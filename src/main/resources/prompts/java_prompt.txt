@@ -1,0 +1,12 @@
+# Java-Specific Requirements
+
+Solve using modern Java 21 with these features where appropriate:
+- Local variable type inference (var); for Java native types and within loops, too
+- Stream API and functional approaches
+- Optional for potential null values
+- Pattern matching for instanceof
+- Text blocks for multi-line strings
+- Switch expressions over switch statements
+- Records for data carriers
+
+Prioritize clean code principles while maintaining optimal performance.

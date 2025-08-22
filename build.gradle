@@ -1,0 +1,83 @@
+plugins {
+  id 'java'
+  id 'application'
+  id 'jacoco'
+  id 'org.openjfx.javafxplugin' version '0.1.0'
+  id 'com.gradleup.shadow' version '9.0.2'
+  id 'com.github.ben-manes.versions' version '0.52.0'
+  id 'org.sonarqube' version '6.2.0.5505'
+}
+
+group = 'dev.coding_challenge_souffleur'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+  mavenCentral()
+}
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(21)
+  }
+}
+
+application {
+  mainClass = 'dev.coding_challenge_souffleur.ApplicationLauncher'
+  applicationDefaultJvmArgs = ['--add-exports=javafx.graphics/com.sun.glass.ui=ALL-UNNAMED']
+}
+
+sonar {
+  properties {
+    property "sonar.projectKey", "coding-challenge-souffleur"
+    property "sonar.organization", "thesouffleuringhatter"
+  }
+}
+
+configurations {
+  mockitoAgent
+}
+
+javafx {
+  version = '21'
+  modules = ['javafx.controls', 'javafx.fxml', 'javafx.swing']
+}
+
+def libs = [mockito: 'org.mockito:mockito-core:5.19.0']
+
+dependencies {
+  implementation 'org.apache.commons:commons-lang3:3.18.0'
+  implementation 'org.slf4j:slf4j-api:2.0.17'
+  runtimeOnly 'org.slf4j:slf4j-simple:2.0.17'
+  implementation 'org.jboss.weld.se:weld-se-core:6.0.3.Final'
+  implementation 'io.smallrye:jandex:3.4.0'
+  implementation 'net.java.dev.jna:jna:5.17.0'
+  implementation 'net.java.dev.jna:jna-platform:5.17.0'
+  implementation 'org.eclipse.microprofile.config:microprofile-config-api:3.1'
+  runtimeOnly 'io.smallrye.config:smallrye-config:3.13.4'
+  implementation 'com.anthropic:anthropic-java:2.5.1'
+  implementation 'com.mikesamuel:json-sanitizer:1.2.3'
+  testImplementation 'io.smallrye.config:smallrye-config:3.13.4'
+  testImplementation 'org.jboss.weld:weld-junit5:5.0.1.Final'
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.13.4'
+  testImplementation libs.mockito
+  testImplementation 'org.mockito:mockito-junit-jupiter:5.19.0'
+  mockitoAgent(libs.mockito) { transitive = false }
+  testImplementation 'org.awaitility:awaitility:4.3.0'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.13.4'
+  testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.13.4'
+  testImplementation 'org.testfx:testfx-core:4.0.18'
+  testImplementation 'org.testfx:testfx-junit5:4.0.18'
+}
+
+test {
+  useJUnitPlatform()
+  // See https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+  jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}"
+}
+
+jacocoTestReport {
+  dependsOn test
+  reports {
+    xml.required = true
+  }
+}

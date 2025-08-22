@@ -1,0 +1,177 @@
+/* ======= THEME COLORS ======= */
+* {
+  -fx-content-background: white;
+  -fx-header-background: #2c3e50;
+  -header-text: white;
+  -primary-text: #2c3e50;
+  -secondary-text: #495057;
+  -tertiary-text: #6c757d;
+  -code-background: #f8f9fa;
+  -border-color: #e9ecef;
+  -scroll-thumb: #cbd3da;
+}
+
+/* ======= LAYOUTS ======= */
+.main-container {
+  -fx-background-color: transparent;
+  -fx-fill-width: true;
+  -fx-fill-height: true;
+  -fx-max-width: Infinity;
+}
+
+.screenshot-preview {
+  -fx-border-color: white;
+  -fx-border-width: 2px;
+}
+
+/* ======= HEADER STYLING ======= */
+.header-box {
+  -fx-background-color: -fx-header-background;
+  -fx-background-radius: 3px;
+  -fx-padding: 5px;
+  -fx-alignment: center-left;
+  -fx-min-height: 40px;
+  -fx-max-height: 40px;
+  -fx-font-weight: bold;
+  -fx-font-size: 13px;
+}
+
+.header-label {
+  -fx-text-fill: -header-text;
+  -fx-padding: 2px 5px;
+}
+
+.close-button {
+  -fx-background-color: transparent;
+  -fx-text-fill: -header-text;
+  -fx-cursor: hand;
+}
+
+.close-button:hover {
+  -fx-background-color: rgba(255, 255, 255, 0.2);
+}
+
+.toggle-button {
+  -fx-background-color: rgba(255, 255, 255, 0.1);
+  -fx-text-fill: -header-text;
+  -fx-cursor: hand;
+  -fx-padding: 3px 8px;
+  -fx-margin: 0 5px;
+  -fx-background-radius: 3px;
+  -fx-border-color: rgba(255, 255, 255, 0.3);
+  -fx-border-width: 1px;
+  -fx-border-radius: 3px;
+}
+
+.toggle-button:hover {
+  -fx-background-color: rgba(255, 255, 255, 0.2);
+}
+
+.content-toggle-button {
+  -fx-background-color: -fx-header-background;
+  -fx-text-fill: white;
+  -fx-cursor: hand;
+  -fx-padding: 5px 12px;
+  -fx-background-radius: 4px;
+  -fx-border-color: transparent;
+  -fx-border-width: 1px;
+  -fx-border-radius: 4px;
+  -fx-font-size: 13px;
+}
+
+.content-toggle-button:hover {
+  -fx-background-color: derive(-fx-header-background, -10%);
+}
+
+.content-pane {
+  -fx-background-color: -fx-content-background;
+  -fx-background-radius: 3px;
+  -fx-min-height: 400px;
+  -fx-pref-height: -1;
+  -fx-pref-width: -1;
+  -fx-max-height: infinity;
+  -fx-max-width: infinity;
+  -fx-fit-to-width: true;
+}
+
+.content-section {
+  -fx-spacing: 5px;
+  -fx-fill-width: true;
+  -fx-min-width: 0;
+  -fx-pref-width: -1;
+  -fx-max-width: infinity;
+}
+
+.section-title {
+  -fx-padding: 5px 0px 2px 0px;
+  -fx-text-fill: -primary-text;
+  -fx-font-weight: bold;
+  -fx-font-size: 16px;
+}
+
+.text-content {
+  -fx-line-spacing: 1.2;
+  -fx-padding: 0px 0px 5px 0px;
+  -fx-wrap-text: true;
+  -fx-min-width: 0;
+  -fx-pref-width: -1;
+  -fx-max-width: infinity;
+}
+
+.status-label {
+  -fx-text-fill: -tertiary-text;
+  -fx-font-style: italic;
+  -fx-padding: 2px 0px;
+}
+
+/* ======= CODE DISPLAY ======= */
+.code-block {
+  -fx-background-color: -code-background;
+  -fx-border-color: -border-color;
+}
+
+.code-text {
+  -fx-font-family: "Consolas", "Monaco", "Courier New", monospace;
+  -fx-font-size: 13px;
+}
+
+.line-number {
+  -fx-fill: -tertiary-text;
+  -fx-font-weight: bold;
+}
+
+/* ======= SCROLL PANES ======= */
+.primary-scroll-pane, .content-scroll-pane, .code-scroll-pane {
+  -fx-background-color: transparent;
+  -fx-border-color: transparent;
+  -fx-max-width: infinity;
+  -fx-max-height: infinity;
+}
+
+.primary-scroll-pane > .viewport,
+.content-scroll-pane > .viewport {
+  -fx-background-color: transparent;
+}
+
+/* Scrollbar styling */
+.scroll-bar:vertical {
+  -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical .thumb {
+  -fx-background-color: -scroll-thumb;
+  -fx-background-radius: 2px;
+}
+
+.scroll-bar > .increment-button,
+.scroll-bar > .decrement-button {
+  -fx-background-color: transparent;
+  -fx-padding: 0.15em;
+  -fx-opacity: 0.7;
+}
+
+/* Use pseudo-classes for better button state handling */
+.scroll-bar > .increment-button:hover,
+.scroll-bar > .decrement-button:hover {
+  -fx-opacity: 1.0;
+}

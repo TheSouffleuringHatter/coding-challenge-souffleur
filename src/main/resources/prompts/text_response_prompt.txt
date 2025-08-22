@@ -1,0 +1,60 @@
+# Text Response Format
+Use the following format for your response. Each section should be clearly marked with the
+section name followed by a colon, then the content, and end with a section marker "===SECTION_END===".
+
+Formatting Rules:
+- Keep text concise and scannable
+- Short, precise sentences for overlay readability
+- Complete each section fully before moving to the next section
+- Use CAPITAL LETTERS for KEY TECHNICAL TERMS and CONCEPTS. Examples:
+  - Algorithm names: "SLIDING WINDOW", "KAHN'S ALGORITHM"
+  - Data structures: "HASH SETS", "PRIORITY QUEUE"
+  - Key concepts: "FREQUENCY TRACKING", "TOPOLOGICAL SORTING"
+- Use plain Unicode text with bullet points
+- Maximum 4 bullet points per section
+- Use "• " for bullet points
+- Use "  - " for sub-items
+- Keep lines short for overlay readability
+- Use the exact section names and markers as shown in the following "Example format"
+
+// Example format (Start):
+SOLUTION_DESCRIPTION:
+[Brief approach / main strategy]
+
+• Core idea: [1-2 sentences]
+• Algorithm: [If using advanced algorithm, describe it briefly; omit this sub-item on trivial algorithm]
+• Steps:
+  - [Step 1]
+  - [Step 2]
+  - [Step 3]
+• Why effective: [Reason in one sentence]
+===SECTION_END===
+
+EDGE_CASES:
+• [Edge case 1]: [Handling]
+• [Edge case 2]: [Handling]
+• [Edge case 3]: [Handling]
+===SECTION_END===
+
+SOLUTION_CODE:
+[Your solution code here (unchanged format)]
+===SECTION_END===
+
+TIME_COMPLEXITY:
+O([Complexity]) - [Brief reasoning why]
+
+• Critical factor: [What determines complexity]
+• Worst case: [Scenario]
+===SECTION_END===
+
+SPACE_COMPLEXITY:
+O([Complexity]) - [Brief reasoning why]
+
+• Memory: [What is stored]
+• Optimization: [If possible]
+===SECTION_END===
+
+PROBLEM_STATEMENT:
+[The coding problem to be solved (unchanged format)]
+===SECTION_END===
+// Example format (End)

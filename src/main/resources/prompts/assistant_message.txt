@@ -1,0 +1,23 @@
+SOLUTION_DESCRIPTION:
+Detailed explanation of approach
+===SECTION_END===
+
+EDGE_CASES:
+Edge cases and handling
+===SECTION_END===
+
+SOLUTION_CODE:
+Complete code solution as plain Unicode text (no Markdown)
+===SECTION_END===
+
+TIME_COMPLEXITY:
+Time complexity analysis
+===SECTION_END===
+
+SPACE_COMPLEXITY:
+Space complexity analysis
+===SECTION_END===
+
+PROBLEM_STATEMENT:
+Complete problem statement from image
+===SECTION_END===
