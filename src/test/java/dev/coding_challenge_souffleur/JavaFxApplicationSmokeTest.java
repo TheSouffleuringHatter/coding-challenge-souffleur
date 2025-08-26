@@ -55,6 +55,7 @@ class JavaFxApplicationSmokeTest {
   private WeldContainer aiOverlayApplicationWeldContainer;
 
   @Init
+  @SuppressWarnings("unused")
   void init() {
     System.setProperty(JavaFxApplication.APPLICATION_TESTING_FLAG, Boolean.TRUE.toString());
     this.javaFxApplication = new JavaFxApplication();
@@ -62,6 +63,7 @@ class JavaFxApplicationSmokeTest {
   }
 
   @Start
+  @SuppressWarnings("unused")
   void start(final Stage stage) {
     javaFxApplication.start(stage);
     aiOverlayApplicationWeldContainer = this.javaFxApplication.getWeldContainer();
@@ -73,6 +75,7 @@ class JavaFxApplicationSmokeTest {
   }
 
   @Stop
+  @SuppressWarnings("unused")
   void stop() {
     assertFalse(Window.getWindows().isEmpty());
     javaFxApplication.stop();
@@ -102,7 +105,6 @@ class JavaFxApplicationSmokeTest {
                 && robot.lookup(SOLUTION_CODE_FLOW_SELECTOR).query().isVisible()
                 && robot.lookup(SOLUTION_DESCRIPTION_FLOW_SELECTOR).query().isVisible());
 
-    // this.scrollDown(robot, 4);
     WaitForAsyncUtils.waitFor(
         2,
         TimeUnit.SECONDS,
