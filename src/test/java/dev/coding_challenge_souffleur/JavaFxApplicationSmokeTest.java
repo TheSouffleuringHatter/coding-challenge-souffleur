@@ -2,6 +2,7 @@ package dev.coding_challenge_souffleur;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.base.NodeMatchers.isInvisible;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
@@ -17,6 +18,8 @@ import org.jboss.weld.environment.se.WeldContainer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.parallel.Isolated;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Init;
@@ -29,6 +32,7 @@ import windowskeyboardhook.KeyboardHookFacade;
 @Isolated
 class JavaFxApplicationSmokeTest {
 
+  private static final int MAX_SCROLL_ATTEMPTS = 50;
   private static final String TOGGLE_PROBLEM_STATEMENT_BUTTON_SELECTOR =
       "#toggleProblemStatementButton";
   private static final String PROBLEM_STATEMENT_SECTION_SELECTOR = "#problemStatementSection";
@@ -51,6 +55,7 @@ class JavaFxApplicationSmokeTest {
   private static final String EDGE_CASES_FLOW_SELECTOR = "#edgeCasesFlow";
   private static final String TIME_COMPLEXITY_FLOW_SELECTOR = "#timeComplexityFlow";
   private static final String SPACE_COMPLEXITY_FLOW_SELECTOR = "#spaceComplexityFlow";
+  private static final Logger log = LoggerFactory.getLogger(JavaFxApplicationSmokeTest.class);
   private JavaFxApplication javaFxApplication;
   private WeldContainer aiOverlayApplicationWeldContainer;
 
@@ -97,7 +102,7 @@ class JavaFxApplicationSmokeTest {
   private void assertContentPane(final FxRobot robot) throws TimeoutException {
     robot.push(RUN_MOCK_ANALYSIS_KEY_CODE_COMBINATION);
     WaitForAsyncUtils.waitFor(
-        3,
+        2,
         TimeUnit.SECONDS,
         () ->
             !robot.lookup(CONTENT_PANE_SELECTOR).queryAll().isEmpty()
@@ -140,23 +145,42 @@ class JavaFxApplicationSmokeTest {
   }
 
   private void assertProblemStatementSection(final FxRobot robot) {
-    this.scrollDown(robot, 5);
+    scrollDownUntilVisible(robot, TOGGLE_PROBLEM_STATEMENT_BUTTON_SELECTOR);
 
     var showProblemStatementButton =
         robot.lookup(TOGGLE_PROBLEM_STATEMENT_BUTTON_SELECTOR).queryButton();
     robot.clickOn(showProblemStatementButton);
 
-    this.scrollDown(robot, 5);
-    verifyThat(PROBLEM_STATEMENT_SECTION_SELECTOR, isVisible());
-
+    scrollDownUntilVisible(robot, PROBLEM_STATEMENT_SECTION_SELECTOR);
     robot.clickOn(showProblemStatementButton);
     verifyThat(TOGGLE_PROBLEM_STATEMENT_BUTTON_SELECTOR, isVisible());
     verifyThat(PROBLEM_STATEMENT_SECTION_SELECTOR, isInvisible());
   }
 
-  private void scrollDown(final FxRobot robot, final int times) {
-    for (var i = 0; i < times; i++) {
+  private static void scrollDownUntilVisible(final FxRobot robot, String nodeQuery) {
+    for (var i = 0; i < MAX_SCROLL_ATTEMPTS; i++) {
       robot.push(SCROLL_DOWN_KEY_CODE_COMBINATION);
+      robot.sleep(100);
+
+      try {
+        // This uses TestFX's internal visibility logic which considers viewport bounds
+        robot.point(nodeQuery).query();
+        return; // If we can get a point, the node is actually shown on screen
+      } catch (RuntimeException e) {
+        log.trace(
+            "Node {} not accessible after {}/{} scroll attempts: {}",
+            nodeQuery,
+            i,
+            MAX_SCROLL_ATTEMPTS,
+            e.getMessage());
+      }
     }
+
+    fail(
+        "Failed to make node "
+            + nodeQuery
+            + " visible after "
+            + MAX_SCROLL_ATTEMPTS
+            + " scroll attempts");
   }
 }
