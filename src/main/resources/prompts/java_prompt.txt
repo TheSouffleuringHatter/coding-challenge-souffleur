@@ -8,5 +8,4 @@ Solve using modern Java 21 with these features where appropriate:
 - Text blocks for multi-line strings
 - Switch expressions over switch statements
 - Records for data carriers
-
-Prioritize clean code principles while maintaining optimal performance.
+- If LinkedList is used as a specific interface such as Stack, use the methods appropriate for the respective interface (for example, push/pop/peek for Stack).
