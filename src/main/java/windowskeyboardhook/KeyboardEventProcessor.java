@@ -22,6 +22,10 @@ class KeyboardEventProcessor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(KeyboardEventProcessor.class);
 
+  private static final int LLKHF_INJECTED = 0x10;
+  private static final int LLKHF_LOWER_IL_INJECTED = 0x02;
+  private static final int INJECTED_FLAGS_MASK = LLKHF_INJECTED | LLKHF_LOWER_IL_INJECTED;
+
   private final List<WindowsKeyListener> keyListeners;
   private final KeyboardStateManager keyboardStateManager;
   private final KeyboardHookManager keyboardHookManager;
@@ -51,6 +55,13 @@ class KeyboardEventProcessor {
     LOGGER.trace("Keyboard event received: nCode={}, wParam={}", nCode, wParam.intValue());
 
     if (nCode < 0) {
+      return callNextHook(nCode, wParam, info);
+    }
+
+    // Ignore injected keystrokes to avoid feedback loops and incompatibilities with other tools
+    var flags = info.flags;
+    if ((flags & INJECTED_FLAGS_MASK) != 0) {
+      LOGGER.trace("Ignoring injected keystroke: flags=0x{}", Integer.toHexString(flags));
       return callNextHook(nCode, wParam, info);
     }
 
