@@ -66,14 +66,15 @@ public class WindowFromScreenCaptureHider {
     WinUserLibrary INSTANCE =
         Native.load("user32", WinUserLibrary.class, W32APIOptions.DEFAULT_OPTIONS);
 
-    /**
-     * Windows API flag to exclude windows from screen capture.
-     *
-     * @see <a
-     *     href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowdisplayaffinity#parameters">
-     *     Windows Documentation on SetWindowDisplayAffinity</a>
-     */
+    int GWL_EXSTYLE = -20;
     int WDA_EXCLUDEFROMCAPTURE = 0x00000011;
+    long WS_EX_NOACTIVATE = 0x08000000L;
+    long WS_EX_TRANSPARENT = 0x00000020L;
+    long WS_EX_LAYERED = 0x00080000L;
+
+    long GetWindowLongPtr(final HWND hWnd, final int nIndex);
+
+    long SetWindowLongPtr(final HWND hWnd, final int nIndex, final long dwNewLong);
 
     /**
      * Sets the display affinity for a window.
@@ -91,6 +92,12 @@ public class WindowFromScreenCaptureHider {
      * @return true if successful, false otherwise
      */
     default boolean excludeWindowFromScreenCapture(final HWND hWnd) {
+      var current = GetWindowLongPtr(hWnd, GWL_EXSTYLE);
+      var desired = current | WS_EX_NOACTIVATE | WS_EX_TRANSPARENT | WS_EX_LAYERED;
+      if (desired != current) {
+        SetWindowLongPtr(hWnd, GWL_EXSTYLE, desired);
+      }
+
       return SetWindowDisplayAffinity(hWnd, WDA_EXCLUDEFROMCAPTURE);
     }
   }
