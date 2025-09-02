@@ -137,6 +137,28 @@ Windows details:
 Implemented in:
 [KeyboardEventProcessor.java](src/main/java/windowskeyboardhook/KeyboardEventProcessor.java)
 
+## 🔧 Development
+
+### Building and Testing
+
+- **Build**: `./gradlew build` or `gradlew.bat build`
+- **Run tests**: `./gradlew test`
+- **Run single test**: `./gradlew test --tests "ClassName.methodName"`
+- **Generate coverage**: `./gradlew jacocoTestReport`
+
+### Architecture Overview
+
+This is a Windows-only JavaFX application with:
+
+- **CDI (Weld)** dependency injection
+- **JNA** for Windows API integration (`SetWindowDisplayAffinity`, keyboard hooks)
+- **Anthropic Java SDK** for Claude API
+- **TestFX + Mockito** for testing
+
+Main entry: `ApplicationLauncher.java` → `JavaFxApplication.java`
+
+Key packages: `model/` (services), `view/` (JavaFX), `windowskeyboardhook/` (Windows integration)
+
 ## 💡 Inspired by...
 
 1. Interview with **Chungin Lee**, author of [Interview Coder](https://www.interviewcoder.co):
