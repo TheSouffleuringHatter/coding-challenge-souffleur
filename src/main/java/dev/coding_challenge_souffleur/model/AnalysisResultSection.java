@@ -137,4 +137,19 @@ enum AnalysisResultSection {
 
     return false;
   }
+
+  static boolean containsSolutionContent(final String text) {
+    if (text == null || text.isEmpty()) {
+      return false;
+    }
+    for (final var section : AnalysisResultSection.values()) {
+      if (section == AnalysisResultSection.PROBLEM_STATEMENT) {
+        continue;
+      }
+      if (text.contains(section.name() + ":")) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
