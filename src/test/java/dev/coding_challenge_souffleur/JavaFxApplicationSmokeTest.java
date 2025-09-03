@@ -32,11 +32,18 @@ import windowskeyboardhook.KeyboardHookFacade;
 @Isolated
 class JavaFxApplicationSmokeTest {
 
+  /**
+   * In case of testing use SHIFT as modifier, see application in {@link
+   * dev.coding_challenge_souffleur.view.keylistener.KeyHandlerProcessor#responsibleFor(windowskeyboardhook.WindowsKeyEvent)}
+   *
+   * <p>Background: It is not possible to isolate KeyCombination to usage of righten CTRL.
+   */
+  private static final KeyCombination.Modifier MATCHING_MODIFIER = KeyCombination.SHIFT_DOWN;
+
   private static final int MAX_SCROLL_ATTEMPTS = 50;
   private static final String TOGGLE_PROBLEM_STATEMENT_BUTTON_SELECTOR =
       "#toggleProblemStatementButton";
   private static final String PROBLEM_STATEMENT_SECTION_SELECTOR = "#problemStatementSection";
-  private static final KeyCombination.Modifier MATCHING_MODIFIER = KeyCombination.CONTROL_DOWN;
   private static final KeyCodeCombination HIDE_SHOW_KEY_CODE_COMBINATION =
       new KeyCodeCombination(KeyCode.W, MATCHING_MODIFIER);
   private static final KeyCodeCombination TAKE_SCREENSHOT_KEY_CODE_COMBINATION =
@@ -118,7 +125,6 @@ class JavaFxApplicationSmokeTest {
   }
 
   @Test
-  @org.junit.jupiter.api.Disabled("Temporarily disabled due to TestFX interaction issues")
   void testApplicationStartsAndExits(final FxRobot robot) throws TimeoutException {
     var initialWindow = robot.window(0);
     assertTrue(initialWindow.isShowing());
@@ -155,11 +161,9 @@ class JavaFxApplicationSmokeTest {
     verifyThat(CONTENT_PANE_SELECTOR, isInvisible());
 
     robot.push(HIDE_SHOW_KEY_CODE_COMBINATION);
-    // Stage is hidden, so we can't query any elements
-    robot.sleep(100); // Give time for hide operation
+    assertTrue(robot.lookup(MAIN_CONTAINER_SELECTOR).queryAll().isEmpty());
 
     robot.push(HIDE_SHOW_KEY_CODE_COMBINATION);
-    robot.sleep(100); // Give time for show operation
     verifyThat(MAIN_CONTAINER_SELECTOR, isVisible());
 
     robot.push(TAKE_SCREENSHOT_KEY_CODE_COMBINATION);
@@ -169,11 +173,13 @@ class JavaFxApplicationSmokeTest {
   private void assertClosing(final FxRobot robot) throws TimeoutException {
     var closeButton = robot.lookup(CLOSE_BUTTON_SELECTOR).queryButton();
     verifyThat(closeButton, isVisible());
+
     robot.push(EXIT_KEY_CODE_COMBINATION);
+
     WaitForAsyncUtils.waitFor(
         2,
         TimeUnit.SECONDS,
-        () -> robot.lookup(TOGGLE_PROBLEM_STATEMENT_BUTTON_SELECTOR).queryAll().isEmpty());
+        () -> robot.lookup(MAIN_CONTAINER_SELECTOR).queryAll().isEmpty());
   }
 
   private void assertProblemStatementSection(final FxRobot robot) {

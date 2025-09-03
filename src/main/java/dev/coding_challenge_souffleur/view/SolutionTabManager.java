@@ -18,9 +18,8 @@ final class SolutionTabManager {
   }
 
   /** Creates a new solution tab with all necessary UI components. */
-  public static Tab createSolutionTab(final String title) {
+  static Tab createSolutionTab(final String title) {
     var tab = new Tab(title.isEmpty() ? DEFAULT_TAB_TITLE : title);
-    tab.setClosable(false);
 
     var scrollPane = new ScrollPane();
     scrollPane.setFitToWidth(true);
@@ -32,6 +31,7 @@ final class SolutionTabManager {
     // Solution Description
     var solutionDescriptionFlow = new FormattedTextFlow();
     solutionDescriptionFlow.getStyleClass().add("text-content");
+    solutionDescriptionFlow.setId("solutionDescriptionFlow");
     contentBox.getChildren().add(solutionDescriptionFlow);
 
     // Edge Cases Section
@@ -41,12 +41,14 @@ final class SolutionTabManager {
     edgeCasesLabel.getStyleClass().add("section-title");
     var edgeCasesFlow = new FormattedTextFlow();
     edgeCasesFlow.getStyleClass().add("text-content");
+    edgeCasesFlow.setId("edgeCasesFlow");
     edgeCasesSection.getChildren().addAll(edgeCasesLabel, edgeCasesFlow);
     contentBox.getChildren().add(edgeCasesSection);
 
     // Solution Code
     var solutionCodeFlow = new FormattedTextFlow();
     solutionCodeFlow.getStyleClass().add("code-block");
+    solutionCodeFlow.setId("solutionCodeFlow");
     contentBox.getChildren().add(solutionCodeFlow);
 
     // Time Complexity Section
@@ -56,6 +58,7 @@ final class SolutionTabManager {
     timeComplexityLabel.getStyleClass().add("section-title");
     var timeComplexityFlow = new FormattedTextFlow();
     timeComplexityFlow.getStyleClass().add("text-content");
+    timeComplexityFlow.setId("timeComplexityFlow");
     timeComplexitySection.getChildren().addAll(timeComplexityLabel, timeComplexityFlow);
     contentBox.getChildren().add(timeComplexitySection);
 
@@ -66,6 +69,7 @@ final class SolutionTabManager {
     spaceComplexityLabel.getStyleClass().add("section-title");
     var spaceComplexityFlow = new FormattedTextFlow();
     spaceComplexityFlow.getStyleClass().add("text-content");
+    spaceComplexityFlow.setId("spaceComplexityFlow");
     spaceComplexitySection.getChildren().addAll(spaceComplexityLabel, spaceComplexityFlow);
     contentBox.getChildren().add(spaceComplexitySection);
 
@@ -86,13 +90,8 @@ final class SolutionTabManager {
     return tab;
   }
 
-  /** Gets the text flow components from a solution tab. */
-  public static SolutionTabData getTabData(final Tab tab) {
-    return (SolutionTabData) tab.getUserData();
-  }
-
   /** Ensures the TabPane has at least the specified number of tabs. */
-  public static void ensureTabCount(final TabPane tabPane, final int requiredCount) {
+  static void ensureTabCount(final TabPane tabPane, final int requiredCount) {
     while (tabPane.getTabs().size() < requiredCount) {
       var tabIndex = tabPane.getTabs().size() + 1;
       var tab = createSolutionTab("Solution " + tabIndex);
@@ -100,7 +99,7 @@ final class SolutionTabManager {
     }
   }
 
-  public record SolutionTabData(
+  record SolutionTabData(
       FormattedTextFlow solutionDescriptionFlow,
       FormattedTextFlow edgeCasesFlow,
       FormattedTextFlow solutionCodeFlow,

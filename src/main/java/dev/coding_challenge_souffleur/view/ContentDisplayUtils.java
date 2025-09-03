@@ -2,6 +2,7 @@ package dev.coding_challenge_souffleur.view;
 
 import dev.coding_challenge_souffleur.model.MultiSolutionResult;
 import dev.coding_challenge_souffleur.model.SolutionSection;
+import dev.coding_challenge_souffleur.view.SolutionTabManager.SolutionTabData;
 import java.util.Optional;
 import javafx.stage.Screen;
 import org.slf4j.Logger;
@@ -71,20 +72,22 @@ final class ContentDisplayUtils {
           SolutionTabManager.ensureTabCount(viewController.solutionTabPane, solutionCount);
 
           // Update each solution tab
-          for (int i = 0; i < solutionCount; i++) {
+          for (var i = 0; i < solutionCount; i++) {
             var tab = viewController.solutionTabPane.getTabs().get(i);
             var solutionOpt = result.getSolution(i);
 
+            var tabData = (SolutionTabData) tab.getUserData();
             if (solutionOpt.isPresent()) {
               var solution = solutionOpt.get();
 
               // Set tab title from solution title or default
-              var tabTitle =
-                  solution.getSection(SolutionSection.SOLUTION_TITLE).orElse("Solution " + (i + 1));
+              var tabTitle = "Solution " + (i + 1);
+              if (solution.getSection(SolutionSection.SOLUTION_TITLE).isPresent()) {
+                tabTitle = "(" + (i + 1) + ") " + solution.getSection(SolutionSection.SOLUTION_TITLE).get();
+              }
               tab.setText(tabTitle);
 
               // Get the tab data and update the content
-              var tabData = SolutionTabManager.getTabData(tab);
               updateSection(
                   tabData.solutionDescriptionFlow(),
                   solution.getSection(SolutionSection.SOLUTION_DESCRIPTION),
@@ -106,7 +109,6 @@ final class ContentDisplayUtils {
             } else {
               // Empty solution - show loading
               tab.setText("Solution " + (i + 1));
-              var tabData = SolutionTabManager.getTabData(tab);
               updateSection(tabData.solutionDescriptionFlow(), Optional.of("Loading..."), false);
               updateSection(tabData.edgeCasesFlow(), Optional.empty(), false);
               updateSection(tabData.solutionCodeFlow(), Optional.empty(), true);

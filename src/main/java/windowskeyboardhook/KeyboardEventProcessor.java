@@ -7,6 +7,7 @@ import com.sun.jna.platform.win32.WinDef.LPARAM;
 import com.sun.jna.platform.win32.WinDef.LRESULT;
 import com.sun.jna.platform.win32.WinDef.WPARAM;
 import com.sun.jna.platform.win32.WinUser.KBDLLHOOKSTRUCT;
+import dev.coding_challenge_souffleur.JavaFxApplication;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Any;
 import jakarta.enterprise.inject.Instance;
@@ -60,8 +61,8 @@ class KeyboardEventProcessor {
 
     // Ignore injected keystrokes to avoid feedback loops and incompatibilities with other tools
     var flags = info.flags;
-    if ((flags & INJECTED_FLAGS_MASK) != 0) {
-      LOGGER.trace("Ignoring injected keystroke: flags=0x{}", Integer.toHexString(flags));
+    if (!Boolean.getBoolean(JavaFxApplication.APPLICATION_TESTING_FLAG) && (flags & INJECTED_FLAGS_MASK) != 0) {
+      LOGGER.warn("Ignoring injected keystroke: flags=0x{}", Integer.toHexString(flags));
       return callNextHook(nCode, wParam, info);
     }
 
