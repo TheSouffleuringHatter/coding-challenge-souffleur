@@ -17,6 +17,6 @@ class RunAnalysisTest {
   void performAction_ShouldDelegateToViewController() {
     new RunAnalysis(viewController).performAction();
 
-    verify(viewController, times(1)).executeScreenshotAnalysis();
+    verify(viewController, times(1)).executeMultiSolutionAnalysis();
   }
 }

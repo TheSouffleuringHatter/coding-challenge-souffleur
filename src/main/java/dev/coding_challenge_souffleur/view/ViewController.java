@@ -107,20 +107,24 @@ public class ViewController {
     screenshotDisplayService.initialize(screenshotPreviewContainer, screenshotPreview);
   }
 
-  public void executeScreenshotAnalysis() {
-    // Use multi-solution analysis by default
-    executeMultiSolutionAnalysis();
-  }
-
   public void executeMultiSolutionAnalysis() {
     var future =
         takeScreenshotAndAnalyzeMultiSolution(this::displayMultiSolutionResult, this::updateStatus);
     handleMultiSolutionCompletion(future, "multi-solution analysis");
   }
 
-  public void executeMockAnalysis() {
-    // Use multi-solution mock analysis by default
-    executeMultiSolutionMockAnalysis();
+  public void executeMultiSolutionMockAnalysis() {
+    var mockResponseText =
+      fileService.loadResourceFileOrDefault(
+        MULTI_SOLUTION_MOCK_RESPONSE_FILE_PATH,
+        "Error: Could not load multi-solution mock response");
+
+    updateStatus("Running multi-solution mock analysis...");
+    var future =
+      anthropicService.analyseMultiSolutionMock(
+        mockResponseText, this::displayMultiSolutionResult);
+
+    handleMultiSolutionCompletion(future, "multi-solution mock analysis");
   }
 
   void displayMultiSolutionResult(final MultiSolutionResult result) {
@@ -153,20 +157,6 @@ public class ViewController {
     LOGGER.trace("Coordinating multi-solution analysis...");
 
     return anthropicService.analyseMultiSolution(screenshot, progressCallback);
-  }
-
-  public void executeMultiSolutionMockAnalysis() {
-    var mockResponseText =
-        fileService.loadResourceFileOrDefault(
-            MULTI_SOLUTION_MOCK_RESPONSE_FILE_PATH,
-            "Error: Could not load multi-solution mock response");
-
-    updateStatus("Running multi-solution mock analysis...");
-    var future =
-        anthropicService.analyseMultiSolutionMock(
-            mockResponseText, this::displayMultiSolutionResult);
-
-    handleMultiSolutionCompletion(future, "multi-solution mock analysis");
   }
 
   private void handleMultiSolutionCompletion(

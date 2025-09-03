@@ -31,10 +31,9 @@ public class StreamingAnalysisResult {
     return Optional.ofNullable(sections.get(solutionSection));
   }
 
-  public void setSection(final SolutionSection solutionSection, final String value) {
-    if (LOGGER.isTraceEnabled()) {
-      LOGGER.trace("Setting section {}", solutionSection);
-    }
+  void setSection(final SolutionSection solutionSection, final String value) {
+    LOGGER.trace("Setting section {}", solutionSection);
+
     if (value == null) {
       sections.remove(solutionSection);
     } else {

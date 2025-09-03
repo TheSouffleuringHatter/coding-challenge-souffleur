@@ -5,7 +5,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.function.Consumer;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +13,6 @@ import org.slf4j.LoggerFactory;
 class MultiSolutionStreamProcessor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MultiSolutionStreamProcessor.class);
-  private static final Pattern SOLUTION_BOUNDARY_PATTERN =
-      Pattern.compile("SOLUTION_TITLE:", Pattern.DOTALL);
 
   private final SolutionSectionParser parser;
 
@@ -164,7 +161,7 @@ class MultiSolutionStreamProcessor {
     }
 
     // If no solution titles found, check if it contains solution content
-    var matcher = SOLUTION_BOUNDARY_PATTERN.matcher(text);
+    var matcher = SolutionSection.SOLUTION_BOUNDARY_PATTERN_INSTANCE.matcher(text);
     if (!matcher.find()) {
       // If text contains solution-related sections, treat as single solution
       if (SolutionSection.containsSolutionContent(text)) {
@@ -175,15 +172,15 @@ class MultiSolutionStreamProcessor {
     }
 
     // Split by solution titles, keeping the SOLUTION_TITLE: part
-    var parts = SOLUTION_BOUNDARY_PATTERN.split(text);
+    var parts = SolutionSection.SOLUTION_BOUNDARY_PATTERN_INSTANCE.split(text);
     if (parts.length <= 1) {
       return new String[] {text};
     }
 
     // Reconstruct solution blocks, adding back the SOLUTION_TITLE: prefix
     var result = new String[parts.length - 1]; // Skip first part (before first SOLUTION_TITLE)
-    for (int i = 1; i < parts.length; i++) {
-      result[i - 1] = "SOLUTION_TITLE:" + parts[i];
+    for (var i = 1; i < parts.length; i++) {
+      result[i - 1] = SolutionSection.SOLUTION_TITLE.headerPrefix() + parts[i];
     }
 
     return result;

@@ -17,6 +17,6 @@ class RunMockAnalysisTest {
   void performAction_ShouldDelegateToViewController() {
     new RunMockAnalysis(viewController).performAction();
 
-    verify(viewController, times(1)).executeMockAnalysis();
+    verify(viewController, times(1)).executeMultiSolutionMockAnalysis();
   }
 }

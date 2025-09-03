@@ -15,13 +15,11 @@ class SolutionSectionParser {
   private static final Logger LOGGER = LoggerFactory.getLogger(SolutionSectionParser.class);
 
   private static Pattern completePattern(final SolutionSection solutionSection) {
-    return Pattern.compile(
-        solutionSection.name() + ":(.*?)" + SolutionSection.SECTION_END, Pattern.DOTALL);
+    return solutionSection.completePattern();
   }
 
   private static Pattern partialPattern(final SolutionSection solutionSection) {
-    return Pattern.compile(
-        solutionSection.name() + ":(.*?)(?=" + SolutionSection.SECTION_END + "|$)", Pattern.DOTALL);
+    return solutionSection.partialPattern();
   }
 
   /**

@@ -19,7 +19,7 @@ class RunMockAnalysis implements KeyHandler {
 
   @Override
   public void performAction() {
-    viewController.executeMockAnalysis();
+    viewController.executeMultiSolutionMockAnalysis();
   }
 
   @Override
