@@ -1,6 +1,7 @@
 package dev.coding_challenge_souffleur.view;
 
 import dev.coding_challenge_souffleur.model.MultiSolutionResult;
+import dev.coding_challenge_souffleur.model.SolutionSection;
 import java.util.Optional;
 import javafx.stage.Screen;
 import org.slf4j.Logger;
@@ -78,17 +79,28 @@ final class ContentDisplayUtils {
               var solution = solutionOpt.get();
 
               // Set tab title from solution title or default
-              var tabTitle = solution.getSolutionTitle().orElse("Solution " + (i + 1));
+              var tabTitle =
+                  solution.getSection(SolutionSection.SOLUTION_TITLE).orElse("Solution " + (i + 1));
               tab.setText(tabTitle);
 
               // Get the tab data and update the content
               var tabData = SolutionTabManager.getTabData(tab);
               updateSection(
-                  tabData.solutionDescriptionFlow(), solution.getSolutionDescription(), false);
-              updateSection(tabData.edgeCasesFlow(), solution.getEdgeCases(), false);
-              updateSection(tabData.solutionCodeFlow(), solution.getSolutionCode(), true);
-              updateSection(tabData.timeComplexityFlow(), solution.getTimeComplexity(), false);
-              updateSection(tabData.spaceComplexityFlow(), solution.getSpaceComplexity(), false);
+                  tabData.solutionDescriptionFlow(),
+                  solution.getSection(SolutionSection.SOLUTION_DESCRIPTION),
+                  false);
+              updateSection(
+                  tabData.edgeCasesFlow(), solution.getSection(SolutionSection.EDGE_CASES), false);
+              updateSection(
+                  tabData.solutionCodeFlow(), solution.getSection(SolutionSection.SOLUTION_CODE), true);
+              updateSection(
+                  tabData.timeComplexityFlow(),
+                  solution.getSection(SolutionSection.TIME_COMPLEXITY),
+                  false);
+              updateSection(
+                  tabData.spaceComplexityFlow(),
+                  solution.getSection(SolutionSection.SPACE_COMPLEXITY),
+                  false);
             } else {
               // Empty solution - show loading
               tab.setText("Solution " + (i + 1));

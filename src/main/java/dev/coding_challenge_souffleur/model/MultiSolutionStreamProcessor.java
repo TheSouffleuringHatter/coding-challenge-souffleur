@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 class MultiSolutionStreamProcessor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MultiSolutionStreamProcessor.class);
-  private static final String SECTION_END = "===SECTION_END===";
   private static final Pattern SOLUTION_BOUNDARY_PATTERN =
       Pattern.compile("SOLUTION_TITLE:", Pattern.DOTALL);
 
@@ -114,7 +113,8 @@ class MultiSolutionStreamProcessor {
 
   private boolean updateSharedProblemStatement(
       final String text, final MultiSolutionResult result) {
-    var problemPattern = Pattern.compile("PROBLEM_STATEMENT:(.*?)" + SECTION_END, Pattern.DOTALL);
+    var problemPattern =
+        Pattern.compile("PROBLEM_STATEMENT:(.*?)" + SolutionSection.SECTION_END, Pattern.DOTALL);
     var matcher = problemPattern.matcher(text);
 
     if (matcher.find()) {

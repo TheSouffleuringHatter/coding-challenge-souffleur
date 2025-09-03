@@ -49,12 +49,22 @@ class AnthropicServiceTest {
     assertTrue(firstSolutionOpt.isPresent());
     var firstSolution = firstSolutionOpt.get();
 
-    assertEquals("Brute Force Approach", firstSolution.getSolutionTitle().get());
-    assertTrue(firstSolution.getSolutionDescription().get().contains("combinations of indices"));
-    assertTrue(firstSolution.getEdgeCases().get().contains("Single element arrays"));
-    assertTrue(firstSolution.getSolutionCode().get().contains("class Solution {"));
-    assertTrue(firstSolution.getTimeComplexity().get().contains("O(n^4)"));
-    assertTrue(firstSolution.getSpaceComplexity().get().contains("O(1)"));
+    assertEquals(
+        "Brute Force Approach",
+        firstSolution.getSection(SolutionSection.SOLUTION_TITLE).get());
+    assertTrue(
+        firstSolution
+            .getSection(SolutionSection.SOLUTION_DESCRIPTION)
+            .get()
+            .contains("combinations of indices"));
+    assertTrue(
+        firstSolution.getSection(SolutionSection.EDGE_CASES).get().contains("Single element arrays"));
+    assertTrue(
+        firstSolution.getSection(SolutionSection.SOLUTION_CODE).get().contains("class Solution {"));
+    assertTrue(
+        firstSolution.getSection(SolutionSection.TIME_COMPLEXITY).get().contains("O(n^4)"));
+    assertTrue(
+        firstSolution.getSection(SolutionSection.SPACE_COMPLEXITY).get().contains("O(1)"));
   }
 
   @Test

@@ -75,12 +75,12 @@ class MultiSolutionResultTest {
     assertFalse(result.isComplete());
 
     // Make second solution complete
-    solution2.setSolutionDescription("Description");
-    solution2.setEdgeCases("Edge cases");
-    solution2.setSolutionCode("Code");
-    solution2.setTimeComplexity("O(n)");
-    solution2.setSpaceComplexity("O(1)");
-    solution2.setProblemStatement("Problem");
+    solution2.setSection(SolutionSection.SOLUTION_DESCRIPTION, "Description");
+    solution2.setSection(SolutionSection.EDGE_CASES, "Edge cases");
+    solution2.setSection(SolutionSection.SOLUTION_CODE, "Code");
+    solution2.setSection(SolutionSection.TIME_COMPLEXITY, "O(n)");
+    solution2.setSection(SolutionSection.SPACE_COMPLEXITY, "O(1)");
+    solution2.setSection(SolutionSection.PROBLEM_STATEMENT, "Problem");
     assertTrue(result.isComplete());
   }
 
@@ -98,12 +98,12 @@ class MultiSolutionResultTest {
 
   private StreamingAnalysisResult createCompleteSolution() {
     var solution = new StreamingAnalysisResult();
-    solution.setProblemStatement("Problem");
-    solution.setSolutionDescription("Description");
-    solution.setEdgeCases("Edge cases");
-    solution.setSolutionCode("Code");
-    solution.setTimeComplexity("O(n)");
-    solution.setSpaceComplexity("O(1)");
+    solution.setSection(SolutionSection.PROBLEM_STATEMENT, "Problem");
+    solution.setSection(SolutionSection.SOLUTION_DESCRIPTION, "Description");
+    solution.setSection(SolutionSection.EDGE_CASES, "Edge cases");
+    solution.setSection(SolutionSection.SOLUTION_CODE, "Code");
+    solution.setSection(SolutionSection.TIME_COMPLEXITY, "O(n)");
+    solution.setSection(SolutionSection.SPACE_COMPLEXITY, "O(1)");
     return solution;
   }
 }

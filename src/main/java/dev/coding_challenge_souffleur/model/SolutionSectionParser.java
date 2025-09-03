@@ -9,18 +9,20 @@ import org.slf4j.LoggerFactory;
  * concerns from data container classes.
  */
 public final class SolutionSectionParser {
+
   private static final Logger LOGGER = LoggerFactory.getLogger(SolutionSectionParser.class);
-  private static final String SECTION_END = "===SECTION_END===";
 
   private SolutionSectionParser() {}
 
   private static Pattern completePattern(final SolutionSection solutionSection) {
-    return Pattern.compile(solutionSection.name() + ":(.*?)" + SECTION_END, Pattern.DOTALL);
+    return Pattern.compile(
+        solutionSection.name() + ":(.*?)" + SolutionSection.SECTION_END, Pattern.DOTALL);
   }
 
   private static Pattern partialPattern(final SolutionSection solutionSection) {
     return Pattern.compile(
-        solutionSection.name() + ":(.*?)(?=" + SECTION_END + "|$)", Pattern.DOTALL);
+        solutionSection.name() + ":(.*?)(?=" + SolutionSection.SECTION_END + "|$)",
+        Pattern.DOTALL);
   }
 
   /**

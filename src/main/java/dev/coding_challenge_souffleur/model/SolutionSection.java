@@ -1,6 +1,6 @@
 package dev.coding_challenge_souffleur.model;
 
-enum SolutionSection {
+public enum SolutionSection {
   PROBLEM_STATEMENT,
   SOLUTION_TITLE,
   SOLUTION_DESCRIPTION,
@@ -8,6 +8,8 @@ enum SolutionSection {
   SOLUTION_CODE,
   TIME_COMPLEXITY,
   SPACE_COMPLEXITY;
+
+  static final String SECTION_END = "===SECTION_END===";
 
   static boolean containsSolutionContent(final String text) {
     if (text == null || text.isEmpty()) {

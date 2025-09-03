@@ -57,7 +57,7 @@ class JavaFxApplicationSmokeTest {
   private static final String EDGE_CASES_FLOW_SELECTOR = "#edgeCasesFlow";
   private static final String TIME_COMPLEXITY_FLOW_SELECTOR = "#timeComplexityFlow";
   private static final String SPACE_COMPLEXITY_FLOW_SELECTOR = "#spaceComplexityFlow";
-  private static final Logger log = LoggerFactory.getLogger(JavaFxApplicationSmokeTest.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(JavaFxApplicationSmokeTest.class);
   private JavaFxApplication javaFxApplication;
   private WeldContainer aiOverlayApplicationWeldContainer;
 
@@ -71,7 +71,7 @@ class JavaFxApplicationSmokeTest {
         robot.point(nodeQuery).query();
         return; // If we can get a point, the node is actually shown on screen
       } catch (RuntimeException e) {
-        log.trace(
+        LOGGER.trace(
             "Node {} not accessible after {}/{} scroll attempts: {}",
             nodeQuery,
             i,
