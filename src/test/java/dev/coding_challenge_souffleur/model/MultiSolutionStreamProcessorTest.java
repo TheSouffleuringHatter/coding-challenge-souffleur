@@ -158,17 +158,14 @@ class MultiSolutionStreamProcessorTest {
     assertTrue(result.getSharedProblemStatement().isPresent());
 
     var solution1 = result.getSolution(0).get();
-    assertEquals(
-        "Solution 1", solution1.getSection(SolutionSection.SOLUTION_TITLE).get());
+    assertEquals("Solution 1", solution1.getSection(SolutionSection.SOLUTION_TITLE).get());
     assertEquals(
         "First solution", solution1.getSection(SolutionSection.SOLUTION_DESCRIPTION).get());
 
     var solution2 = result.getSolution(1).get();
+    assertEquals("Solution 2", solution2.getSection(SolutionSection.SOLUTION_TITLE).get());
     assertEquals(
-        "Solution 2", solution2.getSection(SolutionSection.SOLUTION_TITLE).get());
-    assertEquals(
-        "Second solution",
-        solution2.getSection(SolutionSection.SOLUTION_DESCRIPTION).get());
+        "Second solution", solution2.getSection(SolutionSection.SOLUTION_DESCRIPTION).get());
   }
 
   @Test

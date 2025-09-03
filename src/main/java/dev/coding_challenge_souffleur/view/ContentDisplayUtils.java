@@ -92,7 +92,9 @@ final class ContentDisplayUtils {
               updateSection(
                   tabData.edgeCasesFlow(), solution.getSection(SolutionSection.EDGE_CASES), false);
               updateSection(
-                  tabData.solutionCodeFlow(), solution.getSection(SolutionSection.SOLUTION_CODE), true);
+                  tabData.solutionCodeFlow(),
+                  solution.getSection(SolutionSection.SOLUTION_CODE),
+                  true);
               updateSection(
                   tabData.timeComplexityFlow(),
                   solution.getSection(SolutionSection.TIME_COMPLEXITY),

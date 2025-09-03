@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** Manages creation and organization of solution tabs in the UI. */
-class SolutionTabManager {
+final class SolutionTabManager {
   private static final Logger LOGGER = LoggerFactory.getLogger(SolutionTabManager.class);
   private static final String DEFAULT_TAB_TITLE = "Solution";
 

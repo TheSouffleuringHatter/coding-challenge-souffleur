@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
  * to extend.
  */
 public class StreamingAnalysisResult {
+
   private static final Logger LOGGER = LoggerFactory.getLogger(StreamingAnalysisResult.class);
 
   private final Map<SolutionSection, String> sections = new EnumMap<>(SolutionSection.class);

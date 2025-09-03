@@ -2,6 +2,7 @@ package dev.coding_challenge_souffleur.model;
 
 import com.anthropic.helpers.MessageAccumulator;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.io.IOException;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
@@ -15,6 +16,84 @@ class MultiSolutionStreamProcessor {
   private static final Logger LOGGER = LoggerFactory.getLogger(MultiSolutionStreamProcessor.class);
   private static final Pattern SOLUTION_BOUNDARY_PATTERN =
       Pattern.compile("SOLUTION_TITLE:", Pattern.DOTALL);
+
+  private final SolutionSectionParser parser;
+
+  // CDI constructor
+  @Inject
+  MultiSolutionStreamProcessor(final SolutionSectionParser parser) {
+    this.parser = parser;
+  }
+
+  // Default constructor for unit tests without CDI
+  MultiSolutionStreamProcessor() {
+    this(new SolutionSectionParser());
+  }
+
+  private boolean updateSharedProblemStatement(
+      final String text, final MultiSolutionResult result) {
+    return parser
+        .extractSectionContent(text, SolutionSection.PROBLEM_STATEMENT)
+        .map(String::trim)
+        .filter(ps -> !ps.equals(result.getSharedProblemStatement().orElse("")))
+        .map(
+            ps -> {
+              result.setSharedProblemStatement(ps);
+              return true;
+            })
+        .orElse(false);
+  }
+
+  private boolean updateSingleSolution(
+      final String solutionText, final StreamingAnalysisResult solution) {
+    var updated = false;
+
+    for (final var section : SolutionSection.values()) {
+      // Skip PROBLEM_STATEMENT for individual solutions since it's shared
+      if (section == SolutionSection.PROBLEM_STATEMENT) {
+        continue;
+      }
+
+      if (parser.extractAndUpdate(solutionText, section, solution)) {
+        updated = true;
+      }
+    }
+
+    return updated;
+  }
+
+  private static void dumpTextContentOnError(final String textContent) {
+    if (textContent == null || textContent.trim().isEmpty()) {
+      LOGGER.debug("No text content to dump");
+      return;
+    }
+
+    try {
+      var timestamp = System.currentTimeMillis();
+      var fileName = "multi_solution_error_dump_" + timestamp + ".txt";
+      var path = java.nio.file.Path.of(System.getProperty("java.io.tmpdir"), fileName);
+      java.nio.file.Files.writeString(path, textContent);
+      LOGGER.debug("Multi-solution response text dumped to {}", path);
+    } catch (final IOException | SecurityException e) {
+      LOGGER.error("Failed to write response dump: {}", e.getMessage());
+    } catch (final Exception e) {
+      LOGGER.warn("Unexpected error during response dump: {}", e.getMessage(), e);
+    }
+  }
+
+  private static String extractCompleteResponse(final MessageAccumulator messageAccumulator) {
+    return messageAccumulator.message().content().stream()
+        .filter(block -> block.isText() && block.text().isPresent())
+        .map(block -> block.text().get().text())
+        .collect(Collectors.joining());
+  }
+
+  private static void notifyCallback(
+      final Consumer<MultiSolutionResult> callback, final MultiSolutionResult result) {
+    if (callback != null) {
+      callback.accept(result);
+    }
+  }
 
   void processStreamEvents(
       final StringBuilder accumulatedText,
@@ -108,74 +187,5 @@ class MultiSolutionStreamProcessor {
     }
 
     return result;
-  }
-
-
-  private boolean updateSharedProblemStatement(
-      final String text, final MultiSolutionResult result) {
-    var problemPattern =
-        Pattern.compile("PROBLEM_STATEMENT:(.*?)" + SolutionSection.SECTION_END, Pattern.DOTALL);
-    var matcher = problemPattern.matcher(text);
-
-    if (matcher.find()) {
-      var problemStatement = matcher.group(1).trim();
-      if (!problemStatement.equals(result.getSharedProblemStatement().orElse(""))) {
-        result.setSharedProblemStatement(problemStatement);
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  private boolean updateSingleSolution(
-      final String solutionText, final StreamingAnalysisResult solution) {
-    var updated = false;
-
-    for (final var section : SolutionSection.values()) {
-      // Skip PROBLEM_STATEMENT for individual solutions since it's shared
-      if (section == SolutionSection.PROBLEM_STATEMENT) {
-        continue;
-      }
-
-      if (SolutionSectionParser.extractAndUpdate(solutionText, section, solution)) {
-        updated = true;
-      }
-    }
-
-    return updated;
-  }
-
-  private void dumpTextContentOnError(final String textContent) {
-    if (textContent == null || textContent.trim().isEmpty()) {
-      LOGGER.debug("No text content to dump");
-      return;
-    }
-
-    try {
-      var timestamp = System.currentTimeMillis();
-      var fileName = "multi_solution_error_dump_" + timestamp + ".txt";
-      var path = java.nio.file.Path.of(System.getProperty("java.io.tmpdir"), fileName);
-      java.nio.file.Files.writeString(path, textContent);
-      LOGGER.debug("Multi-solution response text dumped to {}", path);
-    } catch (final IOException | SecurityException e) {
-      LOGGER.error("Failed to write response dump: {}", e.getMessage());
-    } catch (final Exception e) {
-      LOGGER.warn("Unexpected error during response dump: {}", e.getMessage(), e);
-    }
-  }
-
-  private String extractCompleteResponse(final MessageAccumulator messageAccumulator) {
-    return messageAccumulator.message().content().stream()
-        .filter(block -> block.isText() && block.text().isPresent())
-        .map(block -> block.text().get().text())
-        .collect(Collectors.joining());
-  }
-
-  private void notifyCallback(
-      final Consumer<MultiSolutionResult> callback, final MultiSolutionResult result) {
-    if (callback != null) {
-      callback.accept(result);
-    }
   }
 }

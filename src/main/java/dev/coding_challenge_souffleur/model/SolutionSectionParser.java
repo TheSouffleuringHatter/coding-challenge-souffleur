@@ -1,18 +1,18 @@
 package dev.coding_challenge_souffleur.model;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Utility class responsible for parsing text and extracting section contents. Separates parsing
- * concerns from data container classes.
+ * Parser bean responsible for extracting section contents from text.
  */
-public final class SolutionSectionParser {
+@ApplicationScoped
+class SolutionSectionParser {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SolutionSectionParser.class);
-
-  private SolutionSectionParser() {}
 
   private static Pattern completePattern(final SolutionSection solutionSection) {
     return Pattern.compile(
@@ -21,15 +21,40 @@ public final class SolutionSectionParser {
 
   private static Pattern partialPattern(final SolutionSection solutionSection) {
     return Pattern.compile(
-        solutionSection.name() + ":(.*?)(?=" + SolutionSection.SECTION_END + "|$)",
-        Pattern.DOTALL);
+        solutionSection.name() + ":(.*?)(?=" + SolutionSection.SECTION_END + "|$)", Pattern.DOTALL);
+  }
+
+  /**
+   * Returns the content of the given section from the provided text. Prefers complete section
+   * content; if not present, falls back to the latest partial content. Returns empty if not found.
+   */
+  Optional<String> extractSectionContent(
+      final String text, final SolutionSection solutionSection) {
+    if (text == null || text.isEmpty() || solutionSection == null) {
+      return Optional.empty();
+    }
+
+    var completeMatcher = completePattern(solutionSection).matcher(text);
+    if (completeMatcher.find()) {
+      return Optional.of(completeMatcher.group(1).trim());
+    }
+
+    var partialMatcher = partialPattern(solutionSection).matcher(text);
+    if (partialMatcher.find()) {
+      var partial = partialMatcher.group(1).trim();
+      if (!partial.isEmpty()) {
+        return Optional.of(partial);
+      }
+    }
+
+    return Optional.empty();
   }
 
   /**
    * Attempts to extract the content for the provided section from text and update the result.
    * Returns true if the result was updated (complete or partial content changed), otherwise false.
    */
-  public static boolean extractAndUpdate(
+  boolean extractAndUpdate(
       final String text,
       final SolutionSection solutionSection,
       final StreamingAnalysisResult result) {
@@ -37,34 +62,15 @@ public final class SolutionSectionParser {
       return false;
     }
 
-    // First check for complete section
-    var completeMatcher = completePattern(solutionSection).matcher(text);
-    if (completeMatcher.find()) {
-      var extractedValue = completeMatcher.group(1).trim();
+    var contentOpt = extractSectionContent(text, solutionSection);
+    if (contentOpt.isPresent()) {
+      var newValue = contentOpt.get();
       var currentValue = result.getSection(solutionSection).orElse("");
-
-      if (!extractedValue.equals(currentValue)) {
+      if (!newValue.equals(currentValue)) {
         if (LOGGER.isDebugEnabled()) {
-          LOGGER.debug("Found complete {} in text", solutionSection.name());
+          LOGGER.debug("Updated {} from parsed content", solutionSection.name());
         }
-        result.setSection(solutionSection, extractedValue);
-        return true;
-      }
-
-      return false; // Complete section already extracted
-    }
-
-    // If no complete section, check for partial content
-    var partialMatcher = partialPattern(solutionSection).matcher(text);
-    if (partialMatcher.find()) {
-      var partialContent = partialMatcher.group(1).trim();
-      var currentValue = result.getSection(solutionSection).orElse("");
-
-      if (!partialContent.isEmpty() && !partialContent.equals(currentValue)) {
-        if (LOGGER.isTraceEnabled()) {
-          LOGGER.trace("Found partial {} content in text", solutionSection.name());
-        }
-        result.setSection(solutionSection, partialContent);
+        result.setSection(solutionSection, newValue);
         return true;
       }
     }

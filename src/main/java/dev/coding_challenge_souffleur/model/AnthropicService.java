@@ -8,6 +8,7 @@ import com.anthropic.models.messages.ContentBlockParam;
 import com.anthropic.models.messages.ImageBlockParam;
 import com.anthropic.models.messages.MessageCreateParams;
 import com.anthropic.models.messages.Model;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.io.IOException;
@@ -34,20 +35,23 @@ public class AnthropicService {
   private final AnthropicClient anthropicClient;
   private final ImageService imageService;
   private final MultiSolutionStreamProcessor multiSolutionProcessor;
-  private final PromptManager promptManager;
+  private final FileService fileService;
   private final Model claudeModel;
+
+  private String systemMessage;
+  private String userMessage;
 
   @Inject
   AnthropicService(
       final AnthropicClient anthropicClient,
       final ImageService imageService,
       final MultiSolutionStreamProcessor multiSolutionStreamProcessor,
-      final PromptManager promptManager,
+      final FileService fileService,
       @ConfigProperty(name = "anthropic.model") final Model claudeModel) {
     this.anthropicClient = anthropicClient;
     this.imageService = imageService;
     this.multiSolutionProcessor = multiSolutionStreamProcessor;
-    this.promptManager = promptManager;
+    this.fileService = fileService;
     this.claudeModel = claudeModel;
   }
 
@@ -83,15 +87,18 @@ public class AnthropicService {
     return ContentBlockParam.ofImage(ImageBlockParam.builder().source(imageSource).build());
   }
 
-  private MessageCreateParams createMessageParams(final byte[] imageBytes) {
-    return MessageCreateParams.builder()
-        .maxTokens(10000)
-        .system(promptManager.getSystemMessage())
-        .addUserMessageOfBlockParams(List.of(createImageBlock(imageBytes)))
-        .addUserMessage(promptManager.getUserMessage())
-        .enabledThinking(5000)
-        .model(claudeModel)
-        .build();
+  @PostConstruct
+  void loadPrompts() {
+    try {
+      this.systemMessage =
+        fileService.loadResourceFile("/prompts/system_prompt.txt")
+          + fileService.loadResourceFile("/prompts/text_response_prompt.txt")
+          + fileService.loadResourceFile("/prompts/java_prompt.txt")
+          + fileService.loadResourceFile("/prompts/assistant_message.txt");
+      this.userMessage = fileService.loadResourceFile("/prompts/user_message.txt");
+    } catch (final IOException e) {
+      throw new RuntimeException("Failed to load prompt files", e);
+    }
   }
 
   public CompletableFuture<MultiSolutionResult> analyseMultiSolution(
@@ -103,13 +110,6 @@ public class AnthropicService {
       LOGGER.warn("Failed to convert image to byte array", e);
       return CompletableFuture.failedFuture(e);
     }
-  }
-
-  CompletableFuture<MultiSolutionResult> analyseMultiSolution(
-      final byte[] imageBytes, final Consumer<MultiSolutionResult> updateCallback) {
-    return retryAsync(
-        () -> processMultiSolutionRequest(imageBytes, new MultiSolutionResult(), updateCallback),
-        1);
   }
 
   public CompletableFuture<MultiSolutionResult> analyseMultiSolutionMock(
@@ -143,6 +143,13 @@ public class AnthropicService {
 
           return result;
         });
+  }
+
+  CompletableFuture<MultiSolutionResult> analyseMultiSolution(
+    final byte[] imageBytes, final Consumer<MultiSolutionResult> updateCallback) {
+    return retryAsync(
+      () -> processMultiSolutionRequest(imageBytes, new MultiSolutionResult(), updateCallback),
+      1);
   }
 
   private MultiSolutionResult processMultiSolutionRequest(
@@ -179,5 +186,16 @@ public class AnthropicService {
     }
 
     return result;
+  }
+
+  private MessageCreateParams createMessageParams(final byte[] imageBytes) {
+    return MessageCreateParams.builder()
+      .maxTokens(10000)
+      .system(systemMessage)
+      .addUserMessageOfBlockParams(List.of(createImageBlock(imageBytes)))
+      .addUserMessage(userMessage)
+      .enabledThinking(5000)
+      .model(claudeModel)
+      .build();
   }
 }
