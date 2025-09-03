@@ -3,8 +3,8 @@ package dev.coding_challenge_souffleur.view;
 import dev.coding_challenge_souffleur.JavaFxApplication;
 import dev.coding_challenge_souffleur.model.AnthropicService;
 import dev.coding_challenge_souffleur.model.FileService;
-import dev.coding_challenge_souffleur.model.ScreenshotService;
 import dev.coding_challenge_souffleur.model.MultiSolutionResult;
+import dev.coding_challenge_souffleur.model.ScreenshotService;
 import dev.coding_challenge_souffleur.view.keylistener.Exit;
 import dev.coding_challenge_souffleur.view.keylistener.MatchingModifier;
 import java.util.concurrent.CompletableFuture;
@@ -28,9 +28,8 @@ public class ViewController {
   private static final String HIDE_PROBLEM_TEXT = "Hide Problem";
   private static final String ANALYSIS_COMPLETE = "Analysis complete";
   private static final String ANALYSIS_IN_PROGRESS = "Analysis in progress...";
-
-  @FXML VBox contentPane;
   @FXML public TabPane solutionTabPane;
+  @FXML VBox contentPane;
   @FXML FormattedTextFlow problemStatementFlow;
 
   private AnthropicService anthropicService;

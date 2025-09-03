@@ -22,8 +22,7 @@ class ScrollContentUp implements KeyHandler {
   public void performAction() {
     if (viewController.solutionTabPane != null && viewController.solutionTabPane.isVisible()) {
       var selectedTab = viewController.solutionTabPane.getSelectionModel().getSelectedItem();
-      if (selectedTab != null && selectedTab.getContent() instanceof ScrollPane) {
-        var scrollPane = (ScrollPane) selectedTab.getContent();
+      if (selectedTab != null && selectedTab.getContent() instanceof final ScrollPane scrollPane) {
         var vvalue = scrollPane.getVvalue();
         var newValue = Math.clamp(vvalue - ScrollContentDown.SCROLL_INCREMENT, 0.0, 1.0);
         scrollPane.setVvalue(newValue);

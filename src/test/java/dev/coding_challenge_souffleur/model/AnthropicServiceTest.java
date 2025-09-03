@@ -44,14 +44,15 @@ class AnthropicServiceTest {
 
   @Test
   void testAnalyseMultiSolutionMock_Message_ReturnsAnalysisResult() throws IOException {
-    var mockResponse = fileService.loadResourceFile(ViewController.MULTI_SOLUTION_MOCK_RESPONSE_FILE_PATH);
+    var mockResponse =
+        fileService.loadResourceFile(ViewController.MULTI_SOLUTION_MOCK_RESPONSE_FILE_PATH);
     var future = anthropicService.analyseMultiSolutionMock(mockResponse);
     var multiSolutionResult = future.join();
 
     // Test that we have at least one solution
     assertTrue(multiSolutionResult.hasAnySolutions());
     assertTrue(multiSolutionResult.getSolutionCount() >= 1);
-    
+
     // Test the first solution contains expected content
     var firstSolution = multiSolutionResult.getSolution(0).get();
     assertTrue(

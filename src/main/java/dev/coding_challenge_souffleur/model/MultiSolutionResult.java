@@ -33,16 +33,12 @@ public class MultiSolutionResult {
     return !solutions.isEmpty();
   }
 
-  /**
-   * Returns true if all added solutions are complete.
-   */
+  /** Returns true if all added solutions are complete. */
   public boolean isComplete() {
     return !solutions.isEmpty() && solutions.stream().allMatch(StreamingAnalysisResult::isComplete);
   }
 
-  /**
-   * Returns the shared problem statement that applies to all solutions.
-   */
+  /** Returns the shared problem statement that applies to all solutions. */
   public Optional<String> getSharedProblemStatement() {
     return sharedProblemStatement;
   }
@@ -52,9 +48,7 @@ public class MultiSolutionResult {
     this.sharedProblemStatement = Optional.ofNullable(problemStatement);
   }
 
-  /**
-   * Gets a specific solution by index, or empty if index is out of bounds.
-   */
+  /** Gets a specific solution by index, or empty if index is out of bounds. */
   public Optional<StreamingAnalysisResult> getSolution(final int index) {
     if (index >= 0 && index < solutions.size()) {
       return Optional.of(solutions.get(index));

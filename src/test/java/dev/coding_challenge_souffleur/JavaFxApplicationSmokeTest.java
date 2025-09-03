@@ -61,6 +61,33 @@ class JavaFxApplicationSmokeTest {
   private JavaFxApplication javaFxApplication;
   private WeldContainer aiOverlayApplicationWeldContainer;
 
+  private static void scrollDownUntilVisible(final FxRobot robot, String nodeQuery) {
+    for (var i = 0; i < MAX_SCROLL_ATTEMPTS; i++) {
+      robot.push(SCROLL_DOWN_KEY_CODE_COMBINATION);
+      robot.sleep(100);
+
+      try {
+        // This uses TestFX's internal visibility logic which considers viewport bounds
+        robot.point(nodeQuery).query();
+        return; // If we can get a point, the node is actually shown on screen
+      } catch (RuntimeException e) {
+        log.trace(
+            "Node {} not accessible after {}/{} scroll attempts: {}",
+            nodeQuery,
+            i,
+            MAX_SCROLL_ATTEMPTS,
+            e.getMessage());
+      }
+    }
+
+    fail(
+        "Failed to make node "
+            + nodeQuery
+            + " visible after "
+            + MAX_SCROLL_ATTEMPTS
+            + " scroll attempts");
+  }
+
   @Init
   @SuppressWarnings("unused")
   void init() {
@@ -130,7 +157,7 @@ class JavaFxApplicationSmokeTest {
     robot.push(HIDE_SHOW_KEY_CODE_COMBINATION);
     // Stage is hidden, so we can't query any elements
     robot.sleep(100); // Give time for hide operation
-    
+
     robot.push(HIDE_SHOW_KEY_CODE_COMBINATION);
     robot.sleep(100); // Give time for show operation
     verifyThat(MAIN_CONTAINER_SELECTOR, isVisible());
@@ -154,36 +181,9 @@ class JavaFxApplicationSmokeTest {
 
     robot.push(TOGGLE_PROBLEM_STATEMENT_KEY_CODE_COMBINATION);
     scrollDownUntilVisible(robot, PROBLEM_STATEMENT_SECTION_SELECTOR);
-    
+
     robot.push(TOGGLE_PROBLEM_STATEMENT_KEY_CODE_COMBINATION);
     verifyThat(TOGGLE_PROBLEM_STATEMENT_BUTTON_SELECTOR, isVisible());
     verifyThat(PROBLEM_STATEMENT_SECTION_SELECTOR, isInvisible());
-  }
-
-  private static void scrollDownUntilVisible(final FxRobot robot, String nodeQuery) {
-    for (var i = 0; i < MAX_SCROLL_ATTEMPTS; i++) {
-      robot.push(SCROLL_DOWN_KEY_CODE_COMBINATION);
-      robot.sleep(100);
-
-      try {
-        // This uses TestFX's internal visibility logic which considers viewport bounds
-        robot.point(nodeQuery).query();
-        return; // If we can get a point, the node is actually shown on screen
-      } catch (RuntimeException e) {
-        log.trace(
-            "Node {} not accessible after {}/{} scroll attempts: {}",
-            nodeQuery,
-            i,
-            MAX_SCROLL_ATTEMPTS,
-            e.getMessage());
-      }
-    }
-
-    fail(
-        "Failed to make node "
-            + nodeQuery
-            + " visible after "
-            + MAX_SCROLL_ATTEMPTS
-            + " scroll attempts");
   }
 }

@@ -83,8 +83,6 @@ public class AnthropicService {
         .thenCompose(Function.identity());
   }
 
-
-
   private MessageCreateParams createMessageParams(final byte[] imageBytes) {
     return MessageCreateParams.builder()
         .maxTokens(10000)
@@ -121,44 +119,47 @@ public class AnthropicService {
 
   public CompletableFuture<MultiSolutionResult> analyseMultiSolution(
       final byte[] imageBytes, final Consumer<MultiSolutionResult> updateCallback) {
-    return retryAsync(() -> processMultiSolutionRequest(imageBytes, new MultiSolutionResult(), updateCallback), 1);
+    return retryAsync(
+        () -> processMultiSolutionRequest(imageBytes, new MultiSolutionResult(), updateCallback),
+        1);
   }
 
-  public CompletableFuture<MultiSolutionResult> analyseMultiSolutionMock(final String messageTextContent) {
+  public CompletableFuture<MultiSolutionResult> analyseMultiSolutionMock(
+      final String messageTextContent) {
     return analyseMultiSolutionMock(messageTextContent, null);
   }
 
   public CompletableFuture<MultiSolutionResult> analyseMultiSolutionMock(
       final String messageTextContent, final Consumer<MultiSolutionResult> updateCallback) {
-    return CompletableFuture.supplyAsync(() -> {
-      var result = new MultiSolutionResult();
-      var accumulatedText = new StringBuilder();
-      var lines = messageTextContent.lines().toList();
-      var delayPerLine = Math.max(1, 2000 / lines.size());
+    return CompletableFuture.supplyAsync(
+        () -> {
+          var result = new MultiSolutionResult();
+          var accumulatedText = new StringBuilder();
+          var lines = messageTextContent.lines().toList();
+          var delayPerLine = Math.max(1, 2000 / lines.size());
 
-      for (final var line : lines) {
-        multiSolutionProcessor.processStreamEvents(
-            accumulatedText, result, updateCallback, line + "\n");
+          for (final var line : lines) {
+            multiSolutionProcessor.processStreamEvents(
+                accumulatedText, result, updateCallback, line + "\n");
 
-        try {
-          TimeUnit.MILLISECONDS.sleep(delayPerLine);
-        } catch (final InterruptedException e) {
-          Thread.currentThread().interrupt();
-          break;
-        }
-      }
+            try {
+              TimeUnit.MILLISECONDS.sleep(delayPerLine);
+            } catch (final InterruptedException e) {
+              Thread.currentThread().interrupt();
+              break;
+            }
+          }
 
-      // Process the complete text one final time to ensure completion
-      multiSolutionProcessor.processStreamEvents(
-          accumulatedText, result, updateCallback, "");
-      
-      // Final callback with complete result
-      if (updateCallback != null) {
-        updateCallback.accept(result);
-      }
-      
-      return result;
-    });
+          // Process the complete text one final time to ensure completion
+          multiSolutionProcessor.processStreamEvents(accumulatedText, result, updateCallback, "");
+
+          // Final callback with complete result
+          if (updateCallback != null) {
+            updateCallback.accept(result);
+          }
+
+          return result;
+        });
   }
 
   private MultiSolutionResult processMultiSolutionRequest(

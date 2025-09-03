@@ -93,7 +93,7 @@ class MultiSolutionResultTest {
     assertEquals(1, solutions.size());
 
     // Should throw UnsupportedOperationException when trying to modify
-    assertThrows(UnsupportedOperationException.class, () -> solutions.clear());
+    assertThrows(UnsupportedOperationException.class, solutions::clear);
   }
 
   private StreamingAnalysisResult createCompleteSolution() {

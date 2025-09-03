@@ -27,10 +27,10 @@ class ScrollContentUpTest {
   void performAction_ShouldScrollUpSelectedTab() {
     var scrollPane = new ScrollPane();
     scrollPane.setVvalue(0.4);
-    
+
     var tab = new Tab();
     tab.setContent(scrollPane);
-    
+
     viewController.solutionTabPane = solutionTabPane;
     when(solutionTabPane.isVisible()).thenReturn(true);
     when(solutionTabPane.getSelectionModel()).thenReturn(selectionModel);

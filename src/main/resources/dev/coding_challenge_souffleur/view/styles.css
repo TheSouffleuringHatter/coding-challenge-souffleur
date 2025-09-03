@@ -51,22 +51,6 @@
   -fx-background-color: rgba(255, 255, 255, 0.2);
 }
 
-.toggle-button {
-  -fx-background-color: rgba(255, 255, 255, 0.1);
-  -fx-text-fill: -header-text;
-  -fx-cursor: hand;
-  -fx-padding: 3px 8px;
-  -fx-margin: 0 5px;
-  -fx-background-radius: 3px;
-  -fx-border-color: rgba(255, 255, 255, 0.3);
-  -fx-border-width: 1px;
-  -fx-border-radius: 3px;
-}
-
-.toggle-button:hover {
-  -fx-background-color: rgba(255, 255, 255, 0.2);
-}
-
 .content-toggle-button {
   -fx-background-color: -fx-header-background;
   -fx-text-fill: white;
@@ -125,53 +109,9 @@
 }
 
 /* ======= CODE DISPLAY ======= */
-.code-block {
-  -fx-background-color: -code-background;
-  -fx-border-color: -border-color;
-}
-
-.code-text {
-  -fx-font-family: "Consolas", "Monaco", "Courier New", monospace;
-  -fx-font-size: 13px;
-}
-
-.line-number {
-  -fx-fill: -tertiary-text;
-  -fx-font-weight: bold;
-}
 
 /* ======= SCROLL PANES ======= */
-.primary-scroll-pane, .content-scroll-pane, .code-scroll-pane {
-  -fx-background-color: transparent;
-  -fx-border-color: transparent;
-  -fx-max-width: infinity;
-  -fx-max-height: infinity;
-}
-
-.primary-scroll-pane > .viewport,
-.content-scroll-pane > .viewport {
-  -fx-background-color: transparent;
-}
 
 /* Scrollbar styling */
-.scroll-bar:vertical {
-  -fx-background-color: transparent;
-}
-
-.scroll-bar:vertical .thumb {
-  -fx-background-color: -scroll-thumb;
-  -fx-background-radius: 2px;
-}
-
-.scroll-bar > .increment-button,
-.scroll-bar > .decrement-button {
-  -fx-background-color: transparent;
-  -fx-padding: 0.15em;
-  -fx-opacity: 0.7;
-}
 
 /* Use pseudo-classes for better button state handling */
-.scroll-bar > .increment-button:hover,
-.scroll-bar > .decrement-button:hover {
-  -fx-opacity: 1.0;
-}

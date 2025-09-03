@@ -16,7 +16,6 @@ final class ContentDisplayUtils {
     // Utility class
   }
 
-
   private static void updateSection(
       final FormattedTextFlow textFlow,
       final Optional<String> optionalContent,
@@ -74,17 +73,18 @@ final class ContentDisplayUtils {
           for (int i = 0; i < solutionCount; i++) {
             var tab = viewController.solutionTabPane.getTabs().get(i);
             var solutionOpt = result.getSolution(i);
-            
+
             if (solutionOpt.isPresent()) {
               var solution = solutionOpt.get();
-              
+
               // Set tab title from solution title or default
               var tabTitle = solution.getSolutionTitle().orElse("Solution " + (i + 1));
               tab.setText(tabTitle);
-              
+
               // Get the tab data and update the content
               var tabData = SolutionTabManager.getTabData(tab);
-              updateSection(tabData.getSolutionDescriptionFlow(), solution.getSolutionDescription(), false);
+              updateSection(
+                  tabData.getSolutionDescriptionFlow(), solution.getSolutionDescription(), false);
               updateSection(tabData.getEdgeCasesFlow(), solution.getEdgeCases(), false);
               updateSection(tabData.getSolutionCodeFlow(), solution.getSolutionCode(), true);
               updateSection(tabData.getTimeComplexityFlow(), solution.getTimeComplexity(), false);
@@ -102,7 +102,8 @@ final class ContentDisplayUtils {
           }
 
           // Update shared problem statement
-          updateSection(viewController.problemStatementFlow, result.getSharedProblemStatement(), false);
+          updateSection(
+              viewController.problemStatementFlow, result.getSharedProblemStatement(), false);
 
           adjustWindowSize(viewController);
         });

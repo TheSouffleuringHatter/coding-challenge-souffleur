@@ -8,9 +8,7 @@ import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Manages creation and organization of solution tabs in the UI.
- */
+/** Manages creation and organization of solution tabs in the UI. */
 class SolutionTabManager {
   private static final Logger LOGGER = LoggerFactory.getLogger(SolutionTabManager.class);
   private static final String DEFAULT_TAB_TITLE = "Solution";
@@ -19,9 +17,7 @@ class SolutionTabManager {
     // Utility class
   }
 
-  /**
-   * Creates a new solution tab with all necessary UI components.
-   */
+  /** Creates a new solution tab with all necessary UI components. */
   public static Tab createSolutionTab(final String title) {
     var tab = new Tab(title.isEmpty() ? DEFAULT_TAB_TITLE : title);
     tab.setClosable(false);
@@ -77,28 +73,25 @@ class SolutionTabManager {
     tab.setContent(scrollPane);
 
     // Store references to text flows in tab userData for later access
-    var tabData = new SolutionTabData(
-        solutionDescriptionFlow,
-        edgeCasesFlow,
-        solutionCodeFlow,
-        timeComplexityFlow,
-        spaceComplexityFlow);
+    var tabData =
+        new SolutionTabData(
+            solutionDescriptionFlow,
+            edgeCasesFlow,
+            solutionCodeFlow,
+            timeComplexityFlow,
+            spaceComplexityFlow);
     tab.setUserData(tabData);
 
     LOGGER.debug("Created solution tab: {}", title);
     return tab;
   }
 
-  /**
-   * Gets the text flow components from a solution tab.
-   */
+  /** Gets the text flow components from a solution tab. */
   public static SolutionTabData getTabData(final Tab tab) {
     return (SolutionTabData) tab.getUserData();
   }
 
-  /**
-   * Ensures the TabPane has at least the specified number of tabs.
-   */
+  /** Ensures the TabPane has at least the specified number of tabs. */
   public static void ensureTabCount(final TabPane tabPane, final int requiredCount) {
     while (tabPane.getTabs().size() < requiredCount) {
       var tabIndex = tabPane.getTabs().size() + 1;
@@ -107,9 +100,7 @@ class SolutionTabManager {
     }
   }
 
-  /**
-   * Data holder for solution tab components.
-   */
+  /** Data holder for solution tab components. */
   public static class SolutionTabData {
     private final FormattedTextFlow solutionDescriptionFlow;
     private final FormattedTextFlow edgeCasesFlow;

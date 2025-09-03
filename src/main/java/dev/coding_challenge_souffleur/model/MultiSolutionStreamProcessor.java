@@ -14,7 +14,8 @@ class MultiSolutionStreamProcessor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MultiSolutionStreamProcessor.class);
   private static final String SECTION_END = "===SECTION_END===";
-  private static final Pattern SOLUTION_BOUNDARY_PATTERN = Pattern.compile("SOLUTION_TITLE:", Pattern.DOTALL);
+  private static final Pattern SOLUTION_BOUNDARY_PATTERN =
+      Pattern.compile("SOLUTION_TITLE:", Pattern.DOTALL);
 
   void processStreamEvents(
       final StringBuilder accumulatedText,
@@ -54,16 +55,11 @@ class MultiSolutionStreamProcessor {
   }
 
   private boolean updateMultiSolutionResult(final String text, final MultiSolutionResult result) {
-    var updated = false;
-
-    // Extract shared problem statement first
-    if (updateSharedProblemStatement(text, result)) {
-      updated = true;
-    }
+    var updated = updateSharedProblemStatement(text, result);
 
     // Split text into solution blocks
     var solutionBlocks = splitIntoSolutionBlocks(text);
-    
+
     // Ensure we have enough StreamingAnalysisResult objects
     while (result.getSolutionCount() < solutionBlocks.length) {
       result.addSolution(new StreamingAnalysisResult());
@@ -88,13 +84,13 @@ class MultiSolutionStreamProcessor {
     if (text == null || text.trim().isEmpty()) {
       return new String[0];
     }
-    
+
     // If no solution titles found, check if it contains solution content
     var matcher = SOLUTION_BOUNDARY_PATTERN.matcher(text);
     if (!matcher.find()) {
       // If text contains solution-related sections, treat as single solution
       if (containsSolutionContent(text)) {
-        return new String[]{text};
+        return new String[] {text};
       }
       // Otherwise (only problem statement, etc.), return no solution blocks
       return new String[0];
@@ -103,7 +99,7 @@ class MultiSolutionStreamProcessor {
     // Split by solution titles, keeping the SOLUTION_TITLE: part
     var parts = SOLUTION_BOUNDARY_PATTERN.split(text);
     if (parts.length <= 1) {
-      return new String[]{text};
+      return new String[] {text};
     }
 
     // Reconstruct solution blocks, adding back the SOLUTION_TITLE: prefix
@@ -117,17 +113,18 @@ class MultiSolutionStreamProcessor {
 
   private boolean containsSolutionContent(final String text) {
     // Check if text contains any solution-related sections besides PROBLEM_STATEMENT
-    return text.contains("SOLUTION_DESCRIPTION:") ||
-           text.contains("SOLUTION_CODE:") ||
-           text.contains("TIME_COMPLEXITY:") ||
-           text.contains("SPACE_COMPLEXITY:") ||
-           text.contains("EDGE_CASES:");
+    return text.contains("SOLUTION_DESCRIPTION:")
+        || text.contains("SOLUTION_CODE:")
+        || text.contains("TIME_COMPLEXITY:")
+        || text.contains("SPACE_COMPLEXITY:")
+        || text.contains("EDGE_CASES:");
   }
 
-  private boolean updateSharedProblemStatement(final String text, final MultiSolutionResult result) {
+  private boolean updateSharedProblemStatement(
+      final String text, final MultiSolutionResult result) {
     var problemPattern = Pattern.compile("PROBLEM_STATEMENT:(.*?)" + SECTION_END, Pattern.DOTALL);
     var matcher = problemPattern.matcher(text);
-    
+
     if (matcher.find()) {
       var problemStatement = matcher.group(1).trim();
       if (!problemStatement.equals(result.getSharedProblemStatement().orElse(""))) {
@@ -135,24 +132,25 @@ class MultiSolutionStreamProcessor {
         return true;
       }
     }
-    
+
     return false;
   }
 
-  private boolean updateSingleSolution(final String solutionText, final StreamingAnalysisResult solution) {
+  private boolean updateSingleSolution(
+      final String solutionText, final StreamingAnalysisResult solution) {
     var updated = false;
-    
+
     for (final var section : AnalysisResultSection.values()) {
       // Skip PROBLEM_STATEMENT for individual solutions since it's shared
       if (section == AnalysisResultSection.PROBLEM_STATEMENT) {
         continue;
       }
-      
+
       if (section.extractAndUpdate(solutionText, solution)) {
         updated = true;
       }
     }
-    
+
     return updated;
   }
 

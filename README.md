@@ -33,8 +33,9 @@ underlying interface.
 within the application, preventing keyloggers or screen readers from detecting your interactions
 with the AI.
 
-**📑 Multi-Solution Analysis**: Provides up to 3 different solution approaches for each coding problem
-with descriptive tabs like "Hash Map Approach", "Two Pointers", "Sliding Window" — giving you 
+**📑 Multi-Solution Analysis**: Provides up to 3 different solution approaches for each coding
+problem
+with descriptive tabs like "Hash Map Approach", "Two Pointers", "Sliding Window" — giving you
 multiple perspectives and learning opportunities.
 
 ## 🚀 Quick Start
@@ -69,15 +70,15 @@ The Souffleur operates entirely through keyboard shortcuts.
 
 Souffleur activation modifier is `Control on the righten side`.
 
-| Key    | Action        | Description                          |
-|--------|---------------|--------------------------------------|
-| `R`    | 📸 Screenshot | Capture and preview current screen   |
-| `T`    | 🔍 Analyze    | Send screenshot to AI for analysis   |
-| `↑↓←→` | Move          | Reposition the overlay window        |
-| `1/2/3`| 📑 Switch Tab | Switch between solution tabs         |
-| `4/5`  | ⬆️⬇️ Scroll   | Navigate through current tab content |
-| `W`    | 🚫 Hide/Show  | Toggle overlay visibility            |
-| `Q`    | 🚫 Exit       | Exit Souffleur                       |
+| Key     | Action        | Description                          |
+|---------|---------------|--------------------------------------|
+| `R`     | 📸 Screenshot | Capture and preview current screen   |
+| `T`     | 🔍 Analyze    | Send screenshot to AI for analysis   |
+| `↑↓←→`  | Move          | Reposition the overlay window        |
+| `1/2/3` | 📑 Switch Tab | Switch between solution tabs         |
+| `4/5`   | ⬆️⬇️ Scroll   | Navigate through current tab content |
+| `W`     | 🚫 Hide/Show  | Toggle overlay visibility            |
+| `Q`     | 🚫 Exit       | Exit Souffleur                       |
 
 ### Typical Workflow
 
@@ -170,14 +171,14 @@ Key packages: `model/` (services), `view/` (JavaFX), `windowskeyboardhook/` (Win
 1. Interview with **Chungin Lee**, author of [Interview Coder](https://www.interviewcoder.co):
    > Someone could probably build a working prototype version of this that works in less than 1,000
    > lines of code.
-   > 
+   >
    > https://gizmodo.com/a-student-used-ai-to-beat-amazons-brutal-technical-interview-he-got-an-offer-and-someone-tattled-to-his-university-2000571562
-   
+
    Yeah, he was right (976 executables lines of code).
 
-2. > A simple key stroke capturing react app can identify when users are pressing unnecessary keys 
+2. > A simple key stroke capturing react app can identify when users are pressing unnecessary keys
    > during any rounds.
-   > 
-   > https://www.reddit.com/r/brdev/comments/1jlt9x5/comment/modns5c  
-   
+   >
+   > https://www.reddit.com/r/brdev/comments/1jlt9x5/comment/modns5c
+
    Ha, wrong!
