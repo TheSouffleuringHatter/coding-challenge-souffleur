@@ -100,45 +100,10 @@ class SolutionTabManager {
     }
   }
 
-  /** Data holder for solution tab components. */
-  public static class SolutionTabData {
-    private final FormattedTextFlow solutionDescriptionFlow;
-    private final FormattedTextFlow edgeCasesFlow;
-    private final FormattedTextFlow solutionCodeFlow;
-    private final FormattedTextFlow timeComplexityFlow;
-    private final FormattedTextFlow spaceComplexityFlow;
-
-    public SolutionTabData(
-        final FormattedTextFlow solutionDescriptionFlow,
-        final FormattedTextFlow edgeCasesFlow,
-        final FormattedTextFlow solutionCodeFlow,
-        final FormattedTextFlow timeComplexityFlow,
-        final FormattedTextFlow spaceComplexityFlow) {
-      this.solutionDescriptionFlow = solutionDescriptionFlow;
-      this.edgeCasesFlow = edgeCasesFlow;
-      this.solutionCodeFlow = solutionCodeFlow;
-      this.timeComplexityFlow = timeComplexityFlow;
-      this.spaceComplexityFlow = spaceComplexityFlow;
-    }
-
-    public FormattedTextFlow getSolutionDescriptionFlow() {
-      return solutionDescriptionFlow;
-    }
-
-    public FormattedTextFlow getEdgeCasesFlow() {
-      return edgeCasesFlow;
-    }
-
-    public FormattedTextFlow getSolutionCodeFlow() {
-      return solutionCodeFlow;
-    }
-
-    public FormattedTextFlow getTimeComplexityFlow() {
-      return timeComplexityFlow;
-    }
-
-    public FormattedTextFlow getSpaceComplexityFlow() {
-      return spaceComplexityFlow;
-    }
-  }
+  public record SolutionTabData(
+      FormattedTextFlow solutionDescriptionFlow,
+      FormattedTextFlow edgeCasesFlow,
+      FormattedTextFlow solutionCodeFlow,
+      FormattedTextFlow timeComplexityFlow,
+      FormattedTextFlow spaceComplexityFlow) {}
 }

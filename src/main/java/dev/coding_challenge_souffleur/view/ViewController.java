@@ -22,7 +22,8 @@ import org.slf4j.LoggerFactory;
 
 public class ViewController {
 
-  public static final String MULTI_SOLUTION_MOCK_RESPONSE_FILE_PATH = "/prompts/multi_solution_mock.txt";
+  public static final String MULTI_SOLUTION_MOCK_RESPONSE_FILE_PATH =
+      "/prompts/multi_solution_mock.txt";
   private static final Logger LOGGER = LoggerFactory.getLogger(ViewController.class);
   private static final String SHOW_PROBLEM_TEXT = "Show Problem";
   private static final String HIDE_PROBLEM_TEXT = "Hide Problem";
@@ -77,7 +78,6 @@ public class ViewController {
         isCurrentlyVisible ? SHOW_PROBLEM_TEXT : HIDE_PROBLEM_TEXT);
   }
 
-
   void updateStatus(final String status) {
     platformRunLater.accept(
         () -> {
@@ -113,30 +113,31 @@ public class ViewController {
   }
 
   public void executeMultiSolutionAnalysis() {
-    var future = takeScreenshotAndAnalyzeMultiSolution(this::displayMultiSolutionResult, this::updateStatus);
+    var future =
+        takeScreenshotAndAnalyzeMultiSolution(this::displayMultiSolutionResult, this::updateStatus);
     handleMultiSolutionCompletion(future, "multi-solution analysis");
   }
-
 
   public void executeMockAnalysis() {
     // Use multi-solution mock analysis by default
     executeMultiSolutionMockAnalysis();
   }
 
-
   void displayMultiSolutionResult(final MultiSolutionResult result) {
     ContentDisplayUtils.displayMultiSolutionResult(this, result, platformRunLater);
 
     // Update status to ensure content pane becomes visible
     var isComplete = result.isComplete();
-    LOGGER.debug("Multi-solution result complete: {}, solution count: {}", isComplete, result.getSolutionCount());
+    LOGGER.debug(
+        "Multi-solution result complete: {}, solution count: {}",
+        isComplete,
+        result.getSolutionCount());
     var statusText = isComplete ? ANALYSIS_COMPLETE : ANALYSIS_IN_PROGRESS;
     updateStatus(statusText);
   }
 
   private CompletableFuture<MultiSolutionResult> takeScreenshotAndAnalyzeMultiSolution(
-      final Consumer<MultiSolutionResult> progressCallback,
-      final Consumer<String> statusCallback) {
+      final Consumer<MultiSolutionResult> progressCallback, final Consumer<String> statusCallback) {
 
     var optionalScreenshot = screenshotService.takeScreenshotOfDesktop();
     if (optionalScreenshot.isEmpty()) {
@@ -157,7 +158,8 @@ public class ViewController {
   public void executeMultiSolutionMockAnalysis() {
     var mockResponseText =
         fileService.loadResourceFileOrDefault(
-            MULTI_SOLUTION_MOCK_RESPONSE_FILE_PATH, "Error: Could not load multi-solution mock response");
+            MULTI_SOLUTION_MOCK_RESPONSE_FILE_PATH,
+            "Error: Could not load multi-solution mock response");
 
     updateStatus("Running multi-solution mock analysis...");
     var future =

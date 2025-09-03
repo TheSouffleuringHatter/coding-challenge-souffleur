@@ -51,13 +51,6 @@ public class AnthropicService {
     this.claudeModel = claudeModel;
   }
 
-  private static void notifyCallback(
-      final Consumer<StreamingAnalysisResult> callback, final StreamingAnalysisResult result) {
-    if (callback != null) {
-      callback.accept(result);
-    }
-  }
-
   private static <T> CompletableFuture<T> retryAsync(final Supplier<T> task, final int attempt) {
     if (attempt > 1) {
       LOGGER.debug("Retrying {}/{}", attempt, DEFAULT_RETRY_MAX_ATTEMPTS);
@@ -83,6 +76,13 @@ public class AnthropicService {
         .thenCompose(Function.identity());
   }
 
+  private static ContentBlockParam createImageBlock(final byte[] imageBytes) {
+    var base64Image = Base64.getEncoder().encodeToString(imageBytes);
+    var imageSource =
+        Base64ImageSource.builder().data(base64Image).mediaType(MediaType.IMAGE_PNG).build();
+    return ContentBlockParam.ofImage(ImageBlockParam.builder().source(imageSource).build());
+  }
+
   private MessageCreateParams createMessageParams(final byte[] imageBytes) {
     return MessageCreateParams.builder()
         .maxTokens(10000)
@@ -94,14 +94,6 @@ public class AnthropicService {
         .build();
   }
 
-  private ContentBlockParam createImageBlock(final byte[] imageBytes) {
-    var base64Image = Base64.getEncoder().encodeToString(imageBytes);
-    var imageSource =
-        Base64ImageSource.builder().data(base64Image).mediaType(MediaType.IMAGE_PNG).build();
-    return ContentBlockParam.ofImage(ImageBlockParam.builder().source(imageSource).build());
-  }
-
-  // Multi-solution methods
   public CompletableFuture<MultiSolutionResult> analyseMultiSolution(
       final Image image, final Consumer<MultiSolutionResult> updateCallback) {
     try {
@@ -113,20 +105,11 @@ public class AnthropicService {
     }
   }
 
-  public CompletableFuture<MultiSolutionResult> analyseMultiSolution(final byte[] imageBytes) {
-    return analyseMultiSolution(imageBytes, null);
-  }
-
-  public CompletableFuture<MultiSolutionResult> analyseMultiSolution(
+  CompletableFuture<MultiSolutionResult> analyseMultiSolution(
       final byte[] imageBytes, final Consumer<MultiSolutionResult> updateCallback) {
     return retryAsync(
         () -> processMultiSolutionRequest(imageBytes, new MultiSolutionResult(), updateCallback),
         1);
-  }
-
-  public CompletableFuture<MultiSolutionResult> analyseMultiSolutionMock(
-      final String messageTextContent) {
-    return analyseMultiSolutionMock(messageTextContent, null);
   }
 
   public CompletableFuture<MultiSolutionResult> analyseMultiSolutionMock(
@@ -191,7 +174,7 @@ public class AnthropicService {
 
       multiSolutionProcessor.handleFinalResponse(result, updateCallback, messageAccumulator);
     } catch (final Exception e) {
-      LOGGER.error("Error in multi-solution streaming analysis", e);
+      LOGGER.warn("Error in multi-solution streaming analysis", e);
       throw new RuntimeException(e);
     }
 

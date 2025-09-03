@@ -33,11 +33,11 @@ class AnthropicServiceTest {
   void testAnalyseMultiSolution_WithImageBytes_ReturnsAnalysisResult() {
     // Run twice because of internal async usage
 
-    var future1 = anthropicService.analyseMultiSolution(testImage);
+    var future1 = anthropicService.analyseMultiSolution(testImage, null);
     var result1 = future1.join();
     assertTrue(result1.isComplete());
 
-    var future2 = anthropicService.analyseMultiSolution(testImage);
+    var future2 = anthropicService.analyseMultiSolution(testImage, null);
     var result2 = future2.join();
     assertTrue(result2.isComplete());
   }
@@ -46,7 +46,7 @@ class AnthropicServiceTest {
   void testAnalyseMultiSolutionMock_Message_ReturnsAnalysisResult() throws IOException {
     var mockResponse =
         fileService.loadResourceFile(ViewController.MULTI_SOLUTION_MOCK_RESPONSE_FILE_PATH);
-    var future = anthropicService.analyseMultiSolutionMock(mockResponse);
+    var future = anthropicService.analyseMultiSolutionMock(mockResponse, null);
     var multiSolutionResult = future.join();
 
     // Test that we have at least one solution

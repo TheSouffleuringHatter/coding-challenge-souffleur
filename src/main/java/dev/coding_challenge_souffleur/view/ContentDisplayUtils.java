@@ -84,20 +84,20 @@ final class ContentDisplayUtils {
               // Get the tab data and update the content
               var tabData = SolutionTabManager.getTabData(tab);
               updateSection(
-                  tabData.getSolutionDescriptionFlow(), solution.getSolutionDescription(), false);
-              updateSection(tabData.getEdgeCasesFlow(), solution.getEdgeCases(), false);
-              updateSection(tabData.getSolutionCodeFlow(), solution.getSolutionCode(), true);
-              updateSection(tabData.getTimeComplexityFlow(), solution.getTimeComplexity(), false);
-              updateSection(tabData.getSpaceComplexityFlow(), solution.getSpaceComplexity(), false);
+                  tabData.solutionDescriptionFlow(), solution.getSolutionDescription(), false);
+              updateSection(tabData.edgeCasesFlow(), solution.getEdgeCases(), false);
+              updateSection(tabData.solutionCodeFlow(), solution.getSolutionCode(), true);
+              updateSection(tabData.timeComplexityFlow(), solution.getTimeComplexity(), false);
+              updateSection(tabData.spaceComplexityFlow(), solution.getSpaceComplexity(), false);
             } else {
               // Empty solution - show loading
               tab.setText("Solution " + (i + 1));
               var tabData = SolutionTabManager.getTabData(tab);
-              updateSection(tabData.getSolutionDescriptionFlow(), Optional.of("Loading..."), false);
-              updateSection(tabData.getEdgeCasesFlow(), Optional.empty(), false);
-              updateSection(tabData.getSolutionCodeFlow(), Optional.empty(), true);
-              updateSection(tabData.getTimeComplexityFlow(), Optional.empty(), false);
-              updateSection(tabData.getSpaceComplexityFlow(), Optional.empty(), false);
+              updateSection(tabData.solutionDescriptionFlow(), Optional.of("Loading..."), false);
+              updateSection(tabData.edgeCasesFlow(), Optional.empty(), false);
+              updateSection(tabData.solutionCodeFlow(), Optional.empty(), true);
+              updateSection(tabData.timeComplexityFlow(), Optional.empty(), false);
+              updateSection(tabData.spaceComplexityFlow(), Optional.empty(), false);
             }
           }
 
