@@ -34,7 +34,7 @@ within the application, preventing keyloggers or screen readers from detecting y
 with the AI.
 
 **📑 Multi-Solution Analysis**: Provides up to 3 different solution approaches for each coding
-problem with descriptive tabs like "Hash Map Approach", "Two Pointers", "Sliding Window" — 
+problem with descriptive tabs like "Hash Map Approach", "Two Pointers", "Sliding Window" —
 giving you multiple perspectives and learning opportunities.
 
 ## 🚀 Quick Start
@@ -115,6 +115,8 @@ the application window.
 This tells Windows to exclude the window from any screen capture, recording, or
 sharing — including OBS, Teams, Zoom, and Windows built-in screenshot tools.
 
+Addionally, the Souffleur window never gets activated and is transparent, event to mouse clicks.
+
 You can **test** this functionality yourself locally by running Souffleur,
 then running a screen capture tool like
 [Snipping Tool](https://www.microsoft.com/de-de/windows/tips/snipping-tool).
@@ -134,6 +136,9 @@ system-wide keyboard events.
 When a registered key combination is detected, the application
 processes the action and marks the event as "handled," preventing it from reaching other
 applications or being logged by external monitoring tools.
+
+BUT the keyboard event absorption is not applied in case of injected keystrokes,
+ensuring appropriate tools work as expected.
 
 Windows details:
 
