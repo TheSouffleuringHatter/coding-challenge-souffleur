@@ -115,7 +115,7 @@ the application window.
 This tells Windows to exclude the window from any screen capture, recording, or
 sharing — including OBS, Teams, Zoom, and Windows built-in screenshot tools.
 
-Addionally, the Souffleur window never gets activated and is transparent, event to mouse clicks.
+Additionally, the Souffleur window never gets activated and is transparent, event to mouse clicks.
 
 You can **test** this functionality yourself locally by running Souffleur,
 then running a screen capture tool like
