@@ -1,5 +1,6 @@
 package dev.coding_challenge_souffleur.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.coding_challenge_souffleur.view.ViewController;
@@ -30,48 +31,46 @@ class AnthropicServiceTest {
   }
 
   @Test
-  void testAnalyseMultiSolution_WithImageBytes_ReturnsAnalysisResult() {
-    // Run twice because of internal async usage
-
-    var future1 = anthropicService.analyseMultiSolution(testImage, null);
-    var result1 = future1.join();
-    assertTrue(result1.isComplete());
-
-    var future2 = anthropicService.analyseMultiSolution(testImage, null);
-    var result2 = future2.join();
-    assertTrue(result2.isComplete());
-  }
-
-  @Test
   void testAnalyseMultiSolutionMock_Message_ReturnsAnalysisResult() throws IOException {
     var mockResponse =
         fileService.loadResourceFile(ViewController.MULTI_SOLUTION_MOCK_RESPONSE_FILE_PATH);
     var future = anthropicService.analyseMultiSolutionMock(mockResponse, null);
     var multiSolutionResult = future.join();
 
-    // Test that we have at least one solution
     assertTrue(multiSolutionResult.hasAnySolutions());
-    assertTrue(multiSolutionResult.getSolutionCount() >= 1);
+    assertEquals(3, multiSolutionResult.getSolutionCount());
+    assertTrue(
+        multiSolutionResult
+            .getSharedProblemStatement()
+            .get()
+            .contains("Given four integer arrays"));
 
-    // Test the first solution contains expected content
-    var firstSolution = multiSolutionResult.getSolution(0).get();
-    assertTrue(
-        firstSolution.getSolutionDescription().get().startsWith("HASH SET validation"),
-        firstSolution.getSolutionDescription().get().substring(0, 20));
-    assertTrue(
-        firstSolution.getEdgeCases().get().startsWith("• Empty cells"),
-        firstSolution.getEdgeCases().get().substring(0, 20));
-    assertTrue(
-        firstSolution.getSolutionCode().get().startsWith("class Solution {"),
-        firstSolution.getSolutionCode().get().substring(0, 20));
-    assertTrue(
-        firstSolution.getTimeComplexity().get().startsWith("O(1) - Fixed 9x9"),
-        firstSolution.getTimeComplexity().get().substring(0, 20));
-    assertTrue(
-        firstSolution.getSpaceComplexity().get().startsWith("O(1) - Fixed storage"),
-        firstSolution.getSpaceComplexity().get().substring(0, 20));
-    assertTrue(
-        multiSolutionResult.getSharedProblemStatement().get().contains("36. Valid Sudoku"),
-        multiSolutionResult.getSharedProblemStatement().get().substring(0, 20));
+    var firstSolutionOpt = multiSolutionResult.getSolution(0);
+    assertTrue(firstSolutionOpt.isPresent());
+    var firstSolution = firstSolutionOpt.get();
+
+    assertEquals("Brute Force Approach", firstSolution.getSolutionTitle().get());
+    assertTrue(firstSolution.getSolutionDescription().get().contains("combinations of indices"));
+    assertTrue(firstSolution.getEdgeCases().get().contains("Single element arrays"));
+    assertTrue(firstSolution.getSolutionCode().get().contains("class Solution {"));
+    assertTrue(firstSolution.getTimeComplexity().get().contains("O(n^4)"));
+    assertTrue(firstSolution.getSpaceComplexity().get().contains("O(1)"));
+  }
+
+  @Test
+  void testAnalyseMultiSolution_WithImageBytes_LiveSmoke_whenApiKeyPresent() {
+    // Run twice because of internal async usage
+
+    var future1 = anthropicService.analyseMultiSolution(testImage, null);
+    var result1 = future1.join();
+    assertTrue(result1.hasAnySolutions());
+    assertTrue(result1.getSharedProblemStatement().isPresent());
+    assertTrue(result1.isComplete());
+
+    var future2 = anthropicService.analyseMultiSolution(testImage, null);
+    var result2 = future2.join();
+    assertTrue(result2.hasAnySolutions());
+    assertTrue(result2.getSharedProblemStatement().isPresent());
+    assertTrue(result2.isComplete());
   }
 }

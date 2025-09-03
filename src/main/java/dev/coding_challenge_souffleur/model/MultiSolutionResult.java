@@ -35,7 +35,25 @@ public class MultiSolutionResult {
 
   /** Returns true if all added solutions are complete. */
   public boolean isComplete() {
-    return !solutions.isEmpty() && solutions.stream().allMatch(StreamingAnalysisResult::isComplete);
+    if (solutions.isEmpty()) {
+      return false;
+    }
+
+    // If we have a shared problem statement, treat solutions as complete when all
+    // per-solution sections (except problem statement) are present.
+    if (sharedProblemStatement.isPresent()) {
+      return solutions.stream()
+          .allMatch(
+              s ->
+                  s.getSolutionDescription().isPresent()
+                      && s.getEdgeCases().isPresent()
+                      && s.getSolutionCode().isPresent()
+                      && s.getTimeComplexity().isPresent()
+                      && s.getSpaceComplexity().isPresent());
+    }
+
+    // Fallback: require each solution to be fully complete on its own
+    return solutions.stream().allMatch(StreamingAnalysisResult::isComplete);
   }
 
   /** Returns the shared problem statement that applies to all solutions. */
