@@ -143,14 +143,14 @@ class JavaFxApplicationSmokeTest {
         () ->
             !robot.lookup(CONTENT_PANE_SELECTOR).queryAll().isEmpty()
                 && robot.lookup(CONTENT_PANE_SELECTOR).query().isVisible()
-                && robot.lookup(SOLUTION_CODE_FLOW_SELECTOR).query().isVisible()
-                && robot.lookup(SOLUTION_DESCRIPTION_FLOW_SELECTOR).query().isVisible());
-
+                && !robot.lookup(SOLUTION_DESCRIPTION_FLOW_SELECTOR).queryAll().isEmpty());
     WaitForAsyncUtils.waitFor(
         2,
         TimeUnit.SECONDS,
         () ->
-            robot.lookup(EDGE_CASES_FLOW_SELECTOR).query().isVisible()
+            robot.lookup(SOLUTION_DESCRIPTION_FLOW_SELECTOR).query().isVisible()
+                && robot.lookup(EDGE_CASES_FLOW_SELECTOR).query().isVisible()
+                && robot.lookup(SOLUTION_CODE_FLOW_SELECTOR).query().isVisible()
                 && robot.lookup(TIME_COMPLEXITY_FLOW_SELECTOR).query().isVisible()
                 && robot.lookup(SPACE_COMPLEXITY_FLOW_SELECTOR).query().isVisible());
   }
@@ -177,9 +177,7 @@ class JavaFxApplicationSmokeTest {
     robot.push(EXIT_KEY_CODE_COMBINATION);
 
     WaitForAsyncUtils.waitFor(
-        2,
-        TimeUnit.SECONDS,
-        () -> robot.lookup(MAIN_CONTAINER_SELECTOR).queryAll().isEmpty());
+        2, TimeUnit.SECONDS, () -> robot.lookup(MAIN_CONTAINER_SELECTOR).queryAll().isEmpty());
   }
 
   private void assertProblemStatementSection(final FxRobot robot) {
