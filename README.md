@@ -34,9 +34,8 @@ within the application, preventing keyloggers or screen readers from detecting y
 with the AI.
 
 **📑 Multi-Solution Analysis**: Provides up to 3 different solution approaches for each coding
-problem
-with descriptive tabs like "Hash Map Approach", "Two Pointers", "Sliding Window" — giving you
-multiple perspectives and learning opportunities.
+problem with descriptive tabs like "Hash Map Approach", "Two Pointers", "Sliding Window" — 
+giving you multiple perspectives and learning opportunities.
 
 ## 🚀 Quick Start
 
