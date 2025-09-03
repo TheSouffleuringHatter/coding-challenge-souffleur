@@ -118,6 +118,7 @@ enum AnalysisResultSection {
         setValue(result, extractedValue);
         return true;
       }
+
       return false; // Complete section already extracted
     }
 
