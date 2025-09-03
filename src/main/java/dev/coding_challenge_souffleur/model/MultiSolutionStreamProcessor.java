@@ -89,7 +89,7 @@ class MultiSolutionStreamProcessor {
     var matcher = SOLUTION_BOUNDARY_PATTERN.matcher(text);
     if (!matcher.find()) {
       // If text contains solution-related sections, treat as single solution
-      if (AnalysisResultSection.containsSolutionContent(text)) {
+      if (SolutionSection.containsSolutionContent(text)) {
         return new String[] {text};
       }
       // Otherwise (only problem statement, etc.), return no solution blocks
@@ -132,13 +132,13 @@ class MultiSolutionStreamProcessor {
       final String solutionText, final StreamingAnalysisResult solution) {
     var updated = false;
 
-    for (final var section : AnalysisResultSection.values()) {
+    for (final var section : SolutionSection.values()) {
       // Skip PROBLEM_STATEMENT for individual solutions since it's shared
-      if (section == AnalysisResultSection.PROBLEM_STATEMENT) {
+      if (section == SolutionSection.PROBLEM_STATEMENT) {
         continue;
       }
 
-      if (section.extractAndUpdate(solutionText, solution)) {
+      if (SolutionSectionParser.extractAndUpdate(solutionText, section, solution)) {
         updated = true;
       }
     }
