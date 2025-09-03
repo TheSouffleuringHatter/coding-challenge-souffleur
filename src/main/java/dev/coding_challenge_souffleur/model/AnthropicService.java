@@ -91,10 +91,10 @@ public class AnthropicService {
   void loadPrompts() {
     try {
       this.systemMessage =
-        fileService.loadResourceFile("/prompts/system_prompt.txt")
-          + fileService.loadResourceFile("/prompts/text_response_prompt.txt")
-          + fileService.loadResourceFile("/prompts/java_prompt.txt")
-          + fileService.loadResourceFile("/prompts/assistant_message.txt");
+          fileService.loadResourceFile("/prompts/system_prompt.txt")
+              + fileService.loadResourceFile("/prompts/text_response_prompt.txt")
+              + fileService.loadResourceFile("/prompts/java_prompt.txt")
+              + fileService.loadResourceFile("/prompts/assistant_message.txt");
       this.userMessage = fileService.loadResourceFile("/prompts/user_message.txt");
     } catch (final IOException e) {
       throw new RuntimeException("Failed to load prompt files", e);
@@ -123,7 +123,7 @@ public class AnthropicService {
 
           for (final var line : lines) {
             multiSolutionProcessor.processStreamEvents(
-                accumulatedText, result, updateCallback, line + "\n");
+              result, accumulatedText, updateCallback, line + "\n");
 
             try {
               TimeUnit.MILLISECONDS.sleep(delayPerLine);
@@ -134,7 +134,7 @@ public class AnthropicService {
           }
 
           // Process the complete text one final time to ensure completion
-          multiSolutionProcessor.processStreamEvents(accumulatedText, result, updateCallback, "");
+          multiSolutionProcessor.processStreamEvents(result, accumulatedText, updateCallback, "");
 
           // Final callback with complete result
           if (updateCallback != null) {
@@ -146,10 +146,10 @@ public class AnthropicService {
   }
 
   CompletableFuture<MultiSolutionResult> analyseMultiSolution(
-    final byte[] imageBytes, final Consumer<MultiSolutionResult> updateCallback) {
+      final byte[] imageBytes, final Consumer<MultiSolutionResult> updateCallback) {
     return retryAsync(
-      () -> processMultiSolutionRequest(imageBytes, new MultiSolutionResult(), updateCallback),
-      1);
+        () -> processMultiSolutionRequest(imageBytes, new MultiSolutionResult(), updateCallback),
+        1);
   }
 
   private MultiSolutionResult processMultiSolutionRequest(
@@ -175,7 +175,7 @@ public class AnthropicService {
                           var text = textDelta.text();
                           LOGGER.trace("Received text delta for multi-solution: {}", text);
                           multiSolutionProcessor.processStreamEvents(
-                              accumulatedText, result, updateCallback, text);
+                            result, accumulatedText, updateCallback, text);
                         });
               });
 
@@ -190,12 +190,12 @@ public class AnthropicService {
 
   private MessageCreateParams createMessageParams(final byte[] imageBytes) {
     return MessageCreateParams.builder()
-      .maxTokens(10000)
-      .system(systemMessage)
-      .addUserMessageOfBlockParams(List.of(createImageBlock(imageBytes)))
-      .addUserMessage(userMessage)
-      .enabledThinking(5000)
-      .model(claudeModel)
-      .build();
+        .maxTokens(10000)
+        .system(systemMessage)
+        .addUserMessageOfBlockParams(List.of(createImageBlock(imageBytes)))
+        .addUserMessage(userMessage)
+        .enabledThinking(5000)
+        .model(claudeModel)
+        .build();
   }
 }

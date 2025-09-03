@@ -6,9 +6,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Parser bean responsible for extracting section contents from text.
- */
+/** Parser bean responsible for extracting section contents from text. */
 @ApplicationScoped
 class SolutionSectionParser {
 
@@ -26,8 +24,7 @@ class SolutionSectionParser {
    * Returns the content of the given section from the provided text. Prefers complete section
    * content; if not present, falls back to the latest partial content. Returns empty if not found.
    */
-  Optional<String> extractSectionContent(
-      final String text, final SolutionSection solutionSection) {
+  Optional<String> extractSectionContent(final String text, final SolutionSection solutionSection) {
     if (text == null || text.isEmpty() || solutionSection == null) {
       return Optional.empty();
     }
@@ -53,9 +50,9 @@ class SolutionSectionParser {
    * Returns true if the result was updated (complete or partial content changed), otherwise false.
    */
   boolean extractAndUpdate(
-      final String text,
+      final StreamingAnalysisResult result,
       final SolutionSection solutionSection,
-      final StreamingAnalysisResult result) {
+      final String text) {
     if (text == null || text.isEmpty() || solutionSection == null || result == null) {
       return false;
     }

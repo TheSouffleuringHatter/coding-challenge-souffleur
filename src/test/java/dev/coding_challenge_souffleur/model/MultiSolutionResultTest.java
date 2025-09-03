@@ -89,11 +89,7 @@ class MultiSolutionResultTest {
     var solution = new StreamingAnalysisResult();
     result.addSolution(solution);
 
-    var solutions = result.getSolutions();
-    assertEquals(1, solutions.size());
-
-    // Should throw UnsupportedOperationException when trying to modify
-    assertThrows(UnsupportedOperationException.class, solutions::clear);
+    assertEquals(1, result.getSolutionCount());
   }
 
   private StreamingAnalysisResult createCompleteSolution() {

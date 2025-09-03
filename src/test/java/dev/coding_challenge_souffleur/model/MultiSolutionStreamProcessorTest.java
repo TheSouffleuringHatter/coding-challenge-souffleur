@@ -2,9 +2,14 @@ package dev.coding_challenge_souffleur.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import jakarta.inject.Inject;
+import org.jboss.weld.junit5.auto.AddBeanClasses;
+import org.jboss.weld.junit5.auto.EnableAutoWeld;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+@EnableAutoWeld
+@AddBeanClasses({MultiSolutionStreamProcessor.class, SolutionSectionParser.class})
 class MultiSolutionStreamProcessorTest {
 
   private static final String SINGLE_SOLUTION_TEXT =
@@ -122,19 +127,19 @@ class MultiSolutionStreamProcessorTest {
       ===SECTION_END===
       """;
 
-  private MultiSolutionStreamProcessor processor;
+  @Inject private MultiSolutionStreamProcessor processor;
+
   private MultiSolutionResult result;
 
   @BeforeEach
   void setUp() {
-    processor = new MultiSolutionStreamProcessor();
     result = new MultiSolutionResult();
   }
 
   @Test
   void shouldProcessSingleSolutionText() {
     var accumulatedText = new StringBuilder();
-    processor.processStreamEvents(accumulatedText, result, null, SINGLE_SOLUTION_TEXT);
+    processor.processStreamEvents(result, accumulatedText, null, SINGLE_SOLUTION_TEXT);
 
     assertEquals(1, result.getSolutionCount());
     assertTrue(result.getSharedProblemStatement().isPresent());
@@ -152,7 +157,7 @@ class MultiSolutionStreamProcessorTest {
   @Test
   void shouldProcessMultipleSolutionsText() {
     var accumulatedText = new StringBuilder();
-    processor.processStreamEvents(accumulatedText, result, null, MULTI_SOLUTION_TEXT);
+    processor.processStreamEvents(result, accumulatedText, null, MULTI_SOLUTION_TEXT);
 
     assertEquals(2, result.getSolutionCount());
     assertTrue(result.getSharedProblemStatement().isPresent());
@@ -171,7 +176,7 @@ class MultiSolutionStreamProcessorTest {
   @Test
   void shouldHandleEmptyText() {
     var accumulatedText = new StringBuilder();
-    processor.processStreamEvents(accumulatedText, result, null, "");
+    processor.processStreamEvents(result, accumulatedText, null, "");
 
     assertEquals(0, result.getSolutionCount());
     assertFalse(result.hasAnySolutions());
@@ -180,7 +185,7 @@ class MultiSolutionStreamProcessorTest {
   @Test
   void shouldHandleTextWithoutSolutionTitles() {
     var accumulatedText = new StringBuilder();
-    processor.processStreamEvents(accumulatedText, result, null, TEXT_WITHOUT_SOLUTION_TITLES);
+    processor.processStreamEvents(result, accumulatedText, null, TEXT_WITHOUT_SOLUTION_TITLES);
 
     // Should create one solution even without explicit SOLUTION_TITLE
     assertEquals(1, result.getSolutionCount());
@@ -193,13 +198,13 @@ class MultiSolutionStreamProcessorTest {
     var accumulatedText = new StringBuilder();
 
     // First, add problem statement
-    processor.processStreamEvents(accumulatedText, result, null, PROBLEM_STATEMENT_ONLY);
+    processor.processStreamEvents(result, accumulatedText, null, PROBLEM_STATEMENT_ONLY);
 
     assertTrue(result.getSharedProblemStatement().isPresent());
     assertEquals(0, result.getSolutionCount());
 
     // Then add first solution
-    processor.processStreamEvents(accumulatedText, result, null, SOLUTION_CONTINUATION);
+    processor.processStreamEvents(result, accumulatedText, null, SOLUTION_CONTINUATION);
 
     assertEquals(1, result.getSolutionCount());
     var solution = result.getSolution(0).get();

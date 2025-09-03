@@ -35,6 +35,23 @@ public enum SolutionSection {
         Pattern.compile(this.headerPrefix + "(.*?)(?=" + SECTION_END + "|$)", Pattern.DOTALL);
   }
 
+  static boolean containsSolutionContent(final String text) {
+    if (text == null || text.isEmpty()) {
+      return false;
+    }
+
+    for (final var section : values()) {
+      if (section == PROBLEM_STATEMENT) {
+        continue;
+      }
+      if (text.contains(section.headerPrefix())) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   /** Returns the standard header prefix for this section, e.g. "SOLUTION_TITLE:". */
   String headerPrefix() {
     return headerPrefix;
@@ -54,22 +71,5 @@ public enum SolutionSection {
    */
   Pattern partialPattern() {
     return partialPattern;
-  }
-
-  static boolean containsSolutionContent(final String text) {
-    if (text == null || text.isEmpty()) {
-      return false;
-    }
-
-    for (final var section : values()) {
-      if (section == PROBLEM_STATEMENT) {
-        continue;
-      }
-      if (text.contains(section.headerPrefix())) {
-        return true;
-      }
-    }
-
-    return false;
   }
 }

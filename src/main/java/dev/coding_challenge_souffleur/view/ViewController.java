@@ -115,14 +115,14 @@ public class ViewController {
 
   public void executeMultiSolutionMockAnalysis() {
     var mockResponseText =
-      fileService.loadResourceFileOrDefault(
-        MULTI_SOLUTION_MOCK_RESPONSE_FILE_PATH,
-        "Error: Could not load multi-solution mock response");
+        fileService.loadResourceFileOrDefault(
+            MULTI_SOLUTION_MOCK_RESPONSE_FILE_PATH,
+            "Error: Could not load multi-solution mock response");
 
     updateStatus("Running multi-solution mock analysis...");
     var future =
-      anthropicService.analyseMultiSolutionMock(
-        mockResponseText, this::displayMultiSolutionResult);
+        anthropicService.analyseMultiSolutionMock(
+            mockResponseText, this::displayMultiSolutionResult);
 
     handleMultiSolutionCompletion(future, "multi-solution mock analysis");
   }

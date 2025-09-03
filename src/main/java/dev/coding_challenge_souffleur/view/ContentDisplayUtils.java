@@ -83,7 +83,11 @@ final class ContentDisplayUtils {
               // Set tab title from solution title or default
               var tabTitle = "Solution " + (i + 1);
               if (solution.getSection(SolutionSection.SOLUTION_TITLE).isPresent()) {
-                tabTitle = "(" + (i + 1) + ") " + solution.getSection(SolutionSection.SOLUTION_TITLE).get();
+                tabTitle =
+                    "("
+                        + (i + 1)
+                        + ") "
+                        + solution.getSection(SolutionSection.SOLUTION_TITLE).get();
               }
               tab.setText(tabTitle);
 

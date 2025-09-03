@@ -61,7 +61,8 @@ class KeyboardEventProcessor {
 
     // Ignore injected keystrokes to avoid feedback loops and incompatibilities with other tools
     var flags = info.flags;
-    if (!Boolean.getBoolean(JavaFxApplication.APPLICATION_TESTING_FLAG) && (flags & INJECTED_FLAGS_MASK) != 0) {
+    if (!Boolean.getBoolean(JavaFxApplication.APPLICATION_TESTING_FLAG)
+        && (flags & INJECTED_FLAGS_MASK) != 0) {
       LOGGER.warn("Ignoring injected keystroke: flags=0x{}", Integer.toHexString(flags));
       return callNextHook(nCode, wParam, info);
     }

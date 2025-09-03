@@ -16,47 +16,9 @@ class MultiSolutionStreamProcessor {
 
   private final SolutionSectionParser parser;
 
-  // CDI constructor
   @Inject
   MultiSolutionStreamProcessor(final SolutionSectionParser parser) {
     this.parser = parser;
-  }
-
-  // Default constructor for unit tests without CDI
-  MultiSolutionStreamProcessor() {
-    this(new SolutionSectionParser());
-  }
-
-  private boolean updateSharedProblemStatement(
-      final String text, final MultiSolutionResult result) {
-    return parser
-        .extractSectionContent(text, SolutionSection.PROBLEM_STATEMENT)
-        .map(String::trim)
-        .filter(ps -> !ps.equals(result.getSharedProblemStatement().orElse("")))
-        .map(
-            ps -> {
-              result.setSharedProblemStatement(ps);
-              return true;
-            })
-        .orElse(false);
-  }
-
-  private boolean updateSingleSolution(
-      final String solutionText, final StreamingAnalysisResult solution) {
-    var updated = false;
-
-    for (final var section : SolutionSection.values()) {
-      // Skip PROBLEM_STATEMENT for individual solutions since it's shared
-      if (section == SolutionSection.PROBLEM_STATEMENT) {
-        continue;
-      }
-
-      if (parser.extractAndUpdate(solutionText, section, solution)) {
-        updated = true;
-      }
-    }
-
-    return updated;
   }
 
   private static void dumpTextContentOnError(final String textContent) {
@@ -92,9 +54,41 @@ class MultiSolutionStreamProcessor {
     }
   }
 
+  private boolean updateSharedProblemStatement(
+      final MultiSolutionResult result, final String text) {
+    return parser
+        .extractSectionContent(text, SolutionSection.PROBLEM_STATEMENT)
+        .map(String::trim)
+        .filter(ps -> !ps.equals(result.getSharedProblemStatement().orElse("")))
+        .map(
+            ps -> {
+              result.setSharedProblemStatement(ps);
+              return true;
+            })
+        .orElse(false);
+  }
+
+  private boolean updateSingleSolution(
+      final StreamingAnalysisResult solution, final String solutionText) {
+    var updated = false;
+
+    for (final var section : SolutionSection.values()) {
+      // Skip PROBLEM_STATEMENT for individual solutions since it's shared
+      if (section == SolutionSection.PROBLEM_STATEMENT) {
+        continue;
+      }
+
+      if (parser.extractAndUpdate(solution, section, solutionText)) {
+        updated = true;
+      }
+    }
+
+    return updated;
+  }
+
   void processStreamEvents(
-      final StringBuilder accumulatedText,
       final MultiSolutionResult result,
+      final StringBuilder accumulatedText,
       final Consumer<MultiSolutionResult> updateCallback,
       final String textDelta) {
 
@@ -130,7 +124,7 @@ class MultiSolutionStreamProcessor {
   }
 
   private boolean updateMultiSolutionResult(final String text, final MultiSolutionResult result) {
-    var updated = updateSharedProblemStatement(text, result);
+    var updated = updateSharedProblemStatement(result, text);
 
     // Split text into solution blocks
     var solutionBlocks = splitIntoSolutionBlocks(text);
@@ -145,7 +139,7 @@ class MultiSolutionStreamProcessor {
       var solutionBlock = solutionBlocks[i];
       if (result.getSolution(i).isPresent()) {
         var solutionResult = result.getSolution(i).get();
-        if (updateSingleSolution(solutionBlock, solutionResult)) {
+        if (updateSingleSolution(solutionResult, solutionBlock)) {
           updated = true;
         }
       }
@@ -154,7 +148,7 @@ class MultiSolutionStreamProcessor {
     return updated;
   }
 
-  private String[] splitIntoSolutionBlocks(final String text) {
+  private static String[] splitIntoSolutionBlocks(final String text) {
     // If text is empty or whitespace-only, return no solution blocks
     if (text == null || text.trim().isEmpty()) {
       return new String[0];
