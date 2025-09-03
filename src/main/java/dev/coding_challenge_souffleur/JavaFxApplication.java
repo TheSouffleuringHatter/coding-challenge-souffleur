@@ -44,7 +44,7 @@ public class JavaFxApplication extends Application {
     Window.getWindows().forEach(Window::close);
 
     if (weldContainer == null) {
-      LOGGER.warn("Weld container is null");
+      LOGGER.debug("Weld container is null");
       return;
     }
     weldContainer.shutdown();

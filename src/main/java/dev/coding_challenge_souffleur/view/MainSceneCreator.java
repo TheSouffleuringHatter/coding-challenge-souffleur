@@ -10,7 +10,7 @@ import jakarta.inject.Inject;
 import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ class MainSceneCreator {
 
   @Produces private ViewController viewController;
   @Produces private Scene mainScene;
-  @Produces private ScrollPane contentPane;
+  @Produces private VBox contentPane;
 
   @Inject
   MainSceneCreator(

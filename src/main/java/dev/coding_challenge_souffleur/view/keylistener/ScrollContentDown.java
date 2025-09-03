@@ -1,6 +1,7 @@
 package dev.coding_challenge_souffleur.view.keylistener;
 
 import com.sun.jna.platform.win32.Win32VK;
+import dev.coding_challenge_souffleur.view.ViewController;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import javafx.scene.control.ScrollPane;
@@ -8,23 +9,27 @@ import javafx.scene.control.ScrollPane;
 @ApplicationScoped
 class ScrollContentDown implements KeyHandler {
 
-  static final Win32VK SCROLL_DOWN_KEY_CODE = Win32VK.VK_C;
+  static final Win32VK SCROLL_DOWN_KEY_CODE = Win32VK.VK_5;
 
   static final double SCROLL_INCREMENT = 0.2;
 
-  private final ScrollPane contentPane;
+  private final ViewController viewController;
 
   @Inject
-  ScrollContentDown(final ScrollPane contentPane) {
-    this.contentPane = contentPane;
+  ScrollContentDown(final ViewController viewController) {
+    this.viewController = viewController;
   }
 
   @Override
   public void performAction() {
-    if (contentPane != null && contentPane.isVisible()) {
-      var vvalue = contentPane.getVvalue();
-      var newValue = Math.clamp(vvalue + SCROLL_INCREMENT, 0.0, 1.0);
-      contentPane.setVvalue(newValue);
+    if (viewController.solutionTabPane != null && viewController.solutionTabPane.isVisible()) {
+      var selectedTab = viewController.solutionTabPane.getSelectionModel().getSelectedItem();
+      if (selectedTab != null && selectedTab.getContent() instanceof ScrollPane) {
+        var scrollPane = (ScrollPane) selectedTab.getContent();
+        var vvalue = scrollPane.getVvalue();
+        var newValue = Math.clamp(vvalue + SCROLL_INCREMENT, 0.0, 1.0);
+        scrollPane.setVvalue(newValue);
+      }
     }
   }
 

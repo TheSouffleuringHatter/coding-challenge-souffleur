@@ -1,6 +1,7 @@
-# Text Response Format
-Use the following format for your response. Each section should be clearly marked with the
-section name followed by a colon, then the content, and end with a section marker "===SECTION_END===".
+# Multi-Solution Response Format
+Use the following format for your response. Provide up to 3 different solution approaches when multiple approaches exist. Each solution should be a separate complete block with all sections.
+
+For each solution, start with a SOLUTION_TITLE section, then include all other sections for that solution. Use the section markers exactly as shown.
 
 Formatting Rules:
 - Keep text concise and scannable
@@ -18,8 +19,16 @@ Formatting Rules:
 - Use the exact section names and markers as shown in the following "Example format"
 
 // Example format (Start):
+PROBLEM_STATEMENT:
+[The coding problem to be solved (shared across all solutions)]
+===SECTION_END===
+
+SOLUTION_TITLE:
+[Descriptive title like "Hash Map Approach", "Two Pointers", "Sliding Window"]
+===SECTION_END===
+
 SOLUTION_DESCRIPTION:
-[Brief approach / main strategy]
+[Brief approach / main strategy for this solution]
 
 • Core idea: [1-2 sentences]
 • Algorithm: [If using advanced algorithm, describe it briefly; omit this sub-item on trivial algorithm]
@@ -54,7 +63,5 @@ O([Complexity]) - [Brief reasoning why]
 • Optimization: [If possible]
 ===SECTION_END===
 
-PROBLEM_STATEMENT:
-[The coding problem to be solved (unchanged format)]
-===SECTION_END===
+[Repeat SOLUTION_TITLE through SPACE_COMPLEXITY blocks for additional solutions]
 // Example format (End)

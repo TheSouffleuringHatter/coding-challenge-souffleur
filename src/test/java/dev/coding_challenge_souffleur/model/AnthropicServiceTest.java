@@ -30,41 +30,47 @@ class AnthropicServiceTest {
   }
 
   @Test
-  void testAnalyseStreaming_WithImageBytes_ReturnsAnalysisResult() {
-    // Run twice because of internal aync usage
+  void testAnalyseMultiSolution_WithImageBytes_ReturnsAnalysisResult() {
+    // Run twice because of internal async usage
 
-    var future1 = anthropicService.analyseStreaming(testImage);
+    var future1 = anthropicService.analyseMultiSolution(testImage);
     var result1 = future1.join();
     assertTrue(result1.isComplete());
 
-    var future2 = anthropicService.analyseStreaming(testImage);
+    var future2 = anthropicService.analyseMultiSolution(testImage);
     var result2 = future2.join();
     assertTrue(result2.isComplete());
   }
 
   @Test
-  void testAnalyseStreamingMock_Message_ReturnsAnalysisResult() throws IOException {
-    var mockResponse = fileService.loadResourceFile(ViewController.MOCK_RESPONSE_FILE_PATH);
-    var future = anthropicService.analyseStreamingMock(mockResponse);
-    var streamingResult = future.join();
+  void testAnalyseMultiSolutionMock_Message_ReturnsAnalysisResult() throws IOException {
+    var mockResponse = fileService.loadResourceFile(ViewController.MULTI_SOLUTION_MOCK_RESPONSE_FILE_PATH);
+    var future = anthropicService.analyseMultiSolutionMock(mockResponse);
+    var multiSolutionResult = future.join();
 
+    // Test that we have at least one solution
+    assertTrue(multiSolutionResult.hasAnySolutions());
+    assertTrue(multiSolutionResult.getSolutionCount() >= 1);
+    
+    // Test the first solution contains expected content
+    var firstSolution = multiSolutionResult.getSolution(0).get();
     assertTrue(
-        streamingResult.getSolutionDescription().get().startsWith("HASH SET validation"),
-        streamingResult.getSolutionDescription().get().substring(0, 20));
+        firstSolution.getSolutionDescription().get().startsWith("HASH SET validation"),
+        firstSolution.getSolutionDescription().get().substring(0, 20));
     assertTrue(
-        streamingResult.getEdgeCases().get().startsWith("• Empty cells"),
-        streamingResult.getEdgeCases().get().substring(0, 20));
+        firstSolution.getEdgeCases().get().startsWith("• Empty cells"),
+        firstSolution.getEdgeCases().get().substring(0, 20));
     assertTrue(
-        streamingResult.getSolutionCode().get().startsWith("class Solution {"),
-        streamingResult.getSolutionCode().get().substring(0, 20));
+        firstSolution.getSolutionCode().get().startsWith("class Solution {"),
+        firstSolution.getSolutionCode().get().substring(0, 20));
     assertTrue(
-        streamingResult.getTimeComplexity().get().startsWith("O(1) - Fixed 9x9"),
-        streamingResult.getTimeComplexity().get().substring(0, 20));
+        firstSolution.getTimeComplexity().get().startsWith("O(1) - Fixed 9x9"),
+        firstSolution.getTimeComplexity().get().substring(0, 20));
     assertTrue(
-        streamingResult.getSpaceComplexity().get().startsWith("O(1) - Fixed storage"),
-        streamingResult.getSpaceComplexity().get().substring(0, 20));
+        firstSolution.getSpaceComplexity().get().startsWith("O(1) - Fixed storage"),
+        firstSolution.getSpaceComplexity().get().substring(0, 20));
     assertTrue(
-        streamingResult.getProblemStatement().get().contains("36. Valid Sudoku"),
-        streamingResult.getProblemStatement().get().substring(0, 20));
+        multiSolutionResult.getSharedProblemStatement().get().contains("36. Valid Sudoku"),
+        multiSolutionResult.getSharedProblemStatement().get().substring(0, 20));
   }
 }

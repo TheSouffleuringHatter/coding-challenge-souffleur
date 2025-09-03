@@ -19,6 +19,18 @@ enum AnalysisResultSection {
     }
   },
 
+  SOLUTION_TITLE {
+    @Override
+    void setValue(final StreamingAnalysisResult result, final String value) {
+      result.setSolutionTitle(value);
+    }
+
+    @Override
+    Optional<String> getValue(final StreamingAnalysisResult result) {
+      return result.getSolutionTitle();
+    }
+  },
+
   SOLUTION_DESCRIPTION {
     @Override
     void setValue(final StreamingAnalysisResult result, final String value) {

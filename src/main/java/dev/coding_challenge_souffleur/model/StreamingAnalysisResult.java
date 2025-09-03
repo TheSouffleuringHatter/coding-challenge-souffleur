@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
  */
 public class StreamingAnalysisResult {
   private static final Logger LOGGER = LoggerFactory.getLogger(StreamingAnalysisResult.class);
+  private Optional<String> solutionTitle = Optional.empty();
   private Optional<String> problemStatement = Optional.empty();
   private Optional<String> solutionDescription = Optional.empty();
   private Optional<String> edgeCases = Optional.empty();
@@ -28,6 +29,15 @@ public class StreamingAnalysisResult {
         && solutionCode.isPresent()
         && timeComplexity.isPresent()
         && spaceComplexity.isPresent();
+  }
+
+  public Optional<String> getSolutionTitle() {
+    return solutionTitle;
+  }
+
+  public void setSolutionTitle(final String solutionTitle) {
+    LOGGER.trace("Setting solution title");
+    this.solutionTitle = Optional.ofNullable(solutionTitle);
   }
 
   public Optional<String> getProblemStatement() {

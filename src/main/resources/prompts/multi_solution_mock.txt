@@ -1,0 +1,108 @@
+PROBLEM_STATEMENT:
+Given an array of integers and a target sum, find two numbers that add up to the target.
+===SECTION_END===
+
+SOLUTION_TITLE:
+Hash Map Approach
+===SECTION_END===
+
+SOLUTION_DESCRIPTION:
+Use a HASH MAP for O(1) lookups to find complement values
+
+• Core idea: Store visited numbers and check for target - current
+• Algorithm: Single pass through array with hash map lookups
+• Steps:
+  - Create empty hash map
+  - For each number, check if (target - number) exists in map
+  - If found, return indices; if not, add current number to map
+• Why effective: Eliminates nested loops with O(1) lookups
+===SECTION_END===
+
+EDGE_CASES:
+• Duplicate numbers: Handle by checking index positions
+• No solution exists: Return empty or throw exception
+• Array length < 2: Return empty immediately
+===SECTION_END===
+
+SOLUTION_CODE:
+def two_sum(nums, target):
+    num_map = {}  # number -> index
+    
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in num_map:
+            return [num_map[complement], i]
+        num_map[num] = i
+    
+    return []  # No solution found
+===SECTION_END===
+
+TIME_COMPLEXITY:
+O(n) - Single pass through array
+
+• Critical factor: Hash map lookups are O(1) average case
+• Worst case: O(n) with good hash function
+===SECTION_END===
+
+SPACE_COMPLEXITY:
+O(n) - Hash map stores at most n elements
+
+• Memory: Stores number-to-index mappings
+• Optimization: Early return reduces average space usage
+===SECTION_END===
+
+SOLUTION_TITLE:
+Two Pointers
+===SECTION_END===
+
+SOLUTION_DESCRIPTION:
+Use TWO POINTERS technique after sorting the array
+
+• Core idea: Sort array then use left/right pointers moving inward
+• Algorithm: Two pointer convergence on sorted array
+• Steps:
+  - Sort array while keeping original indices
+  - Use left pointer at start, right pointer at end
+  - Move pointers based on sum comparison
+• Why effective: Eliminates need for hash map storage
+===SECTION_END===
+
+EDGE_CASES:
+• Multiple valid pairs: Return first found
+• Duplicate numbers: Handle correctly with index tracking
+• No solution exists: Pointers will cross without finding solution
+===SECTION_END===
+
+SOLUTION_CODE:
+def two_sum_sorted(nums, target):
+    # Create array of (value, original_index) pairs
+    indexed_nums = [(nums[i], i) for i in range(len(nums))]
+    indexed_nums.sort()  # Sort by value
+    
+    left, right = 0, len(indexed_nums) - 1
+    
+    while left < right:
+        current_sum = indexed_nums[left][0] + indexed_nums[right][0]
+        if current_sum == target:
+            return [indexed_nums[left][1], indexed_nums[right][1]]
+        elif current_sum < target:
+            left += 1
+        else:
+            right -= 1
+    
+    return []  # No solution found
+===SECTION_END===
+
+TIME_COMPLEXITY:
+O(n log n) - Dominated by sorting step
+
+• Critical factor: Sorting requires O(n log n) time
+• Worst case: Two pointer traversal is only O(n)
+===SECTION_END===
+
+SPACE_COMPLEXITY:
+O(n) - Additional array for indexed pairs
+
+• Memory: Stores (value, index) pairs for sorting
+• Optimization: In-place sorting if original indices not needed
+===SECTION_END===

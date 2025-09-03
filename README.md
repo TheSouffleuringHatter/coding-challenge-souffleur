@@ -33,6 +33,10 @@ underlying interface.
 within the application, preventing keyloggers or screen readers from detecting your interactions
 with the AI.
 
+**📑 Multi-Solution Analysis**: Provides up to 3 different solution approaches for each coding problem
+with descriptive tabs like "Hash Map Approach", "Two Pointers", "Sliding Window" — giving you 
+multiple perspectives and learning opportunities.
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -65,23 +69,25 @@ The Souffleur operates entirely through keyboard shortcuts.
 
 Souffleur activation modifier is `Control on the righten side`.
 
-| Key    | Action        | Description                        |
-|--------|---------------|------------------------------------|
-| `R`    | 📸 Screenshot | Capture and preview current screen |
-| `T`    | 🔍 Analyze    | Send screenshot to AI for analysis |
-| `↑↓←→` | Move          | Reposition the overlay window      |
-| `C/3`  | ⬆️⬇️ Scroll   | Navigate through AI response       |
-| `W`    | 🚫 Hide/Show  | Toggle overlay visibility          |
-| `Q`    | 🚫 Exit       | Exit Souffleur                     |
+| Key    | Action        | Description                          |
+|--------|---------------|--------------------------------------|
+| `R`    | 📸 Screenshot | Capture and preview current screen   |
+| `T`    | 🔍 Analyze    | Send screenshot to AI for analysis   |
+| `↑↓←→` | Move          | Reposition the overlay window        |
+| `1/2/3`| 📑 Switch Tab | Switch between solution tabs         |
+| `4/5`  | ⬆️⬇️ Scroll   | Navigate through current tab content |
+| `W`    | 🚫 Hide/Show  | Toggle overlay visibility            |
+| `Q`    | 🚫 Exit       | Exit Souffleur                       |
 
 ### Typical Workflow
 
 1. Position the overlay over your coding problem
 2. Press `R` to take a screenshot
-3. Press `T` to get AI analysis
-4. Use `3/C` to scroll through the detailed response
-5. Press `W` to hide/show
-6. Press `Q` to hide/show when done
+3. Press `T` to get AI analysis with multiple solution approaches
+4. Use `1/2/3` to switch between different solution tabs
+5. Use `4/5` to scroll through the current solution
+6. Press `W` to hide/show
+7. Press `Q` to exit when done
 
 ## 🛠 Configuration
 
