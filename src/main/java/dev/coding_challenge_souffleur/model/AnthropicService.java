@@ -123,7 +123,7 @@ public class AnthropicService {
 
           for (final var line : lines) {
             multiSolutionProcessor.processStreamEvents(
-              result, accumulatedText, updateCallback, line + "\n");
+                result, accumulatedText, updateCallback, line + "\n");
 
             try {
               TimeUnit.MILLISECONDS.sleep(delayPerLine);
@@ -135,11 +135,7 @@ public class AnthropicService {
 
           // Process the complete text one final time to ensure completion
           multiSolutionProcessor.processStreamEvents(result, accumulatedText, updateCallback, "");
-
-          // Final callback with complete result
-          if (updateCallback != null) {
-            updateCallback.accept(result);
-          }
+          updateCallback.accept(result);
 
           return result;
         });
@@ -175,7 +171,7 @@ public class AnthropicService {
                           var text = textDelta.text();
                           LOGGER.trace("Received text delta for multi-solution: {}", text);
                           multiSolutionProcessor.processStreamEvents(
-                            result, accumulatedText, updateCallback, text);
+                              result, accumulatedText, updateCallback, text);
                         });
               });
 

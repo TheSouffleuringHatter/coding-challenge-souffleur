@@ -15,7 +15,7 @@ public class MultiSolutionResult {
   private static final Logger LOGGER = LoggerFactory.getLogger(MultiSolutionResult.class);
 
   private final List<StreamingAnalysisResult> solutions = new ArrayList<>();
-  private Optional<String> sharedProblemStatement = Optional.empty();
+  private String sharedProblemStatement;
 
   public int getSolutionCount() {
     return solutions.size();
@@ -29,7 +29,7 @@ public class MultiSolutionResult {
 
     // If we have a shared problem statement, treat solutions as complete when all
     // per-solution sections (except problem statement) are present.
-    if (sharedProblemStatement.isPresent()) {
+    if (sharedProblemStatement != null) {
       return solutions.stream()
           .allMatch(
               s ->
@@ -46,12 +46,12 @@ public class MultiSolutionResult {
 
   /** Returns the shared problem statement that applies to all solutions. */
   public Optional<String> getSharedProblemStatement() {
-    return sharedProblemStatement;
+    return Optional.ofNullable(sharedProblemStatement);
   }
 
   void setSharedProblemStatement(final String problemStatement) {
-    LOGGER.trace("Setting shared problem statement");
-    this.sharedProblemStatement = Optional.ofNullable(problemStatement);
+    LOGGER.trace("Setting shared problem statement to {}", problemStatement);
+    this.sharedProblemStatement = problemStatement;
   }
 
   /** Gets a specific solution by index, or empty if index is out of bounds. */

@@ -2,8 +2,10 @@ package dev.coding_challenge_souffleur.model;
 
 import com.anthropic.helpers.MessageAccumulator;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -14,14 +16,61 @@ class MultiSolutionStreamProcessor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MultiSolutionStreamProcessor.class);
 
-  private final SolutionSectionParser parser;
+  /**
+   * Returns the content of the given section from the provided text. Prefers complete section
+   * content; if not present, falls back to the latest partial content. Returns empty if not found.
+   */
+  private static Optional<String> extractSectionContent(
+      final String text, final SolutionSection solutionSection) {
+    if (text == null || text.isEmpty() || solutionSection == null) {
+      return Optional.empty();
+    }
 
-  @Inject
-  MultiSolutionStreamProcessor(final SolutionSectionParser parser) {
-    this.parser = parser;
+    var completeMatcher = solutionSection.completePattern().matcher(text);
+    if (completeMatcher.find()) {
+      return Optional.of(completeMatcher.group(1).trim());
+    }
+
+    var partialMatcher = solutionSection.partialPattern().matcher(text);
+    if (partialMatcher.find()) {
+      var partial = partialMatcher.group(1).trim();
+      if (!partial.isEmpty()) {
+        return Optional.of(partial);
+      }
+    }
+
+    return Optional.empty();
   }
 
-  private static void dumpTextContentOnError(final String textContent) {
+  /**
+   * Attempts to extract the content for the provided section from text and update the result.
+   * Returns true if the result was updated (complete or partial content changed), otherwise false.
+   */
+  private static boolean extractAndUpdate(
+      final StreamingAnalysisResult result,
+      final SolutionSection solutionSection,
+      final String text) {
+    if (text == null || text.isEmpty() || solutionSection == null || result == null) {
+      return false;
+    }
+
+    var contentOpt = extractSectionContent(text, solutionSection);
+    if (contentOpt.isPresent()) {
+      var newValue = contentOpt.get();
+      var currentValue = result.getSection(solutionSection).orElse("");
+      if (!newValue.equals(currentValue)) {
+        if (LOGGER.isDebugEnabled()) {
+          LOGGER.debug("Updated {} from parsed content", solutionSection.name());
+        }
+        result.setSection(solutionSection, newValue);
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private static void dumpTextContent(final String textContent) {
     if (textContent == null || textContent.trim().isEmpty()) {
       LOGGER.debug("No text content to dump");
       return;
@@ -30,13 +79,13 @@ class MultiSolutionStreamProcessor {
     try {
       var timestamp = System.currentTimeMillis();
       var fileName = "multi_solution_error_dump_" + timestamp + ".txt";
-      var path = java.nio.file.Path.of(System.getProperty("java.io.tmpdir"), fileName);
-      java.nio.file.Files.writeString(path, textContent);
+      var path = Path.of(System.getProperty("java.io.tmpdir"), fileName);
+      Files.writeString(path, textContent);
       LOGGER.debug("Multi-solution response text dumped to {}", path);
     } catch (final IOException | SecurityException e) {
-      LOGGER.error("Failed to write response dump: {}", e.getMessage());
+      LOGGER.debug("Failed to write response dump: {}", e.getMessage());
     } catch (final Exception e) {
-      LOGGER.warn("Unexpected error during response dump: {}", e.getMessage(), e);
+      LOGGER.debug("Unexpected error during response dump: {}", e.getMessage(), e);
     }
   }
 
@@ -56,8 +105,7 @@ class MultiSolutionStreamProcessor {
 
   private boolean updateSharedProblemStatement(
       final MultiSolutionResult result, final String text) {
-    return parser
-        .extractSectionContent(text, SolutionSection.PROBLEM_STATEMENT)
+    return extractSectionContent(text, SolutionSection.PROBLEM_STATEMENT)
         .map(String::trim)
         .filter(ps -> !ps.equals(result.getSharedProblemStatement().orElse("")))
         .map(
@@ -78,7 +126,7 @@ class MultiSolutionStreamProcessor {
         continue;
       }
 
-      if (parser.extractAndUpdate(solution, section, solutionText)) {
+      if (extractAndUpdate(solution, section, solutionText)) {
         updated = true;
       }
     }
@@ -115,10 +163,10 @@ class MultiSolutionStreamProcessor {
 
       if (!result.isComplete()) {
         LOGGER.debug("Multi-solution result is incomplete, dumping response for debugging");
-        dumpTextContentOnError(completeResponse);
+        dumpTextContent(completeResponse);
       }
     } catch (final Exception e) {
-      LOGGER.error("Error handling final response", e);
+      LOGGER.warn("Error handling final response", e);
       notifyCallback(updateCallback, result);
     }
   }

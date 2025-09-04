@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @EnableAutoWeld
-@AddBeanClasses({MultiSolutionStreamProcessor.class, SolutionSectionParser.class})
+@AddBeanClasses(MultiSolutionStreamProcessor.class)
 class MultiSolutionStreamProcessorTest {
 
   private static final String SINGLE_SOLUTION_TEXT =
