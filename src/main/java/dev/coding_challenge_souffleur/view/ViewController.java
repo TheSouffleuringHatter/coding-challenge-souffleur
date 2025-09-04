@@ -30,16 +30,14 @@ public class ViewController {
   private static final String HIDE_PROBLEM_TEXT = "Hide Problem";
   private static final String ANALYSIS_COMPLETE = "Analysis complete";
   private static final String ANALYSIS_IN_PROGRESS = "Analysis in progress...";
-
+  @FXML public TabPane solutionTabPane;
+  @FXML VBox contentPane;
+  @FXML FormattedTextFlow problemStatementFlow;
   private AnthropicService anthropicService;
   private ScreenshotService screenshotService;
   private PlatformRunLater platformRunLater;
   private ScreenshotDisplayService screenshotDisplayService;
   private FileService fileService;
-
-  @FXML public TabPane solutionTabPane;
-  @FXML VBox contentPane;
-  @FXML FormattedTextFlow problemStatementFlow;
   @FXML private Button closeButton;
   @FXML private Button toggleProblemStatementButton;
   @FXML private HBox headerBox;

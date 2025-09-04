@@ -130,6 +130,14 @@ class JavaFxApplicationSmokeTest {
     return "";
   }
 
+  private static void assertSelectedTabHasCoreNodes(final VBox contentBox) {
+    assertFalse(contentBox.lookupAll(SOLUTION_DESCRIPTION_FLOW_SELECTOR).isEmpty());
+    assertFalse(contentBox.lookupAll(EDGE_CASES_FLOW_SELECTOR).isEmpty());
+    assertFalse(contentBox.lookupAll(SOLUTION_CODE_FLOW_SELECTOR).isEmpty());
+    assertFalse(contentBox.lookupAll(TIME_COMPLEXITY_FLOW_SELECTOR).isEmpty());
+    assertFalse(contentBox.lookupAll(SPACE_COMPLEXITY_FLOW_SELECTOR).isEmpty());
+  }
+
   @Init
   @SuppressWarnings("unused")
   void init() {
@@ -237,14 +245,6 @@ class JavaFxApplicationSmokeTest {
     var selectedTab = tabPane.getSelectionModel().getSelectedItem();
     var scrollPane = (ScrollPane) selectedTab.getContent();
     return (VBox) scrollPane.getContent();
-  }
-
-  private static void assertSelectedTabHasCoreNodes(final VBox contentBox) {
-    assertFalse(contentBox.lookupAll(SOLUTION_DESCRIPTION_FLOW_SELECTOR).isEmpty());
-    assertFalse(contentBox.lookupAll(EDGE_CASES_FLOW_SELECTOR).isEmpty());
-    assertFalse(contentBox.lookupAll(SOLUTION_CODE_FLOW_SELECTOR).isEmpty());
-    assertFalse(contentBox.lookupAll(TIME_COMPLEXITY_FLOW_SELECTOR).isEmpty());
-    assertFalse(contentBox.lookupAll(SPACE_COMPLEXITY_FLOW_SELECTOR).isEmpty());
   }
 
   private void switchToTabAndAssertContent(

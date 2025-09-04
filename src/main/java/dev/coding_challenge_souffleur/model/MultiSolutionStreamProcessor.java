@@ -103,6 +103,38 @@ class MultiSolutionStreamProcessor {
     }
   }
 
+  private static String[] splitIntoSolutionBlocks(final String text) {
+    // If text is empty or whitespace-only, return no solution blocks
+    if (text == null || text.trim().isEmpty()) {
+      return new String[0];
+    }
+
+    // If no solution titles found, check if it contains solution content
+    var matcher = SolutionSection.SOLUTION_BOUNDARY_PATTERN_INSTANCE.matcher(text);
+    if (!matcher.find()) {
+      // If text contains solution-related sections, treat as single solution
+      if (SolutionSection.containsSolutionContent(text)) {
+        return new String[] {text};
+      }
+      // Otherwise (only problem statement, etc.), return no solution blocks
+      return new String[0];
+    }
+
+    // Split by solution titles, keeping the SOLUTION_TITLE: part
+    var parts = SolutionSection.SOLUTION_BOUNDARY_PATTERN_INSTANCE.split(text);
+    if (parts.length <= 1) {
+      return new String[] {text};
+    }
+
+    // Reconstruct solution blocks, adding back the SOLUTION_TITLE: prefix
+    var result = new String[parts.length - 1]; // Skip first part (before first SOLUTION_TITLE)
+    for (var i = 1; i < parts.length; i++) {
+      result[i - 1] = SolutionSection.SOLUTION_TITLE.headerPrefix() + parts[i];
+    }
+
+    return result;
+  }
+
   private boolean updateSharedProblemStatement(
       final MultiSolutionResult result, final String text) {
     return extractSectionContent(text, SolutionSection.PROBLEM_STATEMENT)
@@ -194,37 +226,5 @@ class MultiSolutionStreamProcessor {
     }
 
     return updated;
-  }
-
-  private static String[] splitIntoSolutionBlocks(final String text) {
-    // If text is empty or whitespace-only, return no solution blocks
-    if (text == null || text.trim().isEmpty()) {
-      return new String[0];
-    }
-
-    // If no solution titles found, check if it contains solution content
-    var matcher = SolutionSection.SOLUTION_BOUNDARY_PATTERN_INSTANCE.matcher(text);
-    if (!matcher.find()) {
-      // If text contains solution-related sections, treat as single solution
-      if (SolutionSection.containsSolutionContent(text)) {
-        return new String[] {text};
-      }
-      // Otherwise (only problem statement, etc.), return no solution blocks
-      return new String[0];
-    }
-
-    // Split by solution titles, keeping the SOLUTION_TITLE: part
-    var parts = SolutionSection.SOLUTION_BOUNDARY_PATTERN_INSTANCE.split(text);
-    if (parts.length <= 1) {
-      return new String[] {text};
-    }
-
-    // Reconstruct solution blocks, adding back the SOLUTION_TITLE: prefix
-    var result = new String[parts.length - 1]; // Skip first part (before first SOLUTION_TITLE)
-    for (var i = 1; i < parts.length; i++) {
-      result[i - 1] = SolutionSection.SOLUTION_TITLE.headerPrefix() + parts[i];
-    }
-
-    return result;
   }
 }

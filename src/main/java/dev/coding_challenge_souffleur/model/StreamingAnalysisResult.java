@@ -33,7 +33,8 @@ public class StreamingAnalysisResult {
 
   void setSection(final SolutionSection solutionSection, final String value) {
     if (value == null) {
-      throw new IllegalArgumentException("Value cannot be null when setting section " + solutionSection);
+      throw new IllegalArgumentException(
+          "Value cannot be null when setting section " + solutionSection);
     }
 
     LOGGER.trace("Setting section {} to {}", solutionSection, value);
