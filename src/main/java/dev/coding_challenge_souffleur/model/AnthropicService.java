@@ -135,7 +135,10 @@ public class AnthropicService {
 
           // Process the complete text one final time to ensure completion
           multiSolutionProcessor.processStreamEvents(result, accumulatedText, updateCallback, "");
-          updateCallback.accept(result);
+
+          if (updateCallback != null) {
+            updateCallback.accept(result);
+          }
 
           return result;
         });
