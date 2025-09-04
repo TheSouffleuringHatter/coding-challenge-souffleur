@@ -6,24 +6,24 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-class RunMockAnalysis implements KeyHandler {
+class ToggleProblemStatement implements KeyHandler {
 
-  static final Win32VK ANALYSE_KEY_CODE = Win32VK.VK_Z;
+  static final Win32VK TOGGLE_PROBLEM_KEY_CODE = Win32VK.VK_V;
 
   private final ViewController viewController;
 
   @Inject
-  RunMockAnalysis(final ViewController viewController) {
+  ToggleProblemStatement(final ViewController viewController) {
     this.viewController = viewController;
   }
 
   @Override
   public void performAction() {
-    viewController.executeMultiSolutionMockAnalysis();
+    viewController.toggleProblemStatement();
   }
 
   @Override
   public Win32VK getKeyCode() {
-    return ANALYSE_KEY_CODE;
+    return TOGGLE_PROBLEM_KEY_CODE;
   }
 }

@@ -6,24 +6,29 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-class RunMockAnalysis implements KeyHandler {
+class SwitchToTab2 implements KeyHandler {
 
-  static final Win32VK ANALYSE_KEY_CODE = Win32VK.VK_Z;
+  static final Win32VK SWITCH_TO_TAB2_KEY_CODE = Win32VK.VK_2;
 
   private final ViewController viewController;
 
   @Inject
-  RunMockAnalysis(final ViewController viewController) {
+  SwitchToTab2(final ViewController viewController) {
     this.viewController = viewController;
   }
 
   @Override
   public void performAction() {
-    viewController.executeMultiSolutionMockAnalysis();
+    if (viewController.solutionTabPane != null && viewController.solutionTabPane.isVisible()) {
+      var tabs = viewController.solutionTabPane.getTabs();
+      if (tabs.size() > 1) {
+        viewController.solutionTabPane.getSelectionModel().select(1);
+      }
+    }
   }
 
   @Override
   public Win32VK getKeyCode() {
-    return ANALYSE_KEY_CODE;
+    return SWITCH_TO_TAB2_KEY_CODE;
   }
 }

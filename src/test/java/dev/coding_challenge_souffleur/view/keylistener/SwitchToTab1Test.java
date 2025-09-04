@@ -1,10 +1,9 @@
 package dev.coding_challenge_souffleur.view.keylistener;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import dev.coding_challenge_souffleur.view.ViewController;
-import javafx.scene.control.ScrollPane;
+import javafx.collections.FXCollections;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -17,27 +16,23 @@ import org.testfx.framework.junit5.ApplicationExtension;
 
 @ExtendWith({ApplicationExtension.class, MockitoExtension.class})
 @Isolated
-class ScrollContentUpTest {
+class SwitchToTab1Test {
 
   @Mock private ViewController viewController;
   @Mock private TabPane solutionTabPane;
   @Mock private SingleSelectionModel<Tab> selectionModel;
 
   @Test
-  void performAction_ShouldScrollUpSelectedTab() {
-    var scrollPane = new ScrollPane();
-    scrollPane.setVvalue(0.4);
-
-    var tab = new Tab();
-    tab.setContent(scrollPane);
+  void performAction_ShouldSelectFirstTab_WhenTabsArePresentAndVisible() {
+    var tabs = FXCollections.observableArrayList(new Tab(), new Tab(), new Tab());
 
     viewController.solutionTabPane = solutionTabPane;
     when(solutionTabPane.isVisible()).thenReturn(true);
+    when(solutionTabPane.getTabs()).thenReturn(tabs);
     when(solutionTabPane.getSelectionModel()).thenReturn(selectionModel);
-    when(selectionModel.getSelectedItem()).thenReturn(tab);
 
-    new ScrollContentUp(viewController).performAction();
+    new SwitchToTab1(viewController).performAction();
 
-    assertEquals(0.2, scrollPane.getVvalue());
+    verify(selectionModel, times(1)).select(0);
   }
 }

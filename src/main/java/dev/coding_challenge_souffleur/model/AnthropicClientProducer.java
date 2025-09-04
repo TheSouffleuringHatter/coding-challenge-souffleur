@@ -9,14 +9,14 @@ import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
-class AnthropicToolingProducer {
+class AnthropicClientProducer {
 
   private final String apiKey;
 
   @Produces private AnthropicClient anthropicClient;
 
   @Inject
-  AnthropicToolingProducer(@ConfigProperty(name = "anthropic.api.key") final String apiKey) {
+  AnthropicClientProducer(@ConfigProperty(name = "anthropic.api.key") final String apiKey) {
     this.apiKey = apiKey;
   }
 

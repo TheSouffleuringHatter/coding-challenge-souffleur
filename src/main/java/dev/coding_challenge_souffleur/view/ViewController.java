@@ -3,8 +3,8 @@ package dev.coding_challenge_souffleur.view;
 import dev.coding_challenge_souffleur.JavaFxApplication;
 import dev.coding_challenge_souffleur.model.AnthropicService;
 import dev.coding_challenge_souffleur.model.FileService;
+import dev.coding_challenge_souffleur.model.MultiSolutionResult;
 import dev.coding_challenge_souffleur.model.ScreenshotService;
-import dev.coding_challenge_souffleur.model.StreamingAnalysisResult;
 import dev.coding_challenge_souffleur.view.keylistener.Exit;
 import dev.coding_challenge_souffleur.view.keylistener.MatchingModifier;
 import java.util.concurrent.CompletableFuture;
@@ -13,7 +13,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TabPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -22,20 +22,14 @@ import org.slf4j.LoggerFactory;
 
 public class ViewController {
 
-  public static final String MOCK_RESPONSE_FILE_PATH = "/prompts/mock_response.txt";
+  public static final String MULTI_SOLUTION_MOCK_RESPONSE_FILE_PATH =
+      "/prompts/multi_solution_mock.txt";
+
   private static final Logger LOGGER = LoggerFactory.getLogger(ViewController.class);
   private static final String SHOW_PROBLEM_TEXT = "Show Problem";
   private static final String HIDE_PROBLEM_TEXT = "Hide Problem";
   private static final String ANALYSIS_COMPLETE = "Analysis complete";
   private static final String ANALYSIS_IN_PROGRESS = "Analysis in progress...";
-
-  @FXML ScrollPane contentPane;
-  @FXML FormattedTextFlow problemStatementFlow;
-  @FXML FormattedTextFlow solutionDescriptionFlow;
-  @FXML FormattedTextFlow solutionCodeFlow;
-  @FXML FormattedTextFlow edgeCasesFlow;
-  @FXML FormattedTextFlow timeComplexityFlow;
-  @FXML FormattedTextFlow spaceComplexityFlow;
 
   private AnthropicService anthropicService;
   private ScreenshotService screenshotService;
@@ -43,6 +37,9 @@ public class ViewController {
   private ScreenshotDisplayService screenshotDisplayService;
   private FileService fileService;
 
+  @FXML public TabPane solutionTabPane;
+  @FXML VBox contentPane;
+  @FXML FormattedTextFlow problemStatementFlow;
   @FXML private Button closeButton;
   @FXML private Button toggleProblemStatementButton;
   @FXML private HBox headerBox;
@@ -82,14 +79,6 @@ public class ViewController {
         isCurrentlyVisible ? SHOW_PROBLEM_TEXT : HIDE_PROBLEM_TEXT);
   }
 
-  void displayStreamingAnalysisResult(final StreamingAnalysisResult result) {
-    ContentDisplayUtils.displayStreamingAnalysisResult(this, result, platformRunLater);
-
-    // Update status to ensure content pane becomes visible
-    var statusText = result.isComplete() ? ANALYSIS_COMPLETE : ANALYSIS_IN_PROGRESS;
-    updateStatus(statusText);
-  }
-
   void updateStatus(final String status) {
     platformRunLater.accept(
         () -> {
@@ -119,14 +108,41 @@ public class ViewController {
     screenshotDisplayService.initialize(screenshotPreviewContainer, screenshotPreview);
   }
 
-  public void executeScreenshotAnalysis() {
-    var future = takeScreenshotAndAnalyze(this::displayStreamingAnalysisResult, this::updateStatus);
-    handleAnalysisCompletion(future, "screenshot analysis");
+  public void executeMultiSolutionAnalysis() {
+    var future =
+        takeScreenshotAndAnalyzeMultiSolution(this::displayMultiSolutionResult, this::updateStatus);
+    handleMultiSolutionCompletion(future, "multi-solution analysis");
   }
 
-  private CompletableFuture<StreamingAnalysisResult> takeScreenshotAndAnalyze(
-      final Consumer<StreamingAnalysisResult> progressCallback,
-      final Consumer<String> statusCallback) {
+  public void executeMultiSolutionMockAnalysis() {
+    var mockResponseText =
+        fileService.loadResourceFileOrDefault(
+            MULTI_SOLUTION_MOCK_RESPONSE_FILE_PATH,
+            "Error: Could not load multi-solution mock response");
+
+    updateStatus("Running multi-solution mock analysis...");
+    var future =
+        anthropicService.analyseMultiSolutionMock(
+            mockResponseText, this::displayMultiSolutionResult);
+
+    handleMultiSolutionCompletion(future, "multi-solution mock analysis");
+  }
+
+  void displayMultiSolutionResult(final MultiSolutionResult result) {
+    ContentDisplayUtils.displayMultiSolutionResult(this, result, platformRunLater);
+
+    // Update status to ensure content pane becomes visible
+    var isComplete = result.isComplete();
+    LOGGER.debug(
+        "Multi-solution result complete: {}, solution count: {}",
+        isComplete,
+        result.getSolutionCount());
+    var statusText = isComplete ? ANALYSIS_COMPLETE : ANALYSIS_IN_PROGRESS;
+    updateStatus(statusText);
+  }
+
+  private CompletableFuture<MultiSolutionResult> takeScreenshotAndAnalyzeMultiSolution(
+      final Consumer<MultiSolutionResult> progressCallback, final Consumer<String> statusCallback) {
 
     var optionalScreenshot = screenshotService.takeScreenshotOfDesktop();
     if (optionalScreenshot.isEmpty()) {
@@ -138,27 +154,14 @@ public class ViewController {
     var screenshot = optionalScreenshot.get();
     screenshotDisplayService.showScreenshotAsPreview(screenshot);
 
-    statusCallback.accept("Sending screenshot for analysis...");
-    LOGGER.trace("Coordinating screenshot analysis...");
+    statusCallback.accept("Sending screenshot for multi-solution analysis...");
+    LOGGER.trace("Coordinating multi-solution analysis...");
 
-    return anthropicService.analyseStreaming(screenshot, progressCallback);
+    return anthropicService.analyseMultiSolution(screenshot, progressCallback);
   }
 
-  public void executeMockAnalysis() {
-    var mockResponseText =
-        fileService.loadResourceFileOrDefault(
-            MOCK_RESPONSE_FILE_PATH, "Error: Could not load mock response");
-
-    updateStatus("Running mock analysis...");
-    var future =
-        anthropicService.analyseStreamingMock(
-            mockResponseText, this::displayStreamingAnalysisResult);
-
-    handleAnalysisCompletion(future, "mock analysis");
-  }
-
-  private void handleAnalysisCompletion(
-      final CompletableFuture<StreamingAnalysisResult> future, final String analysisType) {
+  private void handleMultiSolutionCompletion(
+      final CompletableFuture<MultiSolutionResult> future, final String analysisType) {
 
     LOGGER.trace("Starting {}...", analysisType);
 

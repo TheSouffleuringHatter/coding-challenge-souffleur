@@ -27,9 +27,9 @@ import org.slf4j.LoggerFactory;
 public class ScreenshotService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ScreenshotService.class);
-
   private static final String DEFAULT_SCREENSHOT_FILE_NAME_PREFIX =
       "screenshot." + ImageService.IMAGE_FORMAT;
+
   private final ImageService imageService;
   private final boolean saveScreenshotToFile;
   private Image screenshot;

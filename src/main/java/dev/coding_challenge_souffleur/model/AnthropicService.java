@@ -8,6 +8,7 @@ import com.anthropic.models.messages.ContentBlockParam;
 import com.anthropic.models.messages.ImageBlockParam;
 import com.anthropic.models.messages.MessageCreateParams;
 import com.anthropic.models.messages.Model;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.io.IOException;
@@ -33,29 +34,25 @@ public class AnthropicService {
 
   private final AnthropicClient anthropicClient;
   private final ImageService imageService;
-  private final StreamResponseProcessor streamProcessor;
-  private final PromptManager promptManager;
+  private final MultiSolutionStreamProcessor multiSolutionProcessor;
+  private final FileService fileService;
   private final Model claudeModel;
+
+  private String systemMessage;
+  private String userMessage;
 
   @Inject
   AnthropicService(
       final AnthropicClient anthropicClient,
       final ImageService imageService,
-      final StreamResponseProcessor streamResponseProcessor,
-      final PromptManager promptManager,
+      final MultiSolutionStreamProcessor multiSolutionStreamProcessor,
+      final FileService fileService,
       @ConfigProperty(name = "anthropic.model") final Model claudeModel) {
     this.anthropicClient = anthropicClient;
     this.imageService = imageService;
-    this.streamProcessor = streamResponseProcessor;
-    this.promptManager = promptManager;
+    this.multiSolutionProcessor = multiSolutionStreamProcessor;
+    this.fileService = fileService;
     this.claudeModel = claudeModel;
-  }
-
-  private static void notifyCallback(
-      final Consumer<StreamingAnalysisResult> callback, final StreamingAnalysisResult result) {
-    if (callback != null) {
-      callback.accept(result);
-    }
   }
 
   private static <T> CompletableFuture<T> retryAsync(final Supplier<T> task, final int attempt) {
@@ -83,71 +80,87 @@ public class AnthropicService {
         .thenCompose(Function.identity());
   }
 
-  public CompletableFuture<StreamingAnalysisResult> analyseStreaming(
-      final Image image, final Consumer<StreamingAnalysisResult> updateCallback) {
+  private static ContentBlockParam createImageBlock(final byte[] imageBytes) {
+    var base64Image = Base64.getEncoder().encodeToString(imageBytes);
+    var imageSource =
+        Base64ImageSource.builder().data(base64Image).mediaType(MediaType.IMAGE_PNG).build();
+    return ContentBlockParam.ofImage(ImageBlockParam.builder().source(imageSource).build());
+  }
+
+  @PostConstruct
+  void loadPrompts() {
+    try {
+      this.systemMessage =
+          fileService.loadResourceFile("/prompts/system_prompt.txt")
+              + fileService.loadResourceFile("/prompts/text_response_prompt.txt")
+              + fileService.loadResourceFile("/prompts/java_prompt.txt")
+              + fileService.loadResourceFile("/prompts/assistant_message.txt");
+      this.userMessage = fileService.loadResourceFile("/prompts/user_message.txt");
+    } catch (final IOException e) {
+      throw new RuntimeException("Failed to load prompt files", e);
+    }
+  }
+
+  public CompletableFuture<MultiSolutionResult> analyseMultiSolution(
+      final Image image, final Consumer<MultiSolutionResult> updateCallback) {
     try {
       var imageBytes = imageService.convertToByteArray(image);
-      return analyseStreaming(imageBytes, updateCallback);
+      return analyseMultiSolution(imageBytes, updateCallback);
     } catch (final IOException e) {
       LOGGER.warn("Failed to convert image to byte array", e);
       return CompletableFuture.failedFuture(e);
     }
   }
 
-  public CompletableFuture<StreamingAnalysisResult> analyseStreaming(final byte[] imageBytes) {
-    return analyseStreaming(imageBytes, null);
-  }
-
-  public CompletableFuture<StreamingAnalysisResult> analyseStreaming(
-      final byte[] imageBytes, final Consumer<StreamingAnalysisResult> updateCallback) {
-    LOGGER.trace("Starting streaming analysis...");
-
-    var result = new StreamingAnalysisResult();
-    notifyCallback(updateCallback, result);
-
-    Supplier<StreamingAnalysisResult> task =
-        () -> processStreamingRequest(imageBytes, result, updateCallback);
-
-    return retryAsync(task, 1);
-  }
-
-  public CompletableFuture<StreamingAnalysisResult> analyseStreamingMock(
-      final String messageTextContent, final Consumer<StreamingAnalysisResult> updateCallback) {
-    LOGGER.debug("Creating mock streaming result from text");
-
-    var result = new StreamingAnalysisResult();
-    notifyCallback(updateCallback, result);
-
+  public CompletableFuture<MultiSolutionResult> analyseMultiSolutionMock(
+      final String messageTextContent, final Consumer<MultiSolutionResult> updateCallback) {
     return CompletableFuture.supplyAsync(
         () -> {
-          for (final var section : AnalysisResultSection.values()) {
-            if (section.extractAndUpdate(messageTextContent, result) && updateCallback != null) {
-              updateCallback.accept(result);
+          var result = new MultiSolutionResult();
+          var accumulatedText = new StringBuilder();
+          var lines = messageTextContent.lines().toList();
+          var delayPerLine = Math.max(1, 2000 / lines.size());
+
+          for (final var line : lines) {
+            multiSolutionProcessor.processStreamEvents(
+                result, accumulatedText, updateCallback, line + "\n");
+
+            try {
+              TimeUnit.MILLISECONDS.sleep(delayPerLine);
+            } catch (final InterruptedException e) {
+              Thread.currentThread().interrupt();
+              break;
             }
           }
-          LOGGER.debug("Mock streaming completed");
+
+          // Process the complete text one final time to ensure completion
+          multiSolutionProcessor.processStreamEvents(result, accumulatedText, updateCallback, "");
+
+          if (updateCallback != null) {
+            updateCallback.accept(result);
+          }
+
           return result;
         });
   }
 
-  CompletableFuture<StreamingAnalysisResult> analyseStreamingMock(final String messageTextContent) {
-    return analyseStreamingMock(messageTextContent, null);
+  CompletableFuture<MultiSolutionResult> analyseMultiSolution(
+      final byte[] imageBytes, final Consumer<MultiSolutionResult> updateCallback) {
+    return retryAsync(
+        () -> processMultiSolutionRequest(imageBytes, new MultiSolutionResult(), updateCallback),
+        1);
   }
 
-  private StreamingAnalysisResult processStreamingRequest(
+  private MultiSolutionResult processMultiSolutionRequest(
       final byte[] imageBytes,
-      final StreamingAnalysisResult result,
-      final Consumer<StreamingAnalysisResult> updateCallback) {
+      final MultiSolutionResult result,
+      final Consumer<MultiSolutionResult> updateCallback) {
 
     var params = createMessageParams(imageBytes);
     var accumulatedText = new StringBuilder();
-
-    // Create fresh MessageAccumulator for each request to avoid state reuse
     var messageAccumulator = MessageAccumulator.create();
 
-    // Anthropic API async documentation at
-    // https://github.com/anthropics/anthropic-sdk-java#asynchronous-execution
-    LOGGER.trace("Calling Anthropic API async...");
+    LOGGER.trace("Calling Anthropic API for multi-solution analysis...");
     try (var streamResponse = anthropicClient.messages().createStreaming(params)) {
       streamResponse.stream()
           .forEach(
@@ -157,15 +170,19 @@ public class AnthropicService {
                     .contentBlockDelta()
                     .flatMap(delta -> delta.delta().text())
                     .ifPresent(
-                        textDelta ->
-                            streamProcessor.processStreamEvents(
-                                accumulatedText, result, updateCallback, textDelta.text()));
+                        textDelta -> {
+                          var text = textDelta.text();
+                          LOGGER.trace("Received text delta for multi-solution: {}", text);
+                          multiSolutionProcessor.processStreamEvents(
+                              result, accumulatedText, updateCallback, text);
+                        });
               });
-    }
 
-    streamProcessor.handleFinalResponse(result, updateCallback, messageAccumulator);
-    LOGGER.debug(
-        "Streaming completed, result status: {}", result.isComplete() ? "COMPLETE" : "INCOMPLETE");
+      multiSolutionProcessor.handleFinalResponse(result, updateCallback, messageAccumulator);
+    } catch (final Exception e) {
+      LOGGER.warn("Error in multi-solution streaming analysis", e);
+      throw new RuntimeException(e);
+    }
 
     return result;
   }
@@ -173,18 +190,11 @@ public class AnthropicService {
   private MessageCreateParams createMessageParams(final byte[] imageBytes) {
     return MessageCreateParams.builder()
         .maxTokens(10000)
-        .system(promptManager.getSystemMessage())
+        .system(systemMessage)
         .addUserMessageOfBlockParams(List.of(createImageBlock(imageBytes)))
-        .addUserMessage(promptManager.getUserMessage())
+        .addUserMessage(userMessage)
         .enabledThinking(5000)
         .model(claudeModel)
         .build();
-  }
-
-  private ContentBlockParam createImageBlock(final byte[] imageBytes) {
-    var base64Image = Base64.getEncoder().encodeToString(imageBytes);
-    var imageSource =
-        Base64ImageSource.builder().data(base64Image).mediaType(MediaType.IMAGE_PNG).build();
-    return ContentBlockParam.ofImage(ImageBlockParam.builder().source(imageSource).build());
   }
 }

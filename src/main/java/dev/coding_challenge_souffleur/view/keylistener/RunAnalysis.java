@@ -19,7 +19,7 @@ class RunAnalysis implements KeyHandler {
 
   @Override
   public void performAction() {
-    viewController.executeScreenshotAnalysis();
+    viewController.executeMultiSolutionAnalysis();
   }
 
   @Override

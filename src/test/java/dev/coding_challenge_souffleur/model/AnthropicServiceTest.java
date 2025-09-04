@@ -1,5 +1,6 @@
 package dev.coding_challenge_souffleur.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.coding_challenge_souffleur.view.ViewController;
@@ -30,41 +31,56 @@ class AnthropicServiceTest {
   }
 
   @Test
-  void testAnalyseStreaming_WithImageBytes_ReturnsAnalysisResult() {
-    // Run twice because of internal aync usage
+  void testAnalyseMultiSolutionMock_Message_ReturnsAnalysisResult() throws IOException {
+    var mockResponse =
+        fileService.loadResourceFile(ViewController.MULTI_SOLUTION_MOCK_RESPONSE_FILE_PATH);
+    var future = anthropicService.analyseMultiSolutionMock(mockResponse, null);
+    var multiSolutionResult = future.join();
 
-    var future1 = anthropicService.analyseStreaming(testImage);
-    var result1 = future1.join();
-    assertTrue(result1.isComplete());
+    assertTrue(multiSolutionResult.hasAnySolutions());
+    assertEquals(3, multiSolutionResult.getSolutionCount());
+    assertTrue(
+        multiSolutionResult
+            .getSharedProblemStatement()
+            .get()
+            .contains("Given four integer arrays"));
 
-    var future2 = anthropicService.analyseStreaming(testImage);
-    var result2 = future2.join();
-    assertTrue(result2.isComplete());
+    var firstSolutionOpt = multiSolutionResult.getSolution(0);
+    assertTrue(firstSolutionOpt.isPresent());
+    var firstSolution = firstSolutionOpt.get();
+
+    assertEquals(
+        "Brute Force Approach", firstSolution.getSection(SolutionSection.SOLUTION_TITLE).get());
+    assertTrue(
+        firstSolution
+            .getSection(SolutionSection.SOLUTION_DESCRIPTION)
+            .get()
+            .contains("combinations of indices"));
+    assertTrue(
+        firstSolution
+            .getSection(SolutionSection.EDGE_CASES)
+            .get()
+            .contains("Single element arrays"));
+    assertTrue(
+        firstSolution.getSection(SolutionSection.SOLUTION_CODE).get().contains("class Solution {"));
+    assertTrue(firstSolution.getSection(SolutionSection.TIME_COMPLEXITY).get().contains("O(n^4)"));
+    assertTrue(firstSolution.getSection(SolutionSection.SPACE_COMPLEXITY).get().contains("O(1)"));
   }
 
   @Test
-  void testAnalyseStreamingMock_Message_ReturnsAnalysisResult() throws IOException {
-    var mockResponse = fileService.loadResourceFile(ViewController.MOCK_RESPONSE_FILE_PATH);
-    var future = anthropicService.analyseStreamingMock(mockResponse);
-    var streamingResult = future.join();
+  void testAnalyseMultiSolution_WithImageBytes_LiveSmoke_whenApiKeyPresent() {
+    // Run twice because of internal async usage
 
-    assertTrue(
-        streamingResult.getSolutionDescription().get().startsWith("HASH SET validation"),
-        streamingResult.getSolutionDescription().get().substring(0, 20));
-    assertTrue(
-        streamingResult.getEdgeCases().get().startsWith("• Empty cells"),
-        streamingResult.getEdgeCases().get().substring(0, 20));
-    assertTrue(
-        streamingResult.getSolutionCode().get().startsWith("class Solution {"),
-        streamingResult.getSolutionCode().get().substring(0, 20));
-    assertTrue(
-        streamingResult.getTimeComplexity().get().startsWith("O(1) - Fixed 9x9"),
-        streamingResult.getTimeComplexity().get().substring(0, 20));
-    assertTrue(
-        streamingResult.getSpaceComplexity().get().startsWith("O(1) - Fixed storage"),
-        streamingResult.getSpaceComplexity().get().substring(0, 20));
-    assertTrue(
-        streamingResult.getProblemStatement().get().contains("36. Valid Sudoku"),
-        streamingResult.getProblemStatement().get().substring(0, 20));
+    var future1 = anthropicService.analyseMultiSolution(testImage, null);
+    var result1 = future1.join();
+    assertTrue(result1.hasAnySolutions());
+    assertTrue(result1.getSharedProblemStatement().isPresent());
+    assertTrue(result1.isComplete());
+
+    var future2 = anthropicService.analyseMultiSolution(testImage, null);
+    var result2 = future2.join();
+    assertTrue(result2.hasAnySolutions());
+    assertTrue(result2.getSharedProblemStatement().isPresent());
+    assertTrue(result2.isComplete());
   }
 }

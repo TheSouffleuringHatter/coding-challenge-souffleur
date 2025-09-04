@@ -1,0 +1,202 @@
+PROBLEM_STATEMENT:
+Given four integer arrays nums1, nums2, nums3, and nums4 all of length n, return the number of tuples (i, j, k, l) such that:
+• 0 ≤ i, j, k, l < n
+• nums1[i] + nums2[j] + nums3[k] + nums4[l] == 0
+
+Example 1: nums1=[1,2], nums2=[-2,-1], nums3=[-1,2], nums4=[0,2] → Output: 2
+Example 2: nums1=[0], nums2=[0], nums3=[0], nums4=[0] → Output: 1
+===SECTION_END===
+
+SOLUTION_TITLE:
+Brute Force Approach
+===SECTION_END===
+
+SOLUTION_DESCRIPTION:
+Check all possible combinations of indices from four arrays.
+
+• Core idea: Nested loops to try every tuple (i,j,k,l) and count zeros
+• Steps:
+  - Iterate through all indices i in nums1
+  - For each i, iterate through all j in nums2
+  - For each (i,j), iterate through all k in nums3
+  - For each (i,j,k), iterate through all l in nums4
+• Why effective: Simple and guaranteed to find all solutions
+===SECTION_END===
+
+EDGE_CASES:
+• Single element arrays: All arrays have length 1
+• All zeros: Every element is 0, result is 1
+• No valid tuples: No combination sums to 0
+===SECTION_END===
+
+SOLUTION_CODE:
+class Solution {
+    public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+        var count = 0;
+        var n = nums1.length;
+
+        // Try all possible combinations of indices
+        for (var i = 0; i < n; i++) {
+            for (var j = 0; j < n; j++) {
+                for (var k = 0; k < n; k++) {
+                    for (var l = 0; l < n; l++) {
+                        // Check if current tuple sums to zero
+                        if (nums1[i] + nums2[j] + nums3[k] + nums4[l] == 0) {
+                            count++;
+                        }
+                    }
+                }
+            }
+        }
+
+        return count;
+    }
+}
+===SECTION_END===
+
+TIME_COMPLEXITY:
+O(n^4) - Four nested loops over array length
+
+• Critical factor: All possible index combinations
+• Worst case: Always checking every tuple
+===SECTION_END===
+
+SPACE_COMPLEXITY:
+O(1) - Only using constant extra variables
+
+• Memory: Few integer variables for counting
+• Optimization: No additional space needed
+===SECTION_END===
+
+SOLUTION_TITLE:
+Hash Map Two-Pass Approach
+===SECTION_END===
+
+SOLUTION_DESCRIPTION:
+Split problem into two parts using HASH MAP for efficient lookup.
+
+• Core idea: Store all sums from nums1+nums2, then find complementary sums from nums3+nums4
+• Steps:
+  - Calculate all possible sums from nums1[i] + nums2[j]
+  - Store frequency of each sum in hash map
+  - For each nums3[k] + nums4[l], find complement -(sum) in map
+  - Add frequency to result count
+• Why effective: Reduces complexity from O(n^4) to O(n^2)
+===SECTION_END===
+
+EDGE_CASES:
+• Single element arrays: Map contains one entry, checked once
+• All zeros: Map has entry (0,1), complement lookup finds it
+• No valid tuples: Map never contains required complement
+===SECTION_END===
+
+SOLUTION_CODE:
+import java.util.HashMap;
+
+class Solution {
+    public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+        var sumFreq = new HashMap<Integer, Integer>();
+
+        // Store all possible sums from first two arrays
+        for (var num1 : nums1) {
+            for (var num2 : nums2) {
+                var sum = num1 + num2;
+                sumFreq.put(sum, sumFreq.getOrDefault(sum, 0) + 1);
+            }
+        }
+
+        var count = 0;
+
+        // Check complementary sums from last two arrays
+        for (var num3 : nums3) {
+            for (var num4 : nums4) {
+                var complement = -(num3 + num4);
+                count += sumFreq.getOrDefault(complement, 0);
+            }
+        }
+
+        return count;
+    }
+}
+===SECTION_END===
+
+TIME_COMPLEXITY:
+O(n^2) - Two separate double loops over array length
+
+• Critical factor: Building hash map and querying it
+• Worst case: Dense hash map with many collisions
+===SECTION_END===
+
+SPACE_COMPLEXITY:
+O(n^2) - Hash map stores up to n^2 sum entries
+
+• Memory: Hash map with potential n^2 unique sums
+• Optimization: Could use more memory-efficient data structures
+===SECTION_END===
+
+SOLUTION_TITLE:
+Optimized Hash Map with Frequency Tracking
+===SECTION_END===
+
+SOLUTION_DESCRIPTION:
+Enhanced hash map approach with FREQUENCY TRACKING optimization.
+
+• Core idea: Same two-pass strategy but with optimized frequency counting
+• Steps:
+  - Pre-calculate frequency map of nums1+nums2 sums
+  - Use merge() for cleaner frequency updates
+  - Batch process nums3+nums4 combinations efficiently
+  - Accumulate results using getOrDefault for safety
+• Why effective: Cleaner code with same O(n^2) performance
+===SECTION_END===
+
+EDGE_CASES:
+• Single element arrays: Single map entry processed once
+• All zeros: Frequency map correctly tracks zero-sum occurrences
+• Large numbers: Integer overflow handled by Java automatically
+===SECTION_END===
+
+SOLUTION_CODE:
+import java.util.HashMap;
+
+class Solution {
+    public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+        var sumCount = new HashMap<Integer, Integer>();
+
+        // Build frequency map of sums from first two arrays
+        for (var num1 : nums1) {
+            for (var num2 : nums2) {
+                var sum = num1 + num2;
+                sumCount.merge(sum, 1, Integer::sum);
+            }
+        }
+
+        var result = 0;
+
+        // Find complementary sums from last two arrays
+        for (var num3 : nums3) {
+            for (var num4 : nums4) {
+                var target = -(num3 + num4);
+                // Add frequency of complement if exists
+                result += sumCount.getOrDefault(target, 0);
+            }
+        }
+
+        return result;
+    }
+}
+===SECTION_END===
+
+TIME_COMPLEXITY:
+O(n^2) - Two phases of double loops over arrays
+
+• Critical factor: Hash map operations are O(1) average case
+• Worst case: Same as previous hash map approach
+===SECTION_END===
+
+SPACE_COMPLEXITY:
+O(n^2) - Hash map storage for sum frequencies
+
+• Memory: Map size depends on unique sum distribution
+• Optimization: Best case O(1) if all sums identical
+===SECTION_END===

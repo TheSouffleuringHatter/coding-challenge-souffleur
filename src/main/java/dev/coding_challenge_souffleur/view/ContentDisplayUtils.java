@@ -1,41 +1,20 @@
 package dev.coding_challenge_souffleur.view;
 
-import dev.coding_challenge_souffleur.model.StreamingAnalysisResult;
+import dev.coding_challenge_souffleur.model.MultiSolutionResult;
+import dev.coding_challenge_souffleur.model.SolutionSection;
+import dev.coding_challenge_souffleur.view.SolutionTabManager.SolutionTabData;
 import java.util.Optional;
 import javafx.stage.Screen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** Utility class for displaying streaming analysis results in the UI. */
-public final class ContentDisplayUtils {
+final class ContentDisplayUtils {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ContentDisplayUtils.class);
   private static final double WINDOW_WIDTH_RATIO = 0.3;
 
   private ContentDisplayUtils() {
     // Utility class
-  }
-
-  static void displayStreamingAnalysisResult(
-      final ViewController viewController,
-      final StreamingAnalysisResult result,
-      final PlatformRunLater platformRunLater) {
-    LOGGER.trace("Displaying streaming analysis result...");
-
-    platformRunLater.accept(
-        () -> {
-          showContentPaneIfNotVisible(viewController);
-
-          updateSection(viewController.solutionCodeFlow, result.getSolutionCode(), true);
-          updateSection(
-              viewController.solutionDescriptionFlow, result.getSolutionDescription(), false);
-          updateSection(viewController.edgeCasesFlow, result.getEdgeCases(), false);
-          updateSection(viewController.timeComplexityFlow, result.getTimeComplexity(), false);
-          updateSection(viewController.spaceComplexityFlow, result.getSpaceComplexity(), false);
-          updateSection(viewController.problemStatementFlow, result.getProblemStatement(), false);
-
-          adjustWindowSize(viewController);
-        });
   }
 
   private static void updateSection(
@@ -72,5 +51,80 @@ public final class ContentDisplayUtils {
       viewController.contentPane.setManaged(true);
       LOGGER.debug("Made content pane visible");
     }
+  }
+
+  static void displayMultiSolutionResult(
+      final ViewController viewController,
+      final MultiSolutionResult result,
+      final PlatformRunLater platformRunLater) {
+    LOGGER.trace("Displaying multi-solution result...");
+
+    platformRunLater.accept(
+        () -> {
+          showContentPaneIfNotVisible(viewController);
+
+          // Clear existing tabs
+          viewController.solutionTabPane.getTabs().clear();
+
+          // Ensure we have tabs for all solutions
+          var solutionCount = Math.max(1, result.getSolutionCount());
+          SolutionTabManager.ensureTabCount(viewController.solutionTabPane, solutionCount);
+
+          // Update each solution tab
+          for (var i = 0; i < solutionCount; i++) {
+            var tab = viewController.solutionTabPane.getTabs().get(i);
+            var solutionOpt = result.getSolution(i);
+
+            var tabData = (SolutionTabData) tab.getUserData();
+            if (solutionOpt.isPresent()) {
+              var solution = solutionOpt.get();
+
+              // Set tab title from solution title or default
+              var tabTitle = "Solution " + (i + 1);
+              if (solution.getSection(SolutionSection.SOLUTION_TITLE).isPresent()) {
+                tabTitle =
+                    "("
+                        + (i + 1)
+                        + ") "
+                        + solution.getSection(SolutionSection.SOLUTION_TITLE).get();
+              }
+              tab.setText(tabTitle);
+
+              // Get the tab data and update the content
+              updateSection(
+                  tabData.solutionDescriptionFlow(),
+                  solution.getSection(SolutionSection.SOLUTION_DESCRIPTION),
+                  false);
+              updateSection(
+                  tabData.edgeCasesFlow(), solution.getSection(SolutionSection.EDGE_CASES), false);
+              updateSection(
+                  tabData.solutionCodeFlow(),
+                  solution.getSection(SolutionSection.SOLUTION_CODE),
+                  true);
+              updateSection(
+                  tabData.timeComplexityFlow(),
+                  solution.getSection(SolutionSection.TIME_COMPLEXITY),
+                  false);
+              updateSection(
+                  tabData.spaceComplexityFlow(),
+                  solution.getSection(SolutionSection.SPACE_COMPLEXITY),
+                  false);
+            } else {
+              // Empty solution - show loading
+              tab.setText("Solution " + (i + 1));
+              updateSection(tabData.solutionDescriptionFlow(), Optional.of("Loading..."), false);
+              updateSection(tabData.edgeCasesFlow(), Optional.empty(), false);
+              updateSection(tabData.solutionCodeFlow(), Optional.empty(), true);
+              updateSection(tabData.timeComplexityFlow(), Optional.empty(), false);
+              updateSection(tabData.spaceComplexityFlow(), Optional.empty(), false);
+            }
+          }
+
+          // Update shared problem statement
+          updateSection(
+              viewController.problemStatementFlow, result.getSharedProblemStatement(), false);
+
+          adjustWindowSize(viewController);
+        });
   }
 }

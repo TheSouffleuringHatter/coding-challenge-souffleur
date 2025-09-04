@@ -1,86 +1,42 @@
 package dev.coding_challenge_souffleur.model;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Represents a streaming analysis result that can be updated as sections are completed. Each
- * section can be in one of two states: - Not started/In progress: The section is not complete yet
- * (Optional.empty()) - Completed: The section is complete (Optional.of(content))
- *
- * <p>This is a simple data container without any listener mechanism.
+ * Represents a streaming analysis result that can be updated as sections are completed. Internally
+ * stores section content in a map keyed by SolutionSection to reduce boilerplate and make it easy
+ * to extend.
  */
 public class StreamingAnalysisResult {
+
   private static final Logger LOGGER = LoggerFactory.getLogger(StreamingAnalysisResult.class);
-  private Optional<String> problemStatement = Optional.empty();
-  private Optional<String> solutionDescription = Optional.empty();
-  private Optional<String> edgeCases = Optional.empty();
-  private Optional<String> solutionCode = Optional.empty();
-  private Optional<String> timeComplexity = Optional.empty();
-  private Optional<String> spaceComplexity = Optional.empty();
 
-  /** Returns true if all sections are complete. */
-  public boolean isComplete() {
-    return problemStatement.isPresent()
-        && solutionDescription.isPresent()
-        && edgeCases.isPresent()
-        && solutionCode.isPresent()
-        && timeComplexity.isPresent()
-        && spaceComplexity.isPresent();
+  private final Map<SolutionSection, String> sections = new EnumMap<>(SolutionSection.class);
+
+  /** Returns true if all required sections (excluding SOLUTION_TITLE) are present. */
+  boolean isComplete() {
+    return sections.containsKey(SolutionSection.PROBLEM_STATEMENT)
+        && sections.containsKey(SolutionSection.SOLUTION_DESCRIPTION)
+        && sections.containsKey(SolutionSection.EDGE_CASES)
+        && sections.containsKey(SolutionSection.SOLUTION_CODE)
+        && sections.containsKey(SolutionSection.TIME_COMPLEXITY)
+        && sections.containsKey(SolutionSection.SPACE_COMPLEXITY);
   }
 
-  public Optional<String> getProblemStatement() {
-    return problemStatement;
+  public Optional<String> getSection(final SolutionSection solutionSection) {
+    return Optional.ofNullable(sections.get(solutionSection));
   }
 
-  public void setProblemStatement(final String problemStatement) {
-    LOGGER.trace("Setting problem statement");
-    this.problemStatement = Optional.ofNullable(problemStatement);
-  }
+  void setSection(final SolutionSection solutionSection, final String value) {
+    if (value == null) {
+      throw new IllegalArgumentException("Value cannot be null when setting section " + solutionSection);
+    }
 
-  public Optional<String> getSolutionDescription() {
-    return solutionDescription;
-  }
-
-  public void setSolutionDescription(final String solutionDescription) {
-    LOGGER.trace("Setting solution description");
-    this.solutionDescription = Optional.ofNullable(solutionDescription);
-  }
-
-  public Optional<String> getEdgeCases() {
-    return edgeCases;
-  }
-
-  public void setEdgeCases(final String edgeCases) {
-    LOGGER.trace("Setting edge cases");
-    this.edgeCases = Optional.ofNullable(edgeCases);
-  }
-
-  public Optional<String> getSolutionCode() {
-    return solutionCode;
-  }
-
-  public void setSolutionCode(final String solutionCode) {
-    LOGGER.trace("Setting solution code");
-    this.solutionCode = Optional.ofNullable(solutionCode);
-  }
-
-  public Optional<String> getTimeComplexity() {
-    return timeComplexity;
-  }
-
-  public void setTimeComplexity(final String timeComplexity) {
-    LOGGER.trace("Setting time complexity");
-    this.timeComplexity = Optional.ofNullable(timeComplexity);
-  }
-
-  public Optional<String> getSpaceComplexity() {
-    return spaceComplexity;
-  }
-
-  public void setSpaceComplexity(final String spaceComplexity) {
-    LOGGER.trace("Setting space complexity");
-    this.spaceComplexity = Optional.ofNullable(spaceComplexity);
+    LOGGER.trace("Setting section {} to {}", solutionSection, value);
+    sections.put(solutionSection, value);
   }
 }
