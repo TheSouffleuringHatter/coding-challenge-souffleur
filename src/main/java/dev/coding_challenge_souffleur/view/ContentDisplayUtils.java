@@ -8,7 +8,6 @@ import javafx.stage.Screen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** Utility class for displaying streaming analysis results in the UI. */
 final class ContentDisplayUtils {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ContentDisplayUtils.class);

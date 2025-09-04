@@ -24,14 +24,12 @@ public class ViewController {
 
   public static final String MULTI_SOLUTION_MOCK_RESPONSE_FILE_PATH =
       "/prompts/multi_solution_mock.txt";
+
   private static final Logger LOGGER = LoggerFactory.getLogger(ViewController.class);
   private static final String SHOW_PROBLEM_TEXT = "Show Problem";
   private static final String HIDE_PROBLEM_TEXT = "Hide Problem";
   private static final String ANALYSIS_COMPLETE = "Analysis complete";
   private static final String ANALYSIS_IN_PROGRESS = "Analysis in progress...";
-  @FXML public TabPane solutionTabPane;
-  @FXML VBox contentPane;
-  @FXML FormattedTextFlow problemStatementFlow;
 
   private AnthropicService anthropicService;
   private ScreenshotService screenshotService;
@@ -39,6 +37,9 @@ public class ViewController {
   private ScreenshotDisplayService screenshotDisplayService;
   private FileService fileService;
 
+  @FXML public TabPane solutionTabPane;
+  @FXML VBox contentPane;
+  @FXML FormattedTextFlow problemStatementFlow;
   @FXML private Button closeButton;
   @FXML private Button toggleProblemStatementButton;
   @FXML private HBox headerBox;
