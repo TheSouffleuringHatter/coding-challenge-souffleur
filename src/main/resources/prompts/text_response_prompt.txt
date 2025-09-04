@@ -1,7 +1,9 @@
 # Multi-Solution Response Format
-Use the following format for your response. Provide up to 3 different solution approaches when multiple approaches exist. Each solution should be a separate complete block with all sections.
+Use the following format for your response. Provide up to 3 different solution approaches when
+multiple approaches exist. Each solution should be a separate complete block with all sections.
 
-For each solution, start with a SOLUTION_TITLE section, then include all other sections for that solution. Use the section markers exactly as shown.
+For each solution, start with a SOLUTION_TITLE section, then include all other sections
+for that solution. Use the section markers exactly as shown.
 
 Formatting Rules:
 - Keep text concise and scannable
