@@ -9,9 +9,16 @@ import static org.testfx.matcher.base.NodeMatchers.isVisible;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.jboss.weld.environment.se.WeldContainer;
@@ -32,18 +39,17 @@ import windowskeyboardhook.KeyboardHookFacade;
 @Isolated
 class JavaFxApplicationSmokeTest {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(JavaFxApplicationSmokeTest.class);
+
+  private static final int MAX_SCROLL_ATTEMPTS = 50;
+
   /**
-   * In case of testing use SHIFT as modifier, see application in {@link
-   * dev.coding_challenge_souffleur.view.keylistener.KeyHandlerProcessor#responsibleFor(windowskeyboardhook.WindowsKeyEvent)}
+   * In case of testing use SHIFT as modifier; in tests, any SHIFT acts as the modifier key.
    *
-   * <p>Background: It is not possible to isolate KeyCombination to usage of righten CTRL.
+   * <p>Background: It is not possible to isolate KeyCombination to usage of right CTRL.
    */
   private static final KeyCombination.Modifier MATCHING_MODIFIER = KeyCombination.SHIFT_DOWN;
 
-  private static final int MAX_SCROLL_ATTEMPTS = 50;
-  private static final String TOGGLE_PROBLEM_STATEMENT_BUTTON_SELECTOR =
-      "#toggleProblemStatementButton";
-  private static final String PROBLEM_STATEMENT_SECTION_SELECTOR = "#problemStatementSection";
   private static final KeyCodeCombination HIDE_SHOW_KEY_CODE_COMBINATION =
       new KeyCodeCombination(KeyCode.W, MATCHING_MODIFIER);
   private static final KeyCodeCombination TAKE_SCREENSHOT_KEY_CODE_COMBINATION =
@@ -56,6 +62,16 @@ class JavaFxApplicationSmokeTest {
       new KeyCodeCombination(KeyCode.DIGIT5, MATCHING_MODIFIER);
   private static final KeyCodeCombination TOGGLE_PROBLEM_STATEMENT_KEY_CODE_COMBINATION =
       new KeyCodeCombination(KeyCode.V, MATCHING_MODIFIER);
+  private static final KeyCodeCombination SWITCH_TO_TAB1 =
+      new KeyCodeCombination(KeyCode.DIGIT1, MATCHING_MODIFIER);
+  private static final KeyCodeCombination SWITCH_TO_TAB2 =
+      new KeyCodeCombination(KeyCode.DIGIT2, MATCHING_MODIFIER);
+  private static final KeyCodeCombination SWITCH_TO_TAB3 =
+      new KeyCodeCombination(KeyCode.DIGIT3, MATCHING_MODIFIER);
+
+  private static final String TOGGLE_PROBLEM_STATEMENT_BUTTON_SELECTOR =
+      "#toggleProblemStatementButton";
+  private static final String PROBLEM_STATEMENT_SECTION_SELECTOR = "#problemStatementSection";
   private static final String CLOSE_BUTTON_SELECTOR = "#closeButton";
   private static final String MAIN_CONTAINER_SELECTOR = "#mainContainer";
   private static final String CONTENT_PANE_SELECTOR = "#contentPane";
@@ -64,7 +80,11 @@ class JavaFxApplicationSmokeTest {
   private static final String EDGE_CASES_FLOW_SELECTOR = "#edgeCasesFlow";
   private static final String TIME_COMPLEXITY_FLOW_SELECTOR = "#timeComplexityFlow";
   private static final String SPACE_COMPLEXITY_FLOW_SELECTOR = "#spaceComplexityFlow";
-  private static final Logger LOGGER = LoggerFactory.getLogger(JavaFxApplicationSmokeTest.class);
+  private static final String SOLUTION_TAB_PANE_SELECTOR = "#solutionTabPane";
+  private static final String STATUS_LABEL_SELECTOR = "#statusLabel";
+  private static final String HEADER_BOX_SELECTOR = "#headerBox";
+  private static final String SCREENSHOT_PREVIEW_SELECTOR = "#screenshotPreview";
+
   private JavaFxApplication javaFxApplication;
   private WeldContainer aiOverlayApplicationWeldContainer;
 
@@ -95,6 +115,21 @@ class JavaFxApplicationSmokeTest {
             + " scroll attempts");
   }
 
+  private static String getFlowText(final Node flowNode) {
+    if (flowNode instanceof TextFlow textFlow) {
+      var sb = new StringBuilder();
+      for (var child : textFlow.getChildren()) {
+        if (child instanceof Text text) {
+          sb.append(text.getText());
+        }
+      }
+      return sb.toString();
+    }
+
+    LOGGER.debug("Node {} is not a TextFlow", flowNode);
+    return "";
+  }
+
   @Init
   @SuppressWarnings("unused")
   void init() {
@@ -108,20 +143,28 @@ class JavaFxApplicationSmokeTest {
   void start(final Stage stage) {
     javaFxApplication.start(stage);
     aiOverlayApplicationWeldContainer = this.javaFxApplication.getWeldContainer();
+
     assertTrue(aiOverlayApplicationWeldContainer.isRunning());
 
     var keyboardHookFacade =
         aiOverlayApplicationWeldContainer.select(KeyboardHookFacade.class).get();
     assertTrue(keyboardHookFacade.isRunning());
+
+    LOGGER.debug("Application started successfully in test mode");
   }
 
   @Stop
   @SuppressWarnings("unused")
   void stop() {
+    var windowsBeforeStop = Window.getWindows().size();
     assertFalse(Window.getWindows().isEmpty());
+
     javaFxApplication.stop();
+
     assertFalse(aiOverlayApplicationWeldContainer.isRunning());
     assertTrue(Window.getWindows().isEmpty());
+
+    LOGGER.debug("Application stopped successfully, {} windows were closed", windowsBeforeStop);
   }
 
   @Test
@@ -135,29 +178,9 @@ class JavaFxApplicationSmokeTest {
     assertClosing(robot);
   }
 
-  private void assertContentPane(final FxRobot robot) throws TimeoutException {
-    robot.push(RUN_MOCK_ANALYSIS_KEY_CODE_COMBINATION);
-    WaitForAsyncUtils.waitFor(
-        2,
-        TimeUnit.SECONDS,
-        () ->
-            !robot.lookup(CONTENT_PANE_SELECTOR).queryAll().isEmpty()
-                && robot.lookup(CONTENT_PANE_SELECTOR).query().isVisible()
-                && !robot.lookup(SOLUTION_DESCRIPTION_FLOW_SELECTOR).queryAll().isEmpty());
-    WaitForAsyncUtils.waitFor(
-        2,
-        TimeUnit.SECONDS,
-        () ->
-            robot.lookup(SOLUTION_DESCRIPTION_FLOW_SELECTOR).query().isVisible()
-                && robot.lookup(EDGE_CASES_FLOW_SELECTOR).query().isVisible()
-                && robot.lookup(SOLUTION_CODE_FLOW_SELECTOR).query().isVisible()
-                && robot.lookup(TIME_COMPLEXITY_FLOW_SELECTOR).query().isVisible()
-                && robot.lookup(SPACE_COMPLEXITY_FLOW_SELECTOR).query().isVisible());
-  }
-
   private void assertHeader(final FxRobot robot) {
     verifyThat(MAIN_CONTAINER_SELECTOR, isVisible());
-    verifyThat("#headerBox", isVisible());
+    verifyThat(HEADER_BOX_SELECTOR, isVisible());
     verifyThat(CONTENT_PANE_SELECTOR, isInvisible());
 
     robot.push(HIDE_SHOW_KEY_CODE_COMBINATION);
@@ -167,7 +190,89 @@ class JavaFxApplicationSmokeTest {
     verifyThat(MAIN_CONTAINER_SELECTOR, isVisible());
 
     robot.push(TAKE_SCREENSHOT_KEY_CODE_COMBINATION);
-    verifyThat("#screenshotPreview", isVisible());
+    verifyThat(SCREENSHOT_PREVIEW_SELECTOR, isVisible());
+  }
+
+  private void assertContentPane(final FxRobot robot) throws TimeoutException {
+    runMockAnalysisAndWait(robot);
+
+    var tabPane = robot.lookup(SOLUTION_TAB_PANE_SELECTOR).queryAs(TabPane.class);
+    WaitForAsyncUtils.waitFor(2, TimeUnit.SECONDS, () -> tabPane.getTabs().size() == 3);
+
+    // Initial tab (index 0) should be selected by default; assert content via snippet
+    var contentBox = getSelectedTabContentBox(tabPane);
+    assertSelectedTabHasCoreNodes(contentBox);
+    var initialDescText = getFlowText(contentBox.lookup(SOLUTION_DESCRIPTION_FLOW_SELECTOR));
+    assertTrue(initialDescText.contains("combinations of indices"));
+    assertTrue(initialDescText.contains("Nested loops"));
+
+    switchToTabAndAssertContent(robot, tabPane, 1, SWITCH_TO_TAB2, "HASH MAP");
+    switchToTabAndAssertContent(robot, tabPane, 2, SWITCH_TO_TAB3, "FREQUENCY TRACKING");
+    switchToTabAndAssertContent(robot, tabPane, 0, SWITCH_TO_TAB1, "Nested loops");
+  }
+
+  private void runMockAnalysisAndWait(final FxRobot robot) throws TimeoutException {
+    robot.push(RUN_MOCK_ANALYSIS_KEY_CODE_COMBINATION);
+
+    // Wait until the content pane is visible and the solution tab pane is present
+    WaitForAsyncUtils.waitFor(
+        2,
+        TimeUnit.SECONDS,
+        () ->
+            !robot.lookup(CONTENT_PANE_SELECTOR).queryAll().isEmpty()
+                && robot.lookup(CONTENT_PANE_SELECTOR).query().isVisible()
+                && !robot.lookup(SOLUTION_TAB_PANE_SELECTOR).queryAll().isEmpty());
+
+    // Wait until analysis is marked complete to avoid background tasks running after exit
+    WaitForAsyncUtils.waitFor(
+        2,
+        TimeUnit.SECONDS,
+        () -> {
+          var statusLabel = robot.lookup(STATUS_LABEL_SELECTOR).queryAs(Label.class);
+          return statusLabel.getText().toLowerCase().contains("complete");
+        });
+  }
+
+  private VBox getSelectedTabContentBox(final TabPane tabPane) {
+    var selectedTab = tabPane.getSelectionModel().getSelectedItem();
+    var scrollPane = (ScrollPane) selectedTab.getContent();
+    return (VBox) scrollPane.getContent();
+  }
+
+  private static void assertSelectedTabHasCoreNodes(final VBox contentBox) {
+    assertFalse(contentBox.lookupAll(SOLUTION_DESCRIPTION_FLOW_SELECTOR).isEmpty());
+    assertFalse(contentBox.lookupAll(EDGE_CASES_FLOW_SELECTOR).isEmpty());
+    assertFalse(contentBox.lookupAll(SOLUTION_CODE_FLOW_SELECTOR).isEmpty());
+    assertFalse(contentBox.lookupAll(TIME_COMPLEXITY_FLOW_SELECTOR).isEmpty());
+    assertFalse(contentBox.lookupAll(SPACE_COMPLEXITY_FLOW_SELECTOR).isEmpty());
+  }
+
+  private void switchToTabAndAssertContent(
+      final FxRobot robot,
+      final TabPane tabPane,
+      final int index,
+      final KeyCodeCombination combo,
+      final String expectedSnippet)
+      throws TimeoutException {
+
+    // Switch to tab with simple retry
+    robot.push(combo);
+    try {
+      WaitForAsyncUtils.waitFor(
+          2, TimeUnit.SECONDS, () -> tabPane.getSelectionModel().getSelectedIndex() == index);
+    } catch (TimeoutException e) {
+      // One retry attempt
+      robot.push(combo);
+      WaitForAsyncUtils.waitFor(
+          2, TimeUnit.SECONDS, () -> tabPane.getSelectionModel().getSelectedIndex() == index);
+    }
+
+    // Assert content
+    var contentBox = getSelectedTabContentBox(tabPane);
+    assertSelectedTabHasCoreNodes(contentBox);
+    var descFlow = contentBox.lookup(SOLUTION_DESCRIPTION_FLOW_SELECTOR);
+    var text = getFlowText(descFlow);
+    assertTrue(text.contains(expectedSnippet));
   }
 
   private void assertClosing(final FxRobot robot) throws TimeoutException {
