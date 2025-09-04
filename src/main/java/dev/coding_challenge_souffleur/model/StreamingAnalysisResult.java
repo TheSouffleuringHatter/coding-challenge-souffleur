@@ -18,13 +18,13 @@ public class StreamingAnalysisResult {
   private final Map<SolutionSection, String> sections = new EnumMap<>(SolutionSection.class);
 
   /** Returns true if all required sections (excluding SOLUTION_TITLE) are present. */
-  public boolean isComplete() {
-    return getSection(SolutionSection.PROBLEM_STATEMENT).isPresent()
-        && getSection(SolutionSection.SOLUTION_DESCRIPTION).isPresent()
-        && getSection(SolutionSection.EDGE_CASES).isPresent()
-        && getSection(SolutionSection.SOLUTION_CODE).isPresent()
-        && getSection(SolutionSection.TIME_COMPLEXITY).isPresent()
-        && getSection(SolutionSection.SPACE_COMPLEXITY).isPresent();
+  boolean isComplete() {
+    return sections.containsKey(SolutionSection.PROBLEM_STATEMENT)
+        && sections.containsKey(SolutionSection.SOLUTION_DESCRIPTION)
+        && sections.containsKey(SolutionSection.EDGE_CASES)
+        && sections.containsKey(SolutionSection.SOLUTION_CODE)
+        && sections.containsKey(SolutionSection.TIME_COMPLEXITY)
+        && sections.containsKey(SolutionSection.SPACE_COMPLEXITY);
   }
 
   public Optional<String> getSection(final SolutionSection solutionSection) {
@@ -32,12 +32,11 @@ public class StreamingAnalysisResult {
   }
 
   void setSection(final SolutionSection solutionSection, final String value) {
-    LOGGER.trace("Setting section {}", solutionSection);
-
     if (value == null) {
-      sections.remove(solutionSection);
-    } else {
-      sections.put(solutionSection, value);
+      throw new IllegalArgumentException("Value cannot be null when setting section " + solutionSection);
     }
+
+    LOGGER.trace("Setting section {} to {}", solutionSection, value);
+    sections.put(solutionSection, value);
   }
 }
