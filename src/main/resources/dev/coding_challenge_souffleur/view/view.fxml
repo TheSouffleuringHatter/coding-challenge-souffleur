@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import dev.coding_challenge_souffleur.view.FormattedTextFlow?>
+<?import dev.coding_challenge_souffleur.view.components.FormattedTextFlow?>
 <?import dev.coding_challenge_souffleur.view.keylistener.ShortcutKeysLabel?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>

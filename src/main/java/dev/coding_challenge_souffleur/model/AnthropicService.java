@@ -134,6 +134,8 @@ public class AnthropicService {
           }
 
           // Process the complete text one final time to ensure completion
+          LOGGER.debug(
+              "Final processing of complete mock text: {} characters", accumulatedText.length());
           multiSolutionProcessor.processStreamEvents(result, accumulatedText, updateCallback, "");
 
           if (updateCallback != null) {

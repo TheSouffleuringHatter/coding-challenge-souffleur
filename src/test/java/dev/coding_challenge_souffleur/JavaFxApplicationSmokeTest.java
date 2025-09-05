@@ -224,12 +224,9 @@ class JavaFxApplicationSmokeTest {
 
     // Wait until the content pane is visible and the solution tab pane is present
     WaitForAsyncUtils.waitFor(
-        2,
-        TimeUnit.SECONDS,
-        () ->
-            !robot.lookup(CONTENT_PANE_SELECTOR).queryAll().isEmpty()
-                && robot.lookup(CONTENT_PANE_SELECTOR).query().isVisible()
-                && !robot.lookup(SOLUTION_TAB_PANE_SELECTOR).queryAll().isEmpty());
+        2, TimeUnit.SECONDS, () -> !robot.lookup(CONTENT_PANE_SELECTOR).queryAll().isEmpty());
+    WaitForAsyncUtils.waitFor(
+        2, TimeUnit.SECONDS, () -> robot.lookup(CONTENT_PANE_SELECTOR).query().isVisible());
 
     // Wait until analysis is marked complete to avoid background tasks running after exit
     WaitForAsyncUtils.waitFor(
@@ -239,6 +236,8 @@ class JavaFxApplicationSmokeTest {
           var statusLabel = robot.lookup(STATUS_LABEL_SELECTOR).queryAs(Label.class);
           return statusLabel.getText().toLowerCase().contains("complete");
         });
+    WaitForAsyncUtils.waitFor(
+      2, TimeUnit.SECONDS, () -> !robot.lookup(SOLUTION_TAB_PANE_SELECTOR).queryAll().isEmpty());
   }
 
   private VBox getSelectedTabContentBox(final TabPane tabPane) {

@@ -3,6 +3,8 @@ package dev.coding_challenge_souffleur.view;
 import dev.coding_challenge_souffleur.model.AnthropicService;
 import dev.coding_challenge_souffleur.model.FileService;
 import dev.coding_challenge_souffleur.model.ScreenshotService;
+import dev.coding_challenge_souffleur.view.components.ContentPaneController;
+import dev.coding_challenge_souffleur.view.components.MultiSolutionTabPane;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
@@ -27,7 +29,7 @@ class MainSceneCreator {
   private final FileService fileService;
   private final PlatformRunLater platformRunLater;
   private final ScreenshotDisplayService screenshotDisplayService;
-  private final ContentDisplayUtils contentDisplayUtils;
+  private final ContentPaneController contentPaneController;
 
   @Produces private ViewController viewController;
   @Produces private Scene mainScene;
@@ -40,13 +42,13 @@ class MainSceneCreator {
       final FileService fileService,
       final PlatformRunLater platformRunLater,
       final ScreenshotDisplayService screenshotDisplayService,
-      final ContentDisplayUtils contentDisplayUtils) {
+      final ContentPaneController contentPaneController) {
     this.anthropicService = anthropicService;
     this.screenshotService = screenshotService;
     this.fileService = fileService;
     this.platformRunLater = platformRunLater;
     this.screenshotDisplayService = screenshotDisplayService;
-    this.contentDisplayUtils = contentDisplayUtils;
+    this.contentPaneController = contentPaneController;
   }
 
   @PostConstruct
@@ -65,13 +67,18 @@ class MainSceneCreator {
     this.mainScene = scene;
 
     this.viewController = fxmlLoader.getController();
+
+    // Create MultiSolutionTabPane directly since it's not CDI-managed
+    var multiSolutionTabPane = new MultiSolutionTabPane(platformRunLater);
+
     this.viewController.setup(
         anthropicService,
         screenshotService,
         fileService,
         platformRunLater,
         screenshotDisplayService,
-        contentDisplayUtils);
+        contentPaneController,
+        multiSolutionTabPane);
     this.contentPane = this.viewController.contentPane;
 
     LOGGER.trace("Main scene created from {}", VIEW_FXML_RESOURCE);

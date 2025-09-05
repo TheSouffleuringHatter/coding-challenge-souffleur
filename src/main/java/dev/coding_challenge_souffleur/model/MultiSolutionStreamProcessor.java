@@ -59,9 +59,7 @@ class MultiSolutionStreamProcessor {
       var newValue = contentOpt.get();
       var currentValue = result.getSection(solutionSection).orElse("");
       if (!newValue.equals(currentValue)) {
-        if (LOGGER.isDebugEnabled()) {
-          LOGGER.debug("Updated {} from parsed content", solutionSection.name());
-        }
+        LOGGER.trace("Updated {} from parsed content", solutionSection.name());
         result.setSection(solutionSection, newValue);
         return true;
       }

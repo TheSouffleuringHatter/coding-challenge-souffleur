@@ -5,6 +5,9 @@ import dev.coding_challenge_souffleur.model.AnthropicService;
 import dev.coding_challenge_souffleur.model.FileService;
 import dev.coding_challenge_souffleur.model.MultiSolutionResult;
 import dev.coding_challenge_souffleur.model.ScreenshotService;
+import dev.coding_challenge_souffleur.view.components.ContentPaneController;
+import dev.coding_challenge_souffleur.view.components.FormattedTextFlow;
+import dev.coding_challenge_souffleur.view.components.MultiSolutionTabPane;
 import dev.coding_challenge_souffleur.view.keylistener.Exit;
 import dev.coding_challenge_souffleur.view.keylistener.MatchingModifier;
 import java.util.concurrent.CompletableFuture;
@@ -38,7 +41,8 @@ public class ViewController {
   private PlatformRunLater platformRunLater;
   private ScreenshotDisplayService screenshotDisplayService;
   private FileService fileService;
-  private ContentDisplayUtils contentDisplayUtils;
+  private ContentPaneController contentPaneController;
+  private MultiSolutionTabPane multiSolutionTabPane;
   @FXML private Button closeButton;
   @FXML private Button toggleProblemStatementButton;
   @FXML private HBox headerBox;
@@ -47,6 +51,11 @@ public class ViewController {
   @FXML private VBox problemStatementSection;
   @FXML private HBox screenshotPreviewContainer;
   @FXML private ImageView screenshotPreview;
+
+  // Expose the active MultiSolutionTabPane for key handlers
+  public MultiSolutionTabPane getActiveTabPane() {
+    return multiSolutionTabPane;
+  }
 
   @FXML
   public void initialize() {
@@ -85,9 +94,8 @@ public class ViewController {
           statusLabel.setText(status);
 
           if (!contentPane.isVisible()) {
-            contentPane.setVisible(true);
-            contentPane.setManaged(true);
-            contentDisplayUtils.adjustWindowSize();
+            contentPaneController.showContentPane(contentPane);
+            contentPaneController.adjustWindowSize(contentPane.getScene().getWindow());
           }
         });
   }
@@ -98,15 +106,24 @@ public class ViewController {
       final FileService fileService,
       final PlatformRunLater platformRunLater,
       final ScreenshotDisplayService screenshotDisplayService,
-      final ContentDisplayUtils contentDisplayUtils) {
+      final ContentPaneController contentPaneController,
+      final MultiSolutionTabPane multiSolutionTabPane) {
     this.anthropicService = anthropicService;
     this.screenshotService = screenshotService;
     this.fileService = fileService;
     this.platformRunLater = platformRunLater;
     this.screenshotDisplayService = screenshotDisplayService;
-    this.contentDisplayUtils = contentDisplayUtils;
+    this.contentPaneController = contentPaneController;
+    this.multiSolutionTabPane = multiSolutionTabPane;
 
     screenshotDisplayService.initialize(screenshotPreviewContainer, screenshotPreview);
+
+    // Replace FXML TabPane with our custom MultiSolutionTabPane
+    var parent = solutionTabPane.getParent();
+    if (parent instanceof final VBox vbox) {
+      var index = vbox.getChildren().indexOf(solutionTabPane);
+      vbox.getChildren().set(index, multiSolutionTabPane);
+    }
   }
 
   public void executeMultiSolutionAnalysis() {
@@ -130,16 +147,39 @@ public class ViewController {
   }
 
   void displayMultiSolutionResult(final MultiSolutionResult result) {
-    contentDisplayUtils.displayMultiSolutionResult(result);
+    platformRunLater.accept(
+        () -> {
+          // Use the enhanced MultiSolutionTabPane to display the result
+          multiSolutionTabPane.displayResult(result);
 
-    // Update status to ensure content pane becomes visible
-    var isComplete = result.isComplete();
-    LOGGER.debug(
-        "Multi-solution result complete: {}, solution count: {}",
-        isComplete,
-        result.getSolutionCount());
-    var statusText = isComplete ? ANALYSIS_COMPLETE : ANALYSIS_IN_PROGRESS;
-    updateStatus(statusText);
+          // Handle problem statement display using enhanced FormattedTextFlow
+          var problem = result.getSharedProblemStatement();
+          if (problem.isPresent()) {
+            problemStatementFlow.displayProblemStatement(problem.get());
+          } else {
+            problemStatementFlow.displayProblemStatement(null); // Will show "Loading..."
+          }
+
+          final String statusText;
+          if (result.isComplete()) {
+            LOGGER.debug(
+                "Multi-solution result complete, solution count: {}", result.getSolutionCount());
+            statusText = ANALYSIS_COMPLETE;
+          } else {
+            LOGGER.trace(
+                "Multi-solution result not complete, solution count: {}",
+                result.getSolutionCount());
+            statusText = ANALYSIS_IN_PROGRESS;
+          }
+
+          LOGGER.trace("Updating status to: {}", statusText);
+          statusLabel.setText(statusText);
+
+          if (!contentPane.isVisible()) {
+            contentPaneController.showContentPane(contentPane);
+            contentPaneController.adjustWindowSize(contentPane.getScene().getWindow());
+          }
+        });
   }
 
   private CompletableFuture<MultiSolutionResult> takeScreenshotAndAnalyzeMultiSolution(

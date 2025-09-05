@@ -5,7 +5,7 @@
   Root is ScrollPane because the custom class extends ScrollPane.
   Note: No fx:controller attribute; controller is set programmatically by SolutionTabContent.
 -->
-<?import dev.coding_challenge_souffleur.view.FormattedTextFlow?>
+<?import dev.coding_challenge_souffleur.view.components.FormattedTextFlow?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>

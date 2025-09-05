@@ -1,11 +1,11 @@
-package dev.coding_challenge_souffleur.view;
+package dev.coding_challenge_souffleur.view.components;
 
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 /**
  * A custom TextFlow control that provides formatted content display with support for code styling
- * and line numbers.
+ * and line numbers. Enhanced with domain-specific methods for problem statement display.
  */
 public class FormattedTextFlow extends TextFlow {
 
@@ -16,7 +16,7 @@ public class FormattedTextFlow extends TextFlow {
    *
    * @param content The content to display
    */
-  void setFormattedContent(final String content) {
+  public void setFormattedContent(final String content) {
     setFormattedContentInternal(content, false);
   }
 
@@ -25,8 +25,22 @@ public class FormattedTextFlow extends TextFlow {
    *
    * @param content The content to display
    */
-  void setFormattedCodeContent(final String content) {
+  public void setFormattedCodeContent(final String content) {
     setFormattedContentInternal(content, true);
+  }
+
+  /**
+   * Displays problem statement content with appropriate formatting. This method provides a specific
+   * interface for problem statement display.
+   *
+   * @param problemStatement The problem statement content to display
+   */
+  public void displayProblemStatement(final String problemStatement) {
+    if (problemStatement == null || problemStatement.isEmpty()) {
+      setFormattedContent("Loading...");
+    } else {
+      setFormattedContent(problemStatement);
+    }
   }
 
   // Internal helper to keep logic in one place

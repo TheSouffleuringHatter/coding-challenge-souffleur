@@ -19,10 +19,11 @@ class SwitchToTab1 implements KeyHandler {
 
   @Override
   public void performAction() {
-    if (viewController.solutionTabPane != null && viewController.solutionTabPane.isVisible()) {
-      var tabs = viewController.solutionTabPane.getTabs();
+    var activeTabPane = viewController.getActiveTabPane();
+    if (activeTabPane != null && activeTabPane.isVisible()) {
+      var tabs = activeTabPane.getTabs();
       if (!tabs.isEmpty()) {
-        viewController.solutionTabPane.getSelectionModel().select(0);
+        activeTabPane.getSelectionModel().select(0);
       }
     }
   }
