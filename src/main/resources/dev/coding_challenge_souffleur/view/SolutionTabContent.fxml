@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Custom component FXML for a single solution tab's content.
+  Root is ScrollPane because the custom class extends ScrollPane.
+  Note: No fx:controller attribute; controller is set programmatically by SolutionTabContent.
+-->
+<?import dev.coding_challenge_souffleur.view.FormattedTextFlow?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<fx:root type="ScrollPane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+  fitToWidth="true" styleClass="solution-scroll-pane">
+  <VBox>
+    <!-- Solution Description -->
+    <FormattedTextFlow fx:id="solutionDescriptionFlow" id="solutionDescriptionFlow"
+      styleClass="text-content">
+      <Text text="Loading..."/>
+    </FormattedTextFlow>
+
+    <!-- Edge Cases Section -->
+    <VBox styleClass="content-section">
+      <Label text="Edge Cases" styleClass="section-title"/>
+      <FormattedTextFlow fx:id="edgeCasesFlow" id="edgeCasesFlow" styleClass="text-content">
+        <Text text="Loading..."/>
+      </FormattedTextFlow>
+    </VBox>
+
+    <!-- Solution Code -->
+    <FormattedTextFlow fx:id="solutionCodeFlow" id="solutionCodeFlow">
+      <Text text="Loading..."/>
+    </FormattedTextFlow>
+
+    <!-- Time Complexity Section -->
+    <VBox styleClass="content-section">
+      <Label text="Time Complexity" styleClass="section-title"/>
+      <FormattedTextFlow fx:id="timeComplexityFlow" id="timeComplexityFlow"
+        styleClass="text-content">
+        <Text text="Loading..."/>
+      </FormattedTextFlow>
+    </VBox>
+
+    <!-- Space Complexity Section -->
+    <VBox styleClass="content-section">
+      <Label text="Space Complexity" styleClass="section-title"/>
+      <FormattedTextFlow fx:id="spaceComplexityFlow" id="spaceComplexityFlow"
+        styleClass="text-content">
+        <Text text="Loading..."/>
+      </FormattedTextFlow>
+    </VBox>
+  </VBox>
+</fx:root>

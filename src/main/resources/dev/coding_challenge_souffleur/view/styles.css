@@ -24,7 +24,6 @@
   -fx-border-width: 2px;
 }
 
-/* ======= HEADER STYLING ======= */
 .header-box {
   -fx-background-color: -fx-header-background;
   -fx-background-radius: 3px;
@@ -108,10 +107,5 @@
   -fx-padding: 2px 0px;
 }
 
-/* ======= CODE DISPLAY ======= */
-
-/* ======= SCROLL PANES ======= */
-
-/* Scrollbar styling */
-
-/* Use pseudo-classes for better button state handling */
+.solution-scroll-pane {
+}

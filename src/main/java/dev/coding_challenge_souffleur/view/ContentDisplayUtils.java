@@ -2,8 +2,7 @@ package dev.coding_challenge_souffleur.view;
 
 import dev.coding_challenge_souffleur.model.MultiSolutionResult;
 import dev.coding_challenge_souffleur.model.SolutionSection;
-import dev.coding_challenge_souffleur.view.SolutionTabManager.SolutionTabData;
-import java.util.Optional;
+import javafx.scene.control.Tab;
 import javafx.stage.Screen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,17 +14,6 @@ final class ContentDisplayUtils {
 
   private ContentDisplayUtils() {
     // Utility class
-  }
-
-  private static void updateSection(
-      final FormattedTextFlow textFlow,
-      final Optional<String> optionalContent,
-      final boolean isCode) {
-    if (optionalContent.isPresent()) {
-      textFlow.setFormattedContent(optionalContent.get(), isCode);
-    } else {
-      textFlow.setFormattedContent("Loading...", false);
-    }
   }
 
   static void adjustWindowSize(final ViewController viewController) {
@@ -66,16 +54,16 @@ final class ContentDisplayUtils {
           // Clear existing tabs
           viewController.solutionTabPane.getTabs().clear();
 
-          // Ensure we have tabs for all solutions
+          // Ensure we have tabs for all solutions and build them directly
           var solutionCount = Math.max(1, result.getSolutionCount());
-          SolutionTabManager.ensureTabCount(viewController.solutionTabPane, solutionCount);
 
-          // Update each solution tab
           for (var i = 0; i < solutionCount; i++) {
-            var tab = viewController.solutionTabPane.getTabs().get(i);
             var solutionOpt = result.getSolution(i);
 
-            var tabData = (SolutionTabData) tab.getUserData();
+            var content = new SolutionTabContent();
+            var tab = new Tab();
+            tab.setContent(content);
+
             if (solutionOpt.isPresent()) {
               var solution = solutionOpt.get();
 
@@ -90,39 +78,31 @@ final class ContentDisplayUtils {
               }
               tab.setText(tabTitle);
 
-              // Get the tab data and update the content
-              updateSection(
-                  tabData.solutionDescriptionFlow(),
-                  solution.getSection(SolutionSection.SOLUTION_DESCRIPTION),
-                  false);
-              updateSection(
-                  tabData.edgeCasesFlow(), solution.getSection(SolutionSection.EDGE_CASES), false);
-              updateSection(
-                  tabData.solutionCodeFlow(),
-                  solution.getSection(SolutionSection.SOLUTION_CODE),
-                  true);
-              updateSection(
-                  tabData.timeComplexityFlow(),
-                  solution.getSection(SolutionSection.TIME_COMPLEXITY),
-                  false);
-              updateSection(
-                  tabData.spaceComplexityFlow(),
-                  solution.getSection(SolutionSection.SPACE_COMPLEXITY),
-                  false);
+              content.setSolutionDescription(
+                  solution.getSection(SolutionSection.SOLUTION_DESCRIPTION).orElse(null));
+              content.setEdgeCases(
+                  solution.getSection(SolutionSection.EDGE_CASES).orElse(null));
+              content.setSolutionCode(
+                  solution.getSection(SolutionSection.SOLUTION_CODE).orElse(null));
+              content.setTimeComplexity(
+                  solution.getSection(SolutionSection.TIME_COMPLEXITY).orElse(null));
+              content.setSpaceComplexity(
+                  solution.getSection(SolutionSection.SPACE_COMPLEXITY).orElse(null));
             } else {
-              // Empty solution - show loading
+              // Empty solution - rely on FXML defaults
               tab.setText("Solution " + (i + 1));
-              updateSection(tabData.solutionDescriptionFlow(), Optional.of("Loading..."), false);
-              updateSection(tabData.edgeCasesFlow(), Optional.empty(), false);
-              updateSection(tabData.solutionCodeFlow(), Optional.empty(), true);
-              updateSection(tabData.timeComplexityFlow(), Optional.empty(), false);
-              updateSection(tabData.spaceComplexityFlow(), Optional.empty(), false);
             }
+
+            viewController.solutionTabPane.getTabs().add(tab);
           }
 
-          // Update shared problem statement
-          updateSection(
-              viewController.problemStatementFlow, result.getSharedProblemStatement(), false);
+          // Problem statement: set if present, otherwise leave blank
+          var problem = result.getSharedProblemStatement();
+          if (problem.isPresent()) {
+            viewController.problemStatementFlow.setFormattedContent(problem.get(), false);
+          } else {
+            viewController.problemStatementFlow.setFormattedContent("Loading...", false);
+          }
 
           adjustWindowSize(viewController);
         });
