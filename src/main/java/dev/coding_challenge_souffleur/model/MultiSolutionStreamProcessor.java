@@ -5,6 +5,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -75,11 +77,11 @@ class MultiSolutionStreamProcessor {
     }
 
     try {
-      var timestamp = System.currentTimeMillis();
-      var fileName = "multi_solution_error_dump_" + timestamp + ".txt";
-      var path = Path.of(System.getProperty("java.io.tmpdir"), fileName);
+      var timeString = LocalTime.now().format(DateTimeFormatter.ofPattern("HHmm"));
+      var fileName = "multi_solution_error_dump_" + timeString + ".txt";
+      var path = Path.of(".", fileName);
       Files.writeString(path, textContent);
-      LOGGER.debug("Multi-solution response text dumped to {}", path);
+      LOGGER.debug("Multi-solution response text dumped to {}", path.toAbsolutePath());
     } catch (final IOException | SecurityException e) {
       LOGGER.debug("Failed to write response dump: {}", e.getMessage());
     } catch (final Exception e) {
