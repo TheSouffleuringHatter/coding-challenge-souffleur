@@ -1,7 +1,7 @@
 package dev.coding_challenge_souffleur.view.keylistener;
 
 import com.sun.jna.platform.win32.Win32VK;
-import dev.coding_challenge_souffleur.view.ViewController;
+import dev.coding_challenge_souffleur.view.components.MultiSolutionTabPane;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import javafx.scene.control.ScrollPane;
@@ -11,18 +11,17 @@ class ScrollContentUp implements KeyHandler {
 
   static final Win32VK SCROLL_UP_KEY_CODE = Win32VK.VK_4;
 
-  private final ViewController viewController;
+  private final MultiSolutionTabPane multiSolutionTabPane;
 
   @Inject
-  ScrollContentUp(final ViewController viewController) {
-    this.viewController = viewController;
+  ScrollContentUp(final MultiSolutionTabPane multiSolutionTabPane) {
+    this.multiSolutionTabPane = multiSolutionTabPane;
   }
 
   @Override
   public void performAction() {
-    var activeTabPane = viewController.getActiveTabPane();
-    if (activeTabPane != null && activeTabPane.isVisible()) {
-      var selectedTab = activeTabPane.getSelectionModel().getSelectedItem();
+    if (multiSolutionTabPane != null && multiSolutionTabPane.isVisible()) {
+      var selectedTab = multiSolutionTabPane.getSelectionModel().getSelectedItem();
       if (selectedTab != null && selectedTab.getContent() instanceof final ScrollPane scrollPane) {
         var vvalue = scrollPane.getVvalue();
         var newValue = Math.clamp(vvalue - ScrollContentDown.SCROLL_INCREMENT, 0.0, 1.0);

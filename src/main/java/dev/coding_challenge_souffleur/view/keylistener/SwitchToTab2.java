@@ -1,7 +1,7 @@
 package dev.coding_challenge_souffleur.view.keylistener;
 
 import com.sun.jna.platform.win32.Win32VK;
-import dev.coding_challenge_souffleur.view.ViewController;
+import dev.coding_challenge_souffleur.view.components.MultiSolutionTabPane;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -10,20 +10,19 @@ class SwitchToTab2 implements KeyHandler {
 
   static final Win32VK SWITCH_TO_TAB2_KEY_CODE = Win32VK.VK_2;
 
-  private final ViewController viewController;
+  private final MultiSolutionTabPane multiSolutionTabPane;
 
   @Inject
-  SwitchToTab2(final ViewController viewController) {
-    this.viewController = viewController;
+  SwitchToTab2(final MultiSolutionTabPane multiSolutionTabPane) {
+    this.multiSolutionTabPane = multiSolutionTabPane;
   }
 
   @Override
   public void performAction() {
-    var activeTabPane = viewController.getActiveTabPane();
-    if (activeTabPane != null && activeTabPane.isVisible()) {
-      var tabs = activeTabPane.getTabs();
+    if (multiSolutionTabPane != null && multiSolutionTabPane.isVisible()) {
+      var tabs = multiSolutionTabPane.getTabs();
       if (tabs.size() > 1) {
-        activeTabPane.getSelectionModel().select(1);
+        multiSolutionTabPane.getSelectionModel().select(1);
       }
     }
   }

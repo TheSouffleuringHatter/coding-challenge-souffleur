@@ -47,9 +47,6 @@ public class ViewController {
   @FXML private HBox screenshotPreviewContainer;
   @FXML private ImageView screenshotPreview;
 
-  public MultiSolutionTabPane getActiveTabPane() {
-    return multiSolutionTabPane;
-  }
 
   @FXML
   public void initialize() {

@@ -2,7 +2,6 @@ package dev.coding_challenge_souffleur.view.keylistener;
 
 import static org.mockito.Mockito.*;
 
-import dev.coding_challenge_souffleur.view.ViewController;
 import dev.coding_challenge_souffleur.view.components.MultiSolutionTabPane;
 import javafx.collections.FXCollections;
 import javafx.scene.control.SingleSelectionModel;
@@ -18,7 +17,6 @@ import org.testfx.framework.junit5.ApplicationExtension;
 @Isolated
 class SwitchToTab1Test {
 
-  @Mock private ViewController viewController;
   @Mock private MultiSolutionTabPane multiSolutionTabPane;
   @Mock private SingleSelectionModel<Tab> selectionModel;
 
@@ -26,12 +24,11 @@ class SwitchToTab1Test {
   void performAction_ShouldSelectFirstTab_WhenTabsArePresentAndVisible() {
     var tabs = FXCollections.observableArrayList(new Tab(), new Tab(), new Tab());
 
-    when(viewController.getActiveTabPane()).thenReturn(multiSolutionTabPane);
     when(multiSolutionTabPane.isVisible()).thenReturn(true);
     when(multiSolutionTabPane.getTabs()).thenReturn(tabs);
     when(multiSolutionTabPane.getSelectionModel()).thenReturn(selectionModel);
 
-    new SwitchToTab1(viewController).performAction();
+    new SwitchToTab1(multiSolutionTabPane).performAction();
 
     verify(selectionModel, times(1)).select(0);
   }

@@ -1,7 +1,7 @@
 package dev.coding_challenge_souffleur.view.keylistener;
 
 import com.sun.jna.platform.win32.Win32VK;
-import dev.coding_challenge_souffleur.view.ViewController;
+import dev.coding_challenge_souffleur.view.components.MultiSolutionTabPane;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import javafx.scene.control.ScrollPane;
@@ -13,18 +13,17 @@ class ScrollContentDown implements KeyHandler {
 
   static final double SCROLL_INCREMENT = 0.2;
 
-  private final ViewController viewController;
+  private final MultiSolutionTabPane multiSolutionTabPane;
 
   @Inject
-  ScrollContentDown(final ViewController viewController) {
-    this.viewController = viewController;
+  ScrollContentDown(final MultiSolutionTabPane multiSolutionTabPane) {
+    this.multiSolutionTabPane = multiSolutionTabPane;
   }
 
   @Override
   public void performAction() {
-    var activeTabPane = viewController.getActiveTabPane();
-    if (activeTabPane != null && activeTabPane.isVisible()) {
-      var selectedTab = activeTabPane.getSelectionModel().getSelectedItem();
+    if (multiSolutionTabPane != null && multiSolutionTabPane.isVisible()) {
+      var selectedTab = multiSolutionTabPane.getSelectionModel().getSelectedItem();
       if (selectedTab != null && selectedTab.getContent() instanceof final ScrollPane scrollPane) {
         var vvalue = scrollPane.getVvalue();
         var newValue = Math.clamp(vvalue + SCROLL_INCREMENT, 0.0, 1.0);

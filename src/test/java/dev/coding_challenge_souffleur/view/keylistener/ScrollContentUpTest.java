@@ -3,7 +3,6 @@ package dev.coding_challenge_souffleur.view.keylistener;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-import dev.coding_challenge_souffleur.view.ViewController;
 import dev.coding_challenge_souffleur.view.components.MultiSolutionTabPane;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SingleSelectionModel;
@@ -19,7 +18,6 @@ import org.testfx.framework.junit5.ApplicationExtension;
 @Isolated
 class ScrollContentUpTest {
 
-  @Mock private ViewController viewController;
   @Mock private MultiSolutionTabPane multiSolutionTabPane;
   @Mock private SingleSelectionModel<Tab> selectionModel;
 
@@ -31,12 +29,11 @@ class ScrollContentUpTest {
     var tab = new Tab();
     tab.setContent(scrollPane);
 
-    when(viewController.getActiveTabPane()).thenReturn(multiSolutionTabPane);
     when(multiSolutionTabPane.isVisible()).thenReturn(true);
     when(multiSolutionTabPane.getSelectionModel()).thenReturn(selectionModel);
     when(selectionModel.getSelectedItem()).thenReturn(tab);
 
-    new ScrollContentUp(viewController).performAction();
+    new ScrollContentUp(multiSolutionTabPane).performAction();
 
     assertEquals(0.2, scrollPane.getVvalue());
   }

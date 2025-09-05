@@ -32,6 +32,7 @@ class MainSceneCreator {
 
   @Produces private ViewController viewController;
   @Produces private Scene mainScene;
+  @Produces private MultiSolutionTabPane multiSolutionTabPane;
 
   @Inject
   MainSceneCreator(
@@ -66,8 +67,8 @@ class MainSceneCreator {
 
     this.viewController = fxmlLoader.getController();
 
-    // Create MultiSolutionTabPane directly since it's not CDI-managed
-    var multiSolutionTabPane = new MultiSolutionTabPane(platformRunLater);
+    // Create MultiSolutionTabPane and store it for CDI injection
+    this.multiSolutionTabPane = new MultiSolutionTabPane(platformRunLater);
 
     this.viewController.setup(
         anthropicService,
@@ -76,7 +77,7 @@ class MainSceneCreator {
         platformRunLater,
         screenshotDisplayService,
         contentPaneController,
-        multiSolutionTabPane);
+        this.multiSolutionTabPane);
 
     LOGGER.debug("Main scene created from {}", VIEW_FXML_RESOURCE);
   }
