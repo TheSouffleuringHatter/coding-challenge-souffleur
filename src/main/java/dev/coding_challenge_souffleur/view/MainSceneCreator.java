@@ -25,7 +25,6 @@ class MainSceneCreator {
 
   private final AnthropicService anthropicService;
   private final ScreenshotService screenshotService;
-  private final FileService fileService;
   private final PlatformRunLater platformRunLater;
   private final ScreenshotDisplayService screenshotDisplayService;
   private final ContentPaneController contentPaneController;
@@ -44,7 +43,6 @@ class MainSceneCreator {
       final ContentPaneController contentPaneController) {
     this.anthropicService = anthropicService;
     this.screenshotService = screenshotService;
-    this.fileService = fileService;
     this.platformRunLater = platformRunLater;
     this.screenshotDisplayService = screenshotDisplayService;
     this.contentPaneController = contentPaneController;
@@ -73,7 +71,6 @@ class MainSceneCreator {
     this.viewController.setup(
         anthropicService,
         screenshotService,
-        fileService,
         platformRunLater,
         screenshotDisplayService,
         contentPaneController,

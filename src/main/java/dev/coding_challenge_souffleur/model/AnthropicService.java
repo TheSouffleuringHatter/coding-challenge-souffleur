@@ -40,6 +40,7 @@ public class AnthropicService {
 
   private String systemMessage;
   private String userMessage;
+  private String multiSolutionMockText;
 
   @Inject
   AnthropicService(
@@ -96,6 +97,7 @@ public class AnthropicService {
               + fileService.loadResourceFile("/prompts/java_prompt.txt")
               + fileService.loadResourceFile("/prompts/assistant_message.txt");
       this.userMessage = fileService.loadResourceFile("/prompts/user_message.txt");
+      this.multiSolutionMockText = fileService.loadResourceFile("/prompts/multi_solution_mock.txt");
     } catch (final IOException e) {
       throw new RuntimeException("Failed to load prompt files", e);
     }
@@ -113,12 +115,13 @@ public class AnthropicService {
   }
 
   public CompletableFuture<MultiSolutionResult> analyseMultiSolutionMock(
-      final String messageTextContent, final Consumer<MultiSolutionResult> updateCallback) {
+      final Consumer<MultiSolutionResult> updateCallback) {
     return CompletableFuture.supplyAsync(
         () -> {
           var result = new MultiSolutionResult();
           var accumulatedText = new StringBuilder();
-          var lines = messageTextContent.lines().toList();
+
+          var lines = multiSolutionMockText.lines().toList();
           var delayPerLine = Math.max(1, 2000 / lines.size());
 
           for (final var line : lines) {

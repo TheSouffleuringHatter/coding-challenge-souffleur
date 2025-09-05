@@ -3,7 +3,6 @@ package dev.coding_challenge_souffleur.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import dev.coding_challenge_souffleur.view.ViewController;
 import io.smallrye.config.inject.ConfigExtension;
 import jakarta.inject.Inject;
 import java.io.IOException;
@@ -32,9 +31,7 @@ class AnthropicServiceTest {
 
   @Test
   void testAnalyseMultiSolutionMock_Message_ReturnsAnalysisResult() throws IOException {
-    var mockResponse =
-        fileService.loadResourceFile(ViewController.MULTI_SOLUTION_MOCK_RESPONSE_FILE_PATH);
-    var future = anthropicService.analyseMultiSolutionMock(mockResponse, null);
+    var future = anthropicService.analyseMultiSolutionMock(null);
     var multiSolutionResult = future.join();
 
     assertTrue(multiSolutionResult.hasAnySolutions());

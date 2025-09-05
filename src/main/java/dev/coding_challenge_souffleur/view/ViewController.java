@@ -24,9 +24,6 @@ import org.slf4j.LoggerFactory;
 
 public class ViewController {
 
-  public static final String MULTI_SOLUTION_MOCK_RESPONSE_FILE_PATH =
-      "/prompts/multi_solution_mock.txt";
-
   private static final Logger LOGGER = LoggerFactory.getLogger(ViewController.class);
   private static final String ANALYSIS_COMPLETE = "Analysis complete";
   private static final String ANALYSIS_IN_PROGRESS = "Analysis in progress...";
@@ -34,7 +31,6 @@ public class ViewController {
   private ScreenshotService screenshotService;
   private PlatformRunLater platformRunLater;
   private ScreenshotDisplayService screenshotDisplayService;
-  private FileService fileService;
   private ContentPaneController contentPaneController;
   private MultiSolutionTabPane multiSolutionTabPane;
   @FXML private VBox contentPane;
@@ -91,14 +87,12 @@ public class ViewController {
   void setup(
       final AnthropicService anthropicService,
       final ScreenshotService screenshotService,
-      final FileService fileService,
       final PlatformRunLater platformRunLater,
       final ScreenshotDisplayService screenshotDisplayService,
       final ContentPaneController contentPaneController,
       final MultiSolutionTabPane multiSolutionTabPane) {
     this.anthropicService = anthropicService;
     this.screenshotService = screenshotService;
-    this.fileService = fileService;
     this.platformRunLater = platformRunLater;
     this.screenshotDisplayService = screenshotDisplayService;
     this.contentPaneController = contentPaneController;
@@ -120,15 +114,9 @@ public class ViewController {
   }
 
   public void executeMultiSolutionMockAnalysis() {
-    var mockResponseText =
-        fileService.loadResourceFileOrDefault(
-            MULTI_SOLUTION_MOCK_RESPONSE_FILE_PATH,
-            "Error: Could not load multi-solution mock response");
-
     updateStatus("Running multi-solution mock analysis...");
     var future =
-        anthropicService.analyseMultiSolutionMock(
-            mockResponseText, this::displayMultiSolutionResult);
+        anthropicService.analyseMultiSolutionMock(this::displayMultiSolutionResult);
 
     handleMultiSolutionCompletion(future, "multi-solution mock analysis");
   }
