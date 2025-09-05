@@ -146,12 +146,12 @@ class MultiSolutionStreamProcessorTest {
     assertEquals("Test problem statement", result.getSharedProblemStatement().get());
 
     var solution = result.getSolution(0).get();
-    assertTrue(solution.getSection(SolutionSection.SOLUTION_TITLE).isPresent());
-    assertEquals("Hash Map Approach", solution.getSection(SolutionSection.SOLUTION_TITLE).get());
-    assertTrue(solution.getSection(SolutionSection.SOLUTION_DESCRIPTION).isPresent());
+    assertNotNull(solution.getSolutionTitle());
+    assertEquals("Hash Map Approach", solution.getSolutionTitle());
+    assertNotNull(solution.getSolutionDescription());
     assertEquals(
         "Test solution description",
-        solution.getSection(SolutionSection.SOLUTION_DESCRIPTION).get());
+        solution.getSolutionDescription());
   }
 
   @Test
@@ -163,14 +163,14 @@ class MultiSolutionStreamProcessorTest {
     assertTrue(result.getSharedProblemStatement().isPresent());
 
     var solution1 = result.getSolution(0).get();
-    assertEquals("Solution 1", solution1.getSection(SolutionSection.SOLUTION_TITLE).get());
+    assertEquals("Solution 1", solution1.getSolutionTitle());
     assertEquals(
-        "First solution", solution1.getSection(SolutionSection.SOLUTION_DESCRIPTION).get());
+        "First solution", solution1.getSolutionDescription());
 
     var solution2 = result.getSolution(1).get();
-    assertEquals("Solution 2", solution2.getSection(SolutionSection.SOLUTION_TITLE).get());
+    assertEquals("Solution 2", solution2.getSolutionTitle());
     assertEquals(
-        "Second solution", solution2.getSection(SolutionSection.SOLUTION_DESCRIPTION).get());
+        "Second solution", solution2.getSolutionDescription());
   }
 
   @Test
@@ -208,8 +208,8 @@ class MultiSolutionStreamProcessorTest {
 
     assertEquals(1, result.getSolutionCount());
     var solution = result.getSolution(0).get();
-    assertTrue(solution.getSection(SolutionSection.SOLUTION_TITLE).isPresent());
-    assertTrue(solution.getSection(SolutionSection.SOLUTION_DESCRIPTION).isPresent());
-    assertFalse(solution.getSection(SolutionSection.SOLUTION_CODE).isPresent()); // Not yet added
+    assertNotNull(solution.getSolutionTitle());
+    assertNotNull(solution.getSolutionDescription());
+    assertNull(solution.getSolutionCode()); // Not yet added
   }
 }

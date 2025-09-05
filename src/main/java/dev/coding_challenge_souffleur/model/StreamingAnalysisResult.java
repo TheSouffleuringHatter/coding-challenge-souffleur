@@ -27,8 +27,32 @@ public class StreamingAnalysisResult {
         && sections.containsKey(SolutionSection.SPACE_COMPLEXITY);
   }
 
-  public Optional<String> getSection(final SolutionSection solutionSection) {
-    return Optional.ofNullable(sections.get(solutionSection));
+  public String getProblemStatement() {
+    return sections.get(SolutionSection.PROBLEM_STATEMENT);
+  }
+
+  public String getSolutionTitle() {
+    return sections.get(SolutionSection.SOLUTION_TITLE);
+  }
+
+  public String getSolutionDescription() {
+    return sections.get(SolutionSection.SOLUTION_DESCRIPTION);
+  }
+
+  public String getEdgeCases() {
+    return sections.get(SolutionSection.EDGE_CASES);
+  }
+
+  public String getSolutionCode() {
+    return sections.get(SolutionSection.SOLUTION_CODE);
+  }
+
+  public String getTimeComplexity() {
+    return sections.get(SolutionSection.TIME_COMPLEXITY);
+  }
+
+  public String getSpaceComplexity() {
+    return sections.get(SolutionSection.SPACE_COMPLEXITY);
   }
 
   void setSection(final SolutionSection solutionSection, final String value) {

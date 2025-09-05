@@ -33,11 +33,11 @@ public class MultiSolutionResult {
       return solutions.stream()
           .allMatch(
               s ->
-                  s.getSection(SolutionSection.SOLUTION_DESCRIPTION).isPresent()
-                      && s.getSection(SolutionSection.EDGE_CASES).isPresent()
-                      && s.getSection(SolutionSection.SOLUTION_CODE).isPresent()
-                      && s.getSection(SolutionSection.TIME_COMPLEXITY).isPresent()
-                      && s.getSection(SolutionSection.SPACE_COMPLEXITY).isPresent());
+                  s.getSolutionDescription() != null
+                      && s.getEdgeCases() != null
+                      && s.getSolutionCode() != null
+                      && s.getTimeComplexity() != null
+                      && s.getSpaceComplexity() != null);
     }
 
     // Fallback: require each solution to be fully complete on its own

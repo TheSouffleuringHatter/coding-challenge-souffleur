@@ -48,23 +48,22 @@ public class SolutionTabContent extends ScrollPane {
 
     // Set tab title from solution title or default
     var tabTitle = "Solution " + (solutionIndex + 1);
-    if (solution != null && solution.getSection(SolutionSection.SOLUTION_TITLE).isPresent()) {
+    if (solution != null && solution.getSolutionTitle() != null) {
       tabTitle =
           "("
               + (solutionIndex + 1)
               + ") "
-              + solution.getSection(SolutionSection.SOLUTION_TITLE).get();
+              + solution.getSolutionTitle();
     }
     tab.setText(tabTitle);
 
     // If solution is null, rely on FXML defaults
     if (solution != null) {
-      setSolutionDescription(
-          solution.getSection(SolutionSection.SOLUTION_DESCRIPTION).orElse(null));
-      setEdgeCases(solution.getSection(SolutionSection.EDGE_CASES).orElse(null));
-      setSolutionCode(solution.getSection(SolutionSection.SOLUTION_CODE).orElse(null));
-      setTimeComplexity(solution.getSection(SolutionSection.TIME_COMPLEXITY).orElse(null));
-      setSpaceComplexity(solution.getSection(SolutionSection.SPACE_COMPLEXITY).orElse(null));
+      setSolutionDescription(solution.getSolutionDescription());
+      setEdgeCases(solution.getEdgeCases());
+      setSolutionCode(solution.getSolutionCode());
+      setTimeComplexity(solution.getTimeComplexity());
+      setSpaceComplexity(solution.getSpaceComplexity());
     }
 
     return tab;

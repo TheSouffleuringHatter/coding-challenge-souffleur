@@ -19,7 +19,7 @@ public enum SolutionSection {
   static final Pattern SOLUTION_BOUNDARY_PATTERN_INSTANCE =
       Pattern.compile(SOLUTION_TITLE.headerPrefix(), Pattern.DOTALL);
 
-  static final String SECTION_END = "===SECTION_END===";
+  private static final String SECTION_END = "===SECTION_END===";
 
   // Precompiled per-enum constants
   private final String headerPrefix;
@@ -71,5 +71,20 @@ public enum SolutionSection {
    */
   Pattern partialPattern() {
     return partialPattern;
+  }
+
+  /**
+   * Returns the section value from the given StreamingAnalysisResult.
+   */
+  public String getValue(final StreamingAnalysisResult result) {
+    return switch (this) {
+      case PROBLEM_STATEMENT -> result.getProblemStatement();
+      case SOLUTION_TITLE -> result.getSolutionTitle();
+      case SOLUTION_DESCRIPTION -> result.getSolutionDescription();
+      case EDGE_CASES -> result.getEdgeCases();
+      case SOLUTION_CODE -> result.getSolutionCode();
+      case TIME_COMPLEXITY -> result.getTimeComplexity();
+      case SPACE_COMPLEXITY -> result.getSpaceComplexity();
+    };
   }
 }
