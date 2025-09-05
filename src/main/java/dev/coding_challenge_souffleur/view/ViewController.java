@@ -33,9 +33,6 @@ public class ViewController {
   private static final String HIDE_PROBLEM_TEXT = "Hide Problem";
   private static final String ANALYSIS_COMPLETE = "Analysis complete";
   private static final String ANALYSIS_IN_PROGRESS = "Analysis in progress...";
-  @FXML public TabPane solutionTabPane;
-  @FXML VBox contentPane;
-  @FXML FormattedTextFlow problemStatementFlow;
   private AnthropicService anthropicService;
   private ScreenshotService screenshotService;
   private PlatformRunLater platformRunLater;
@@ -43,6 +40,9 @@ public class ViewController {
   private FileService fileService;
   private ContentPaneController contentPaneController;
   private MultiSolutionTabPane multiSolutionTabPane;
+  @FXML private VBox contentPane;
+  @FXML private FormattedTextFlow problemStatementFlow;
+  @FXML private TabPane solutionTabPane;
   @FXML private Button closeButton;
   @FXML private Button toggleProblemStatementButton;
   @FXML private HBox headerBox;
@@ -52,7 +52,6 @@ public class ViewController {
   @FXML private HBox screenshotPreviewContainer;
   @FXML private ImageView screenshotPreview;
 
-  // Expose the active MultiSolutionTabPane for key handlers
   public MultiSolutionTabPane getActiveTabPane() {
     return multiSolutionTabPane;
   }
@@ -208,11 +207,12 @@ public class ViewController {
 
     future.whenComplete(
         (finalResult, error) -> {
-          if (error != null) {
+          if (error == null) {
+            LOGGER.debug("Analysis '{}' completed successfully", analysisType);
+            updateStatus(ANALYSIS_COMPLETE);
+          } else {
             LOGGER.warn("Error in {}", analysisType, error);
             updateStatus("Error in " + analysisType + ": " + error.getMessage());
-          } else {
-            LOGGER.debug("Analysis '{}' completed successfully", analysisType);
           }
         });
   }

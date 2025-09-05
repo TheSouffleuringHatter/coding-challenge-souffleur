@@ -7,9 +7,7 @@ import javafx.stage.Window;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Service responsible for content pane visibility and window sizing logic.
- */
+/** Service responsible for content pane visibility and window sizing logic. */
 @ApplicationScoped
 public class ContentPaneController {
 

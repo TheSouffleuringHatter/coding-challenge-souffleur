@@ -7,9 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Custom JavaFX component extending TabPane that handles the display of multiple solutions.
- * This component understands domain objects and manages its own display logic.
- * Note: This is not a CDI-managed bean because JavaFX components cannot be proxied.
+ * Custom JavaFX component extending TabPane that handles the display of multiple solutions. This
+ * component understands domain objects and manages its own display logic. Note: This is not a
+ * CDI-managed bean because JavaFX components cannot be proxied.
  */
 public class MultiSolutionTabPane extends TabPane {
 

@@ -22,8 +22,9 @@ class ScrollContentDown implements KeyHandler {
 
   @Override
   public void performAction() {
-    if (viewController.solutionTabPane != null && viewController.solutionTabPane.isVisible()) {
-      var selectedTab = viewController.solutionTabPane.getSelectionModel().getSelectedItem();
+    var activeTabPane = viewController.getActiveTabPane();
+    if (activeTabPane != null && activeTabPane.isVisible()) {
+      var selectedTab = activeTabPane.getSelectionModel().getSelectedItem();
       if (selectedTab != null && selectedTab.getContent() instanceof final ScrollPane scrollPane) {
         var vvalue = scrollPane.getVvalue();
         var newValue = Math.clamp(vvalue + SCROLL_INCREMENT, 0.0, 1.0);

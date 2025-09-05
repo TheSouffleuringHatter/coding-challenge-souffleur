@@ -12,7 +12,6 @@ import jakarta.inject.Inject;
 import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +32,6 @@ class MainSceneCreator {
 
   @Produces private ViewController viewController;
   @Produces private Scene mainScene;
-  @Produces private VBox contentPane;
 
   @Inject
   MainSceneCreator(
@@ -79,8 +77,7 @@ class MainSceneCreator {
         screenshotDisplayService,
         contentPaneController,
         multiSolutionTabPane);
-    this.contentPane = this.viewController.contentPane;
 
-    LOGGER.trace("Main scene created from {}", VIEW_FXML_RESOURCE);
+    LOGGER.debug("Main scene created from {}", VIEW_FXML_RESOURCE);
   }
 }
