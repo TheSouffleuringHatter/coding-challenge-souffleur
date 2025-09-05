@@ -30,12 +30,12 @@
   </HBox>
   <VBox managed="false" styleClass="content-pane" visible="false" fx:id="contentPane">
     <Label styleClass="status-label" text="Analyzing..." fx:id="statusLabel"/>
-    <TabPane styleClass="solution-tabs" fx:id="solutionTabPane">
+    <TabPane styleClass="solution-tabs" fx:id="solutionTabPanePlaceholder">
       <!-- Tabs will be dynamically added here -->
     </TabPane>
     <VBox styleClass="content-section">
       <Button onAction="#toggleProblemStatement" styleClass="content-toggle-button"
-        text="Show Problem" fx:id="toggleProblemStatementButton"/>
+        text="Show/Hide Challenge" fx:id="toggleProblemStatementButton"/>
       <VBox managed="false" styleClass="content-section"
         visible="false" fx:id="problemStatementSection">
         <Label styleClass="section-title" text="Problem Statement"/>

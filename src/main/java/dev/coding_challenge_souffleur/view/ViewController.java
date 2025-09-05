@@ -16,7 +16,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TabPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -29,8 +28,6 @@ public class ViewController {
       "/prompts/multi_solution_mock.txt";
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ViewController.class);
-  private static final String SHOW_PROBLEM_TEXT = "Show Problem";
-  private static final String HIDE_PROBLEM_TEXT = "Hide Problem";
   private static final String ANALYSIS_COMPLETE = "Analysis complete";
   private static final String ANALYSIS_IN_PROGRESS = "Analysis in progress...";
   private AnthropicService anthropicService;
@@ -42,9 +39,7 @@ public class ViewController {
   private MultiSolutionTabPane multiSolutionTabPane;
   @FXML private VBox contentPane;
   @FXML private FormattedTextFlow problemStatementFlow;
-  @FXML private TabPane solutionTabPane;
   @FXML private Button closeButton;
-  @FXML private Button toggleProblemStatementButton;
   @FXML private HBox headerBox;
   @FXML private Label shortcutModifierText;
   @FXML private Label statusLabel;
@@ -81,9 +76,6 @@ public class ViewController {
 
     problemStatementSection.setVisible(!isCurrentlyVisible);
     problemStatementSection.setManaged(!isCurrentlyVisible);
-
-    toggleProblemStatementButton.setText(
-        isCurrentlyVisible ? SHOW_PROBLEM_TEXT : HIDE_PROBLEM_TEXT);
   }
 
   void updateStatus(final String status) {
@@ -118,11 +110,10 @@ public class ViewController {
     screenshotDisplayService.initialize(screenshotPreviewContainer, screenshotPreview);
 
     // Replace FXML TabPane with our custom MultiSolutionTabPane
-    var parent = solutionTabPane.getParent();
-    if (parent instanceof final VBox vbox) {
-      var index = vbox.getChildren().indexOf(solutionTabPane);
-      vbox.getChildren().set(index, multiSolutionTabPane);
-    }
+    var solutionTabPane = contentPane.lookup("#solutionTabPanePlaceholder");
+    var parent = (VBox) solutionTabPane.getParent();
+    var index = parent.getChildren().indexOf(solutionTabPane);
+    parent.getChildren().set(index, multiSolutionTabPane);
   }
 
   public void executeMultiSolutionAnalysis() {
