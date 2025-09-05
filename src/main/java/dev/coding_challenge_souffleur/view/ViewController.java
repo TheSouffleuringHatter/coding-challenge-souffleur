@@ -38,6 +38,7 @@ public class ViewController {
   private PlatformRunLater platformRunLater;
   private ScreenshotDisplayService screenshotDisplayService;
   private FileService fileService;
+  private ContentDisplayUtils contentDisplayUtils;
   @FXML private Button closeButton;
   @FXML private Button toggleProblemStatementButton;
   @FXML private HBox headerBox;
@@ -86,7 +87,7 @@ public class ViewController {
           if (!contentPane.isVisible()) {
             contentPane.setVisible(true);
             contentPane.setManaged(true);
-            ContentDisplayUtils.adjustWindowSize(this);
+            contentDisplayUtils.adjustWindowSize();
           }
         });
   }
@@ -96,12 +97,14 @@ public class ViewController {
       final ScreenshotService screenshotService,
       final FileService fileService,
       final PlatformRunLater platformRunLater,
-      final ScreenshotDisplayService screenshotDisplayService) {
+      final ScreenshotDisplayService screenshotDisplayService,
+      final ContentDisplayUtils contentDisplayUtils) {
     this.anthropicService = anthropicService;
     this.screenshotService = screenshotService;
     this.fileService = fileService;
     this.platformRunLater = platformRunLater;
     this.screenshotDisplayService = screenshotDisplayService;
+    this.contentDisplayUtils = contentDisplayUtils;
 
     screenshotDisplayService.initialize(screenshotPreviewContainer, screenshotPreview);
   }
@@ -127,7 +130,7 @@ public class ViewController {
   }
 
   void displayMultiSolutionResult(final MultiSolutionResult result) {
-    ContentDisplayUtils.displayMultiSolutionResult(this, result, platformRunLater);
+    contentDisplayUtils.displayMultiSolutionResult(result);
 
     // Update status to ensure content pane becomes visible
     var isComplete = result.isComplete();

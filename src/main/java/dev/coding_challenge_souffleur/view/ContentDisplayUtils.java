@@ -2,21 +2,29 @@ package dev.coding_challenge_souffleur.view;
 
 import dev.coding_challenge_souffleur.model.MultiSolutionResult;
 import dev.coding_challenge_souffleur.model.SolutionSection;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import javafx.scene.control.Tab;
 import javafx.stage.Screen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-final class ContentDisplayUtils {
+@ApplicationScoped
+class ContentDisplayUtils {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ContentDisplayUtils.class);
   private static final double WINDOW_WIDTH_RATIO = 0.3;
 
-  private ContentDisplayUtils() {
-    // Utility class
+  private final PlatformRunLater platformRunLater;
+  private final ViewController viewController;
+
+  @Inject
+  ContentDisplayUtils(final PlatformRunLater platformRunLater, final ViewController viewController) {
+    this.platformRunLater = platformRunLater;
+    this.viewController = viewController;
   }
 
-  static void adjustWindowSize(final ViewController viewController) {
+  void adjustWindowSize() {
     var scene = viewController.contentPane.getScene();
     if (scene != null && scene.getWindow() != null) {
       adjustWindowToScreen(scene.getWindow());
@@ -31,7 +39,7 @@ final class ContentDisplayUtils {
     window.setY(screenBounds.getMinY());
   }
 
-  private static void showContentPaneIfNotVisible(final ViewController viewController) {
+  private void showContentPaneIfNotVisible() {
     LOGGER.trace("Content pane visible: {}", viewController.contentPane.isVisible());
     if (!viewController.contentPane.isVisible()) {
       LOGGER.trace("Making content pane visible...");
@@ -41,15 +49,12 @@ final class ContentDisplayUtils {
     }
   }
 
-  static void displayMultiSolutionResult(
-      final ViewController viewController,
-      final MultiSolutionResult result,
-      final PlatformRunLater platformRunLater) {
+  void displayMultiSolutionResult(final MultiSolutionResult result) {
     LOGGER.trace("Displaying multi-solution result...");
 
     platformRunLater.accept(
         () -> {
-          showContentPaneIfNotVisible(viewController);
+          showContentPaneIfNotVisible();
 
           // Clear existing tabs
           viewController.solutionTabPane.getTabs().clear();
@@ -104,7 +109,7 @@ final class ContentDisplayUtils {
             viewController.problemStatementFlow.setFormattedContent("Loading...");
           }
 
-          adjustWindowSize(viewController);
+          adjustWindowSize();
         });
   }
 }

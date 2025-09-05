@@ -27,6 +27,7 @@ class MainSceneCreator {
   private final FileService fileService;
   private final PlatformRunLater platformRunLater;
   private final ScreenshotDisplayService screenshotDisplayService;
+  private final ContentDisplayUtils contentDisplayUtils;
 
   @Produces private ViewController viewController;
   @Produces private Scene mainScene;
@@ -38,12 +39,14 @@ class MainSceneCreator {
       final ScreenshotService screenshotService,
       final FileService fileService,
       final PlatformRunLater platformRunLater,
-      final ScreenshotDisplayService screenshotDisplayService) {
+      final ScreenshotDisplayService screenshotDisplayService,
+      final ContentDisplayUtils contentDisplayUtils) {
     this.anthropicService = anthropicService;
     this.screenshotService = screenshotService;
     this.fileService = fileService;
     this.platformRunLater = platformRunLater;
     this.screenshotDisplayService = screenshotDisplayService;
+    this.contentDisplayUtils = contentDisplayUtils;
   }
 
   @PostConstruct
@@ -67,7 +70,8 @@ class MainSceneCreator {
         screenshotService,
         fileService,
         platformRunLater,
-        screenshotDisplayService);
+        screenshotDisplayService,
+        contentDisplayUtils);
     this.contentPane = this.viewController.contentPane;
 
     LOGGER.trace("Main scene created from {}", VIEW_FXML_RESOURCE);
