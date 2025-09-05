@@ -28,8 +28,9 @@ application {
 
 sonar {
   properties {
-    property "sonar.projectKey", "coding-challenge-souffleur"
-    property "sonar.organization", "thesouffleuringhatter"
+    property 'sonar.projectKey', 'coding-challenge-souffleur'
+    property 'sonar.organization', 'thesouffleuringhatter'
+    property 'sonar.branch.name', 'main'
   }
 }
 
