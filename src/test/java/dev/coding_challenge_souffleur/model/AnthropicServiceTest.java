@@ -30,7 +30,7 @@ class AnthropicServiceTest {
   }
 
   @Test
-  void testAnalyseMultiSolutionMock_Message_ReturnsAnalysisResult() throws IOException {
+  void testAnalyseMultiSolutionMock_Message_ReturnsAnalysisResult() {
     var future = anthropicService.analyseMultiSolutionMock(null);
     var multiSolutionResult = future.join();
 
@@ -46,18 +46,10 @@ class AnthropicServiceTest {
     assertTrue(firstSolutionOpt.isPresent());
     var firstSolution = firstSolutionOpt.get();
 
-    assertEquals(
-        "Brute Force Approach", firstSolution.getSolutionTitle());
-    assertTrue(
-        firstSolution
-            .getSolutionDescription()
-            .contains("combinations of indices"));
-    assertTrue(
-        firstSolution
-            .getEdgeCases()
-            .contains("Single element arrays"));
-    assertTrue(
-        firstSolution.getSolutionCode().contains("class Solution {"));
+    assertEquals("Brute Force Approach", firstSolution.getSolutionTitle());
+    assertTrue(firstSolution.getSolutionDescription().contains("combinations of indices"));
+    assertTrue(firstSolution.getEdgeCases().contains("Single element arrays"));
+    assertTrue(firstSolution.getSolutionCode().contains("class Solution {"));
     assertTrue(firstSolution.getTimeComplexity().contains("O(n^4)"));
     assertTrue(firstSolution.getSpaceComplexity().contains("O(1)"));
   }

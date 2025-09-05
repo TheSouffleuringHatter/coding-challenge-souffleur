@@ -73,9 +73,7 @@ public enum SolutionSection {
     return partialPattern;
   }
 
-  /**
-   * Returns the section value from the given StreamingAnalysisResult.
-   */
+  /** Returns the section value from the given StreamingAnalysisResult. */
   public String getValue(final StreamingAnalysisResult result) {
     return switch (this) {
       case PROBLEM_STATEMENT -> result.getProblemStatement();

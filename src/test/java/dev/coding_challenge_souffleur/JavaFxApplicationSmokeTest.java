@@ -237,7 +237,7 @@ class JavaFxApplicationSmokeTest {
           return statusLabel.getText().toLowerCase().contains("complete");
         });
     WaitForAsyncUtils.waitFor(
-      2, TimeUnit.SECONDS, () -> !robot.lookup(SOLUTION_TAB_PANE_SELECTOR).queryAll().isEmpty());
+        2, TimeUnit.SECONDS, () -> !robot.lookup(SOLUTION_TAB_PANE_SELECTOR).queryAll().isEmpty());
   }
 
   private VBox getSelectedTabContentBox(final TabPane tabPane) {

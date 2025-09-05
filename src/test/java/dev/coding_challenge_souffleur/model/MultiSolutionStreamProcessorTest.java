@@ -149,9 +149,7 @@ class MultiSolutionStreamProcessorTest {
     assertNotNull(solution.getSolutionTitle());
     assertEquals("Hash Map Approach", solution.getSolutionTitle());
     assertNotNull(solution.getSolutionDescription());
-    assertEquals(
-        "Test solution description",
-        solution.getSolutionDescription());
+    assertEquals("Test solution description", solution.getSolutionDescription());
   }
 
   @Test
@@ -164,13 +162,11 @@ class MultiSolutionStreamProcessorTest {
 
     var solution1 = result.getSolution(0).get();
     assertEquals("Solution 1", solution1.getSolutionTitle());
-    assertEquals(
-        "First solution", solution1.getSolutionDescription());
+    assertEquals("First solution", solution1.getSolutionDescription());
 
     var solution2 = result.getSolution(1).get();
     assertEquals("Solution 2", solution2.getSolutionTitle());
-    assertEquals(
-        "Second solution", solution2.getSolutionDescription());
+    assertEquals("Second solution", solution2.getSolutionDescription());
   }
 
   @Test

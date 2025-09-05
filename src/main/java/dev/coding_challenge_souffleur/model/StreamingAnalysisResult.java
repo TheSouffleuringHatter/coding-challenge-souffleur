@@ -2,7 +2,6 @@ package dev.coding_challenge_souffleur.model;
 
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

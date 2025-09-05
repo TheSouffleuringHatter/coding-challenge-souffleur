@@ -1,6 +1,5 @@
 package dev.coding_challenge_souffleur.view.components;
 
-import dev.coding_challenge_souffleur.model.SolutionSection;
 import dev.coding_challenge_souffleur.model.StreamingAnalysisResult;
 import java.io.IOException;
 import javafx.fxml.FXML;
@@ -49,11 +48,7 @@ public class SolutionTabContent extends ScrollPane {
     // Set tab title from solution title or default
     var tabTitle = "Solution " + (solutionIndex + 1);
     if (solution != null && solution.getSolutionTitle() != null) {
-      tabTitle =
-          "("
-              + (solutionIndex + 1)
-              + ") "
-              + solution.getSolutionTitle();
+      tabTitle = "(" + (solutionIndex + 1) + ") " + solution.getSolutionTitle();
     }
     tab.setText(tabTitle);
 
