@@ -12,12 +12,25 @@ public class FormattedTextFlow extends TextFlow {
   private static final String CODE_STYLE = "code-text";
 
   /**
-   * Updates the TextFlow with formatted content, handling null safety and line breaks.
+   * Updates the TextFlow with normal formatted content (no code styling).
    *
    * @param content The content to display
-   * @param isCode Whether to apply code styling
    */
-  void setFormattedContent(final String content, final boolean isCode) {
+  void setFormattedContent(final String content) {
+    setFormattedContentInternal(content, false);
+  }
+
+  /**
+   * Updates the TextFlow with code formatted content (code styling and line numbers).
+   *
+   * @param content The content to display
+   */
+  void setFormattedCodeContent(final String content) {
+    setFormattedContentInternal(content, true);
+  }
+
+  // Internal helper to keep logic in one place
+  private void setFormattedContentInternal(final String content, final boolean isCode) {
     // Clear existing content
     this.getChildren().clear();
 

@@ -4,8 +4,6 @@ import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ScrollPane;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Reusable UI component for displaying a single solution tab's content. Built with the Custom
@@ -13,7 +11,6 @@ import org.slf4j.LoggerFactory;
  */
 public class SolutionTabContent extends ScrollPane {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(SolutionTabContent.class);
   private static final String SOLUTION_TAB_FXML = "SolutionTabContent.fxml";
 
   @FXML private FormattedTextFlow solutionDescriptionFlow;
@@ -23,10 +20,6 @@ public class SolutionTabContent extends ScrollPane {
   @FXML private FormattedTextFlow spaceComplexityFlow;
 
   public SolutionTabContent() {
-    loadFXML();
-  }
-
-  private void loadFXML() {
     var loader = new FXMLLoader(getClass().getResource(SOLUTION_TAB_FXML));
     loader.setRoot(this);
     loader.setController(this);
@@ -38,22 +31,22 @@ public class SolutionTabContent extends ScrollPane {
   }
 
   public void setSolutionDescription(final String content) {
-    solutionDescriptionFlow.setFormattedContent(content, false);
+    solutionDescriptionFlow.setFormattedContent(content);
   }
 
   public void setEdgeCases(final String content) {
-    edgeCasesFlow.setFormattedContent(content, false);
+    edgeCasesFlow.setFormattedContent(content);
   }
 
   public void setSolutionCode(final String content) {
-    solutionCodeFlow.setFormattedContent(content, true);
+    solutionCodeFlow.setFormattedCodeContent(content);
   }
 
   public void setTimeComplexity(final String content) {
-    timeComplexityFlow.setFormattedContent(content, false);
+    timeComplexityFlow.setFormattedContent(content);
   }
 
   public void setSpaceComplexity(final String content) {
-    spaceComplexityFlow.setFormattedContent(content, false);
+    spaceComplexityFlow.setFormattedContent(content);
   }
 }

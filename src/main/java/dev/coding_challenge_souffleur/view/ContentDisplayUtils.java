@@ -99,9 +99,9 @@ final class ContentDisplayUtils {
           // Problem statement: set if present, otherwise leave blank
           var problem = result.getSharedProblemStatement();
           if (problem.isPresent()) {
-            viewController.problemStatementFlow.setFormattedContent(problem.get(), false);
+            viewController.problemStatementFlow.setFormattedContent(problem.get());
           } else {
-            viewController.problemStatementFlow.setFormattedContent("Loading...", false);
+            viewController.problemStatementFlow.setFormattedContent("Loading...");
           }
 
           adjustWindowSize(viewController);
