@@ -69,8 +69,7 @@ class MainSceneCreator {
     this.viewController = fxmlLoader.getController();
 
     // Create MultiSolutionTabPane and store it for CDI injection
-    this.multiSolutionTabPane = new MultiSolutionTabPane(platformRunLater);
-
+    this.multiSolutionTabPane = new MultiSolutionTabPane();
     this.viewController.setup(
         anthropicService,
         screenshotService,

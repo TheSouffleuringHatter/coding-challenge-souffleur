@@ -15,10 +15,7 @@ public class MultiSolutionTabPane extends TabPane {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MultiSolutionTabPane.class);
 
-  private final PlatformRunLater platformRunLater;
-
-  public MultiSolutionTabPane(final PlatformRunLater platformRunLater) {
-    this.platformRunLater = platformRunLater;
+  public MultiSolutionTabPane() {
     this.getStyleClass().add("solution-tabs");
     this.setId("solutionTabPane");
   }
@@ -33,31 +30,27 @@ public class MultiSolutionTabPane extends TabPane {
   public void displayResult(final MultiSolutionResult result) {
     LOGGER.trace("Displaying multi-solution result in TabPane...");
 
-    platformRunLater.accept(
-        () -> {
-          var solutionCount = Math.max(1, result.getSolutionCount());
+    var solutionCount = Math.max(1, result.getSolutionCount());
+    for (var i = 0; i < solutionCount; i++) {
+      if (result.getSolution(i).isEmpty()) {
+        return;
+      }
 
-          for (var i = 0; i < solutionCount; i++) {
-            if (result.getSolution(i).isEmpty()) {
-              return;
-            }
+      LOGGER.trace("Updating tab content for solution {}", i + 1);
+      var solution = result.getSolution(i).get();
 
-            LOGGER.trace("Updating tab content for solution {}", i + 1);
-            var solution = result.getSolution(i).get();
+      var tabContent = getOrCreateTabContent(i);
+      tabContent.displaySolution(solution, i);
 
-            var tabContent = getOrCreateTabContent(i);
-            tabContent.displaySolution(solution, i);
+      // Force layout pass to trigger window resize for content changes
+      this.requestLayout();
 
-            // Force layout pass to trigger window resize for content changes
-            this.requestLayout();
-
-            // Also request layout on the scene root to ensure full layout recalculation
-            var scene = this.getScene();
-            if (scene != null && scene.getRoot() != null) {
-              scene.getRoot().requestLayout();
-            }
-          }
-        });
+      // Also request layout on the scene root to ensure full layout recalculation
+      var scene = this.getScene();
+      if (scene != null && scene.getRoot() != null) {
+        scene.getRoot().requestLayout();
+      }
+    }
   }
 
   private SolutionTabContent getOrCreateTabContent(final int i) {
