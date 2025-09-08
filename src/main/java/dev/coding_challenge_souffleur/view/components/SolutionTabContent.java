@@ -51,7 +51,7 @@ public class SolutionTabContent extends ScrollPane {
 
     solutionDescriptionFlow.setFormattedContent(solution.getSolutionDescription());
     edgeCasesFlow.setFormattedContent(solution.getEdgeCases());
-    solutionCodeFlow.setFormattedContent(solution.getSolutionCode());
+    solutionCodeFlow.setFormattedCodeContent(solution.getSolutionCode());
     timeComplexityFlow.setFormattedContent(solution.getTimeComplexity());
     spaceComplexityFlow.setFormattedContent(solution.getSpaceComplexity());
   }
