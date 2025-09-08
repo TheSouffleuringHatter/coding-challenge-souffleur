@@ -102,7 +102,7 @@ save.screenshot.to.file=false
 # Application Behavior Configuration
 app.exit.platform.on.close=true
 app.keyboard.filter.injected.keys=true  
-app.stage.creation.mode=async
+app.stage.creation.async=true
 app.keyboard.modifier.keys=VK_RCONTROL
 ```
 
@@ -112,7 +112,7 @@ app.keyboard.modifier.keys=VK_RCONTROL
 |-------------------------------------|-------------------------------------------------------|--------------------|-----------------------|
 | `app.exit.platform.on.close`        | Whether to call `Platform.exit()` when closing        | `true`             | `false`               |
 | `app.keyboard.filter.injected.keys` | Filter out injected keystrokes                        | `true`             | `false`               |
-| `app.stage.creation.mode`           | Stage creation timing                                 | `async`            | `sync`                |
+| `app.stage.creation.async`          | Create stage asynchronously (true) or synchronously (false) | `true`             | `false`              |
 | `app.keyboard.modifier.keys`        | Modifier keys for shortcuts (comma-separated Win32VK) | `VK_RCONTROL`      | `VK_LSHIFT,VK_RSHIFT` |
 
 The test environment automatically overrides these settings in

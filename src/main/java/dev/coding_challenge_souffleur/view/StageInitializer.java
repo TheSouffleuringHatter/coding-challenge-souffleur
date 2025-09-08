@@ -1,6 +1,5 @@
 package dev.coding_challenge_souffleur.view;
 
-import dev.coding_challenge_souffleur.config.StageCreationMode;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
@@ -25,7 +24,7 @@ public class StageInitializer {
 
   private final WindowFromScreenCaptureHider windowFromScreenCaptureHider;
   private final Scene mainScene;
-  private final StageCreationMode stageCreationMode;
+  private final boolean asyncStageCreation;
 
   private Stage stage;
 
@@ -33,10 +32,10 @@ public class StageInitializer {
   StageInitializer(
       final WindowFromScreenCaptureHider windowFromScreenCaptureHider,
       final Scene mainScene,
-      @ConfigProperty(name = "app.stage.creation.mode") final StageCreationMode stageCreationMode) {
+      @ConfigProperty(name = "app.stage.creation.async") final boolean asyncStageCreation) {
     this.mainScene = mainScene;
     this.windowFromScreenCaptureHider = windowFromScreenCaptureHider;
-    this.stageCreationMode = stageCreationMode;
+    this.asyncStageCreation = asyncStageCreation;
   }
 
   /**
@@ -70,7 +69,7 @@ public class StageInitializer {
 
     // In sync mode, JavaFX Platform is already initialized by TestFX,
     // so we can create the stage synchronously
-    if (stageCreationMode == StageCreationMode.SYNC) {
+    if (!asyncStageCreation) {
       try {
         this.createAndShowOverlayStage();
         windowFromScreenCaptureHider.excludeWindowsFromScreenCapture();
@@ -89,7 +88,7 @@ public class StageInitializer {
   @Produces
   public Stage getStage() {
     // In sync mode, stage was created in @PostConstruct
-    if (stageCreationMode == StageCreationMode.SYNC) {
+    if (!asyncStageCreation) {
       return stage;
     }
 

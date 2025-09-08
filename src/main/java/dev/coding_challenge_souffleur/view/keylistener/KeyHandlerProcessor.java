@@ -33,17 +33,15 @@ class KeyHandlerProcessor implements WindowsKeyListener {
 
     keyHandlers = new EnumMap<>(Win32VK.class);
     keyHandlerInstances.forEach(keyHandler -> keyHandlers.put(keyHandler.getKeyCode(), keyHandler));
-    LOGGER.debug("Initialized with {} key handlers", keyHandlers.size());
+    LOGGER.debug(
+        "Initialized with {} key handlers, modifier keys is: {}", keyHandlers.size(), modifierKeys);
   }
 
   @Override
   public boolean responsibleFor(final WindowsKeyEvent event) {
     var pressedModifiers = event.pressedModifierKeyCodes();
-    var configuredKeyCodes = modifierKeys.stream()
-        .map(win32vk -> win32vk.code)
-        .toList();
-    var modifierMatches = pressedModifiers.stream()
-        .anyMatch(configuredKeyCodes::contains);
+    var configuredKeyCodes = modifierKeys.stream().map(win32vk -> win32vk.code).toList();
+    var modifierMatches = pressedModifiers.stream().anyMatch(configuredKeyCodes::contains);
     return modifierMatches && keyHandlers.containsKey(event.keyCode());
   }
 
@@ -58,7 +56,7 @@ class KeyHandlerProcessor implements WindowsKeyListener {
     LOGGER.trace("Received event {} in {}", event, keyHandlerClassSimpleName);
 
     if (event.keyDown()) {
-      LOGGER.debug("Executing action in: {}", keyHandlerClassSimpleName);
+      LOGGER.trace("Executing action in: {}", keyHandlerClassSimpleName);
       platformRunLater.accept(keyHandler::performAction);
     }
 
