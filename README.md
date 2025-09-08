@@ -92,7 +92,7 @@ Souffleur activation modifier is `Control on the righten side`.
 ## 🛠 Configuration
 
 Create `.env` or edit `src/main/resources/META-INF/microprofile-config.properties`:
-
+ 
 ```properties
 # AI Model Configuration
 anthropic.model=claude-sonnet-4-0
@@ -108,12 +108,12 @@ app.keyboard.modifier.keys=VK_RCONTROL
 
 ### Configuration Properties
 
-| Property                            | Description                                           | Production Default | Test Default          |
-|-------------------------------------|-------------------------------------------------------|--------------------|-----------------------|
-| `app.exit.platform.on.close`        | Whether to call `Platform.exit()` when closing        | `true`             | `false`               |
-| `app.keyboard.filter.injected.keys` | Filter out injected keystrokes                        | `true`             | `false`               |
-| `app.stage.creation.async`          | Create stage asynchronously (true) or synchronously (false) | `true`             | `false`              |
-| `app.keyboard.modifier.keys`        | Modifier keys for shortcuts (comma-separated Win32VK) | `VK_RCONTROL`      | `VK_LSHIFT,VK_RSHIFT` |
+| Property                            | Description                                                 | Production Default | Test Default          |
+|-------------------------------------|-------------------------------------------------------------|--------------------|-----------------------|
+| `app.exit.platform.on.close`        | Whether to call `Platform.exit()` when closing              | `true`             | `false`               |
+| `app.keyboard.filter.injected.keys` | Filter out injected keystrokes                              | `true`             | `false`               |
+| `app.stage.creation.async`          | Create stage asynchronously (true) or synchronously (false) | `true`             | `false`               |
+| `app.keyboard.modifier.keys`        | Modifier keys for shortcuts (comma-separated Win32VK)       | `VK_RCONTROL`      | `VK_LSHIFT,VK_RSHIFT` |
 
 The test environment automatically overrides these settings in
 `src/test/resources/META-INF/microprofile-config.properties` to ensure proper test execution.
