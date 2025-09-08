@@ -6,11 +6,11 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
 import javafx.application.Platform;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +31,7 @@ public class StageInitializer {
 
   @Inject
   StageInitializer(
-      final WindowFromScreenCaptureHider windowFromScreenCaptureHider, 
+      final WindowFromScreenCaptureHider windowFromScreenCaptureHider,
       final Scene mainScene,
       @ConfigProperty(name = "app.stage.creation.mode") final StageCreationMode stageCreationMode) {
     this.mainScene = mainScene;

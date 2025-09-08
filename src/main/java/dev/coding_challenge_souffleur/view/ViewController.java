@@ -42,7 +42,6 @@ public class ViewController {
   @FXML private HBox screenshotPreviewContainer;
   @FXML private ImageView screenshotPreview;
 
-
   @FXML
   public void initialize() {
     shortcutModifierText.setText(MatchingModifier.MATCHING_MODIFIER.toString());
@@ -116,8 +115,7 @@ public class ViewController {
 
   public void executeMultiSolutionMockAnalysis() {
     updateStatus("Running multi-solution mock analysis...");
-    var future =
-        anthropicService.analyseMultiSolutionMock(this::displayMultiSolutionResult);
+    var future = anthropicService.analyseMultiSolutionMock(this::displayMultiSolutionResult);
 
     handleMultiSolutionCompletion(future, "multi-solution mock analysis");
   }

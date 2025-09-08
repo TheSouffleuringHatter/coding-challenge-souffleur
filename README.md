@@ -97,10 +97,8 @@ Create `.env` or edit `src/main/resources/META-INF/microprofile-config.propertie
 # AI Model Configuration
 anthropic.model=claude-sonnet-4-0
 anthropic.api.key=your-api-key-here
-
 # Screenshot Configuration  
 save.screenshot.to.file=false
-
 # Application Behavior Configuration
 app.exit.platform.on.close=true
 app.keyboard.filter.injected.keys=true  
@@ -110,14 +108,15 @@ app.keyboard.modifier.key=RIGHT_CTRL
 
 ### Configuration Properties
 
-| Property | Description | Production Default | Test Default |
-|----------|-------------|-------------------|--------------|
-| `app.exit.platform.on.close` | Whether to call `Platform.exit()` when closing | `true` | `false` |
-| `app.keyboard.filter.injected.keys` | Filter out injected keystrokes | `true` | `false` |
-| `app.stage.creation.mode` | Stage creation timing | `async` | `sync` |
-| `app.keyboard.modifier.key` | Modifier key for shortcuts | `RIGHT_CTRL` | `ANY_SHIFT` |
+| Property                            | Description                                    | Production Default | Test Default |
+|-------------------------------------|------------------------------------------------|--------------------|--------------|
+| `app.exit.platform.on.close`        | Whether to call `Platform.exit()` when closing | `true`             | `false`      |
+| `app.keyboard.filter.injected.keys` | Filter out injected keystrokes                 | `true`             | `false`      |
+| `app.stage.creation.mode`           | Stage creation timing                          | `async`            | `sync`       |
+| `app.keyboard.modifier.key`         | Modifier key for shortcuts                     | `RIGHT_CTRL`       | `ANY_SHIFT`  |
 
-The test environment automatically overrides these settings in `src/test/resources/META-INF/microprofile-config.properties` to ensure proper test execution.
+The test environment automatically overrides these settings in
+`src/test/resources/META-INF/microprofile-config.properties` to ensure proper test execution.
 
 ## 📋 System Requirements
 

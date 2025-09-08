@@ -85,7 +85,8 @@ class KeyHandlerProcessorTest {
         .when(keyHandlerInstances)
         .forEach(any(Consumer.class));
 
-    processor = new KeyHandlerProcessor(keyHandlerInstances, platformRunLater, ModifierKeyType.RIGHT_CTRL);
+    processor =
+        new KeyHandlerProcessor(keyHandlerInstances, platformRunLater, ModifierKeyType.RIGHT_CTRL);
   }
 
   /**
@@ -125,7 +126,8 @@ class KeyHandlerProcessorTest {
         .when(platformRunLater)
         .accept(any(Runnable.class));
 
-    processor = new KeyHandlerProcessor(keyHandlerInstances, platformRunLater, ModifierKeyType.RIGHT_CTRL);
+    processor =
+        new KeyHandlerProcessor(keyHandlerInstances, platformRunLater, ModifierKeyType.RIGHT_CTRL);
 
     lenient().when(mockEvent.keyCode()).thenReturn(eventKeyCode);
     lenient().when(mockEvent.modifierKeyCodesMatchExactly(any())).thenReturn(modifiersMatch);
@@ -176,7 +178,8 @@ class KeyHandlerProcessorTest {
         .when(platformRunLater)
         .accept(any(Runnable.class));
 
-    processor = new KeyHandlerProcessor(keyHandlerInstances, platformRunLater, ModifierKeyType.RIGHT_CTRL);
+    processor =
+        new KeyHandlerProcessor(keyHandlerInstances, platformRunLater, ModifierKeyType.RIGHT_CTRL);
 
     lenient().when(mockEvent.keyCode()).thenReturn(eventKeyCode);
     lenient().when(mockEvent.keyDown()).thenReturn(keyDown);
@@ -224,7 +227,8 @@ class KeyHandlerProcessorTest {
         .when(platformRunLater)
         .accept(any(Runnable.class));
 
-    processor = new KeyHandlerProcessor(keyHandlerInstances, platformRunLater, ModifierKeyType.RIGHT_CTRL);
+    processor =
+        new KeyHandlerProcessor(keyHandlerInstances, platformRunLater, ModifierKeyType.RIGHT_CTRL);
 
     when(mockEvent.keyCode()).thenReturn(Win32VK.VK_B);
     when(mockEvent.modifierKeyCodesMatchExactly(any())).thenReturn(true);
@@ -267,7 +271,8 @@ class KeyHandlerProcessorTest {
         .when(platformRunLater)
         .accept(any(Runnable.class));
 
-    processor = new KeyHandlerProcessor(keyHandlerInstances, platformRunLater, ModifierKeyType.RIGHT_CTRL);
+    processor =
+        new KeyHandlerProcessor(keyHandlerInstances, platformRunLater, ModifierKeyType.RIGHT_CTRL);
 
     when(mockEvent.keyCode()).thenReturn(Win32VK.VK_B);
     when(mockEvent.keyDown()).thenReturn(true);
