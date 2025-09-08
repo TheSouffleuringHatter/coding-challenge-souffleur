@@ -24,7 +24,9 @@ public class MultiSolutionTabPane extends TabPane {
   }
 
   /**
-   * Displays the given MultiSolutionResult by creating and managing solution tabs internally.
+   * Displays the given MultiSolutionResult by incrementally updating solution tabs. This method
+   * preserves existing tabs and only updates their content, preventing flickering and maintaining
+   * user's tab selection state during streaming updates.
    *
    * @param result the multi-solution result to display
    */
@@ -33,21 +35,43 @@ public class MultiSolutionTabPane extends TabPane {
 
     platformRunLater.accept(
         () -> {
-          // Clear existing tabs
-          this.getTabs().clear();
-
-          // Ensure we have tabs for all solutions and build them directly
           var solutionCount = Math.max(1, result.getSolutionCount());
 
           for (var i = 0; i < solutionCount; i++) {
-            var solutionOpt = result.getSolution(i);
-            var content = new SolutionTabContent();
+            if (result.getSolution(i).isEmpty()) {
+              return;
+            }
 
-            // Use the enhanced displaySolution method to handle tab creation and content
-            var tab = content.displaySolution(solutionOpt.orElse(null), i);
+            LOGGER.trace("Updating tab content for solution {}", i + 1);
+            var solution = result.getSolution(i).get();
 
-            this.getTabs().add(tab);
+            var tabContent = getOrCreateTabContent(i);
+            tabContent.displaySolution(solution, i);
+
+            // Force layout pass to trigger window resize for content changes
+            this.requestLayout();
+
+            // Also request layout on the scene root to ensure full layout recalculation
+            var scene = this.getScene();
+            if (scene != null && scene.getRoot() != null) {
+              scene.getRoot().requestLayout();
+            }
           }
         });
+  }
+
+  private SolutionTabContent getOrCreateTabContent(final int i) {
+    SolutionTabContent tabContent;
+    if (i >= this.getTabs().size()) {
+      tabContent = new SolutionTabContent();
+      var tab = tabContent.getTab();
+      this.getTabs().add(tab);
+      LOGGER.trace("Adding new tab for solution {}", i + 1);
+    } else {
+      var tab = this.getTabs().get(i);
+      tabContent = (SolutionTabContent) tab.getContent();
+    }
+
+    return tabContent;
   }
 }

@@ -16,6 +16,8 @@ public class SolutionTabContent extends ScrollPane {
 
   private static final String SOLUTION_TAB_FXML = "SolutionTabContent.fxml";
 
+  private final Tab tab;
+
   @FXML private FormattedTextFlow solutionDescriptionFlow;
   @FXML private FormattedTextFlow edgeCasesFlow;
   @FXML private FormattedTextFlow solutionCodeFlow;
@@ -26,61 +28,48 @@ public class SolutionTabContent extends ScrollPane {
     var loader = new FXMLLoader(getClass().getResource(SOLUTION_TAB_FXML));
     loader.setRoot(this);
     loader.setController(this);
+
     try {
       loader.load();
     } catch (IOException e) {
       throw new IllegalStateException("Failed to load " + SOLUTION_TAB_FXML, e);
     }
+
+    this.tab = new Tab();
+    tab.setContent(this);
   }
 
   /**
-   * Displays a solution with the given index, handling tab title logic internally. Returns a
-   * configured Tab object ready for insertion into a TabPane.
+   * Displays a solution using an existing tab (for updates) or creates a new tab (for initial
+   * display). This unified method handles both creation and incremental updates elegantly.
    *
    * @param solution the solution to display
    * @param solutionIndex the 0-based index of this solution
-   * @return a configured Tab containing this solution content
    */
-  public Tab displaySolution(final StreamingAnalysisResult solution, final int solutionIndex) {
-    var tab = new Tab();
-    tab.setContent(this);
+  void displaySolution(final StreamingAnalysisResult solution, final int solutionIndex) {
+    updateTabTitle(solution, solutionIndex);
 
+    solutionDescriptionFlow.setFormattedContent(solution.getSolutionDescription());
+    edgeCasesFlow.setFormattedContent(solution.getEdgeCases());
+    solutionCodeFlow.setFormattedContent(solution.getSolutionCode());
+    timeComplexityFlow.setFormattedContent(solution.getTimeComplexity());
+    spaceComplexityFlow.setFormattedContent(solution.getSpaceComplexity());
+  }
+
+  Tab getTab() {
+    return this.tab;
+  }
+
+  private void updateTabTitle(final StreamingAnalysisResult solution, final int solutionIndex) {
     // Set tab title from solution title or default
-    var tabTitle = "Solution " + (solutionIndex + 1);
-    if (solution != null && solution.getSolutionTitle() != null) {
-      tabTitle = "(" + (solutionIndex + 1) + ") " + solution.getSolutionTitle();
-    }
-    tab.setText(tabTitle);
-
-    // If solution is null, rely on FXML defaults
-    if (solution != null) {
-      setSolutionDescription(solution.getSolutionDescription());
-      setEdgeCases(solution.getEdgeCases());
-      setSolutionCode(solution.getSolutionCode());
-      setTimeComplexity(solution.getTimeComplexity());
-      setSpaceComplexity(solution.getSpaceComplexity());
+    var newTabTitle = "(" + (solutionIndex + 1) + ") Solution";
+    if (solution.getSolutionTitle() != null) {
+      newTabTitle = "(" + (solutionIndex + 1) + ") " + solution.getSolutionTitle();
     }
 
-    return tab;
-  }
-
-  public void setSolutionDescription(final String content) {
-    solutionDescriptionFlow.setFormattedContent(content);
-  }
-
-  public void setEdgeCases(final String content) {
-    edgeCasesFlow.setFormattedContent(content);
-  }
-
-  public void setSolutionCode(final String content) {
-    solutionCodeFlow.setFormattedCodeContent(content);
-  }
-
-  public void setTimeComplexity(final String content) {
-    timeComplexityFlow.setFormattedContent(content);
-  }
-
-  public void setSpaceComplexity(final String content) {
-    spaceComplexityFlow.setFormattedContent(content);
+    // Only update the title if it would change
+    if (!newTabTitle.equals(tab.getText())) {
+      tab.setText(newTabTitle);
+    }
   }
 }
