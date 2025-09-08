@@ -13,8 +13,6 @@ import windowskeyboardhook.KeyboardHookFacade;
 
 public class JavaFxApplication extends Application {
 
-  public static final String APPLICATION_TESTING_FLAG = "application.testing";
-
   private static final Logger LOGGER = LoggerFactory.getLogger(JavaFxApplication.class);
 
   private WeldContainer weldContainer;
@@ -27,7 +25,6 @@ public class JavaFxApplication extends Application {
       throw new UnsupportedOperationException("This application requires MS Windows.");
     }
 
-    LOGGER.debug("Running in testing mode: {}", Boolean.getBoolean(APPLICATION_TESTING_FLAG));
     this.weld = new Weld().addPackages(true, this.getClass(), KeyboardHookFacade.class);
   }
 

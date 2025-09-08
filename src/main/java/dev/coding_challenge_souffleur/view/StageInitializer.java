@@ -1,6 +1,5 @@
 package dev.coding_challenge_souffleur.view;
 
-import dev.coding_challenge_souffleur.JavaFxApplication;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
@@ -10,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,16 +23,19 @@ public class StageInitializer {
   private static final Logger LOGGER = LoggerFactory.getLogger(StageInitializer.class);
 
   private final WindowFromScreenCaptureHider windowFromScreenCaptureHider;
-
   private final Scene mainScene;
+  private final boolean asyncStageCreation;
 
   private Stage stage;
 
   @Inject
   StageInitializer(
-      final WindowFromScreenCaptureHider windowFromScreenCaptureHider, final Scene mainScene) {
+      final WindowFromScreenCaptureHider windowFromScreenCaptureHider,
+      final Scene mainScene,
+      @ConfigProperty(name = "app.stage.creation.async") final boolean asyncStageCreation) {
     this.mainScene = mainScene;
     this.windowFromScreenCaptureHider = windowFromScreenCaptureHider;
+    this.asyncStageCreation = asyncStageCreation;
   }
 
   /**
@@ -64,41 +67,41 @@ public class StageInitializer {
 
     Platform.setImplicitExit(false);
 
-    // In testing mode, JavaFX Platform is already initialized by TestFX,
+    // In sync mode, JavaFX Platform is already initialized by TestFX,
     // so we can create the stage synchronously
-    if (Boolean.getBoolean(JavaFxApplication.APPLICATION_TESTING_FLAG)) {
+    if (!asyncStageCreation) {
       try {
         this.createAndShowOverlayStage();
         windowFromScreenCaptureHider.excludeWindowsFromScreenCapture();
-        LOGGER.debug("Stage initialization complete (testing mode)");
+        LOGGER.debug("Stage initialization complete (sync mode)");
       } catch (Exception e) {
-        throw new RuntimeException("Failed to initialize stage in testing mode", e);
+        throw new RuntimeException("Failed to initialize stage in sync mode", e);
       }
       return;
     }
 
-    // In production mode, stage creation is deferred until getStage() is called
+    // In async mode, stage creation is deferred until getStage() is called
     // This avoids the timing issue where @PostConstruct runs before JavaFX Platform is ready
     LOGGER.debug("Stage creation deferred until first access");
   }
 
   @Produces
   public Stage getStage() {
-    // In testing mode, stage was created in @PostConstruct
-    if (Boolean.getBoolean(JavaFxApplication.APPLICATION_TESTING_FLAG)) {
+    // In sync mode, stage was created in @PostConstruct
+    if (!asyncStageCreation) {
       return stage;
     }
 
-    // In production mode, create stage on first access
+    // In async mode, create stage on first access
     if (stage == null) {
       synchronized (this) {
         if (stage == null) {
           try {
             this.createAndShowOverlayStage();
             windowFromScreenCaptureHider.excludeWindowsFromScreenCapture();
-            LOGGER.debug("Stage initialization complete (production mode)");
+            LOGGER.debug("Stage initialization complete (async mode)");
           } catch (Exception e) {
-            throw new RuntimeException("Failed to initialize stage in production mode", e);
+            throw new RuntimeException("Failed to initialize stage in async mode", e);
           }
         }
       }

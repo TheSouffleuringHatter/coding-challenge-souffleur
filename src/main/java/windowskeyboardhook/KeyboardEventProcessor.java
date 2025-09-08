@@ -7,13 +7,13 @@ import com.sun.jna.platform.win32.WinDef.LPARAM;
 import com.sun.jna.platform.win32.WinDef.LRESULT;
 import com.sun.jna.platform.win32.WinDef.WPARAM;
 import com.sun.jna.platform.win32.WinUser.KBDLLHOOKSTRUCT;
-import dev.coding_challenge_souffleur.JavaFxApplication;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Any;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,18 +30,25 @@ class KeyboardEventProcessor {
   private final List<WindowsKeyListener> keyListeners;
   private final KeyboardStateManager keyboardStateManager;
   private final KeyboardHookManager keyboardHookManager;
+  private final boolean filterInjectedKeys;
 
   @Inject
   KeyboardEventProcessor(
       final KeyboardStateManager keyboardStateManager,
       final KeyboardHookManager keyboardHookManager,
-      @Any final Instance<WindowsKeyListener> keyListenerInstances) {
+      @Any final Instance<WindowsKeyListener> keyListenerInstances,
+      @ConfigProperty(name = "app.keyboard.filter.injected.keys")
+          final boolean filterInjectedKeys) {
     this.keyboardStateManager = keyboardStateManager;
     this.keyboardHookManager = keyboardHookManager;
+    this.filterInjectedKeys = filterInjectedKeys;
 
     this.keyListeners = new ArrayList<>();
     keyListenerInstances.forEach(keyListeners::add);
-    LOGGER.debug("Initialized with {} key listeners", keyListeners.size());
+    LOGGER.debug(
+        "Initialized with {} key listeners, filter injected keys: {}",
+        keyListeners.size(),
+        filterInjectedKeys);
   }
 
   /**
@@ -61,9 +68,8 @@ class KeyboardEventProcessor {
 
     // Ignore injected keystrokes to avoid feedback loops and incompatibilities with other tools
     var flags = info.flags;
-    if (!Boolean.getBoolean(JavaFxApplication.APPLICATION_TESTING_FLAG)
-        && (flags & INJECTED_FLAGS_MASK) != 0) {
-      LOGGER.warn("Ignoring injected keystroke: flags=0x{}", Integer.toHexString(flags));
+    if (filterInjectedKeys && (flags & INJECTED_FLAGS_MASK) != 0) {
+      LOGGER.debug("Ignoring injected keystroke: flags=0x{}", Integer.toHexString(flags));
       return callNextHook(nCode, wParam, info);
     }
 

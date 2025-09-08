@@ -92,12 +92,46 @@ Souffleur activation modifier is `Control on the righten side`.
 ## 🛠 Configuration
 
 Create `.env` or edit `src/main/resources/META-INF/microprofile-config.properties`:
-
+ 
 ```properties
+# AI Model Configuration
 anthropic.model=claude-sonnet-4-0
 anthropic.api.key=your-api-key-here
+# Screenshot Configuration  
 save.screenshot.to.file=false
+# Application Behavior Configuration
+app.exit.platform.on.close=true
+app.keyboard.filter.injected.keys=true  
+app.stage.creation.async=true
+app.keyboard.modifier.keys=VK_RCONTROL
 ```
+
+### Configuration Properties
+
+| Property                            | Description                                                 | Production Default | Test Default          |
+|-------------------------------------|-------------------------------------------------------------|--------------------|-----------------------|
+| `app.exit.platform.on.close`        | Whether to call `Platform.exit()` when closing              | `true`             | `false`               |
+| `app.keyboard.filter.injected.keys` | Filter out injected keystrokes                              | `true`             | `false`               |
+| `app.stage.creation.async`          | Create stage asynchronously (true) or synchronously (false) | `true`             | `false`               |
+| `app.keyboard.modifier.keys`        | Modifier keys for shortcuts (comma-separated Win32VK)       | `VK_RCONTROL`      | `VK_LSHIFT,VK_RSHIFT` |
+
+The test environment automatically overrides these settings in
+`src/test/resources/META-INF/microprofile-config.properties` to ensure proper test execution.
+
+#### Modifier Key Examples
+
+The `app.keyboard.modifier.keys` property accepts comma-separated Win32VK constants:
+
+- **Single key**: `VK_RCONTROL` (right Ctrl only)
+- **Multiple keys**: `VK_LSHIFT,VK_RSHIFT` (any shift key)
+- **Mixed modifiers**: `VK_LCONTROL,VK_RCONTROL,VK_MENU` (any Ctrl or Alt)
+
+Common Win32VK constants:
+
+- `VK_LCONTROL` / `VK_RCONTROL` - Left/Right Ctrl
+- `VK_LSHIFT` / `VK_RSHIFT` - Left/Right Shift
+- `VK_LMENU` / `VK_RMENU` - Left/Right Alt
+- `VK_LWIN` / `VK_RWIN` - Left/Right Windows key
 
 ## 📋 System Requirements
 

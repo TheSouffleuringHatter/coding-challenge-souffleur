@@ -1,14 +1,15 @@
 package dev.coding_challenge_souffleur.view.keylistener;
 
 import com.sun.jna.platform.win32.Win32VK;
-import dev.coding_challenge_souffleur.JavaFxApplication;
 import dev.coding_challenge_souffleur.view.PlatformRunLater;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Any;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import windowskeyboardhook.WindowsKeyEvent;
@@ -20,24 +21,27 @@ class KeyHandlerProcessor implements WindowsKeyListener {
   private static final Logger LOGGER = LoggerFactory.getLogger(KeyHandlerProcessor.class);
   private final PlatformRunLater platformRunLater;
   private final Map<Win32VK, KeyHandler> keyHandlers;
+  private final List<Win32VK> modifierKeys;
 
   @Inject
   KeyHandlerProcessor(
       @Any final Instance<KeyHandler> keyHandlerInstances,
-      final PlatformRunLater platformRunLater) {
+      final PlatformRunLater platformRunLater,
+      @ConfigProperty(name = "app.keyboard.modifier.keys") final List<Win32VK> modifierKeys) {
     this.platformRunLater = platformRunLater;
+    this.modifierKeys = modifierKeys;
 
     keyHandlers = new EnumMap<>(Win32VK.class);
     keyHandlerInstances.forEach(keyHandler -> keyHandlers.put(keyHandler.getKeyCode(), keyHandler));
-    LOGGER.debug("Initialized with {} key handlers", keyHandlers.size());
+    LOGGER.debug(
+        "Initialized with {} key handlers, modifier keys is: {}", keyHandlers.size(), modifierKeys);
   }
 
   @Override
   public boolean responsibleFor(final WindowsKeyEvent event) {
-    var modifierMatches =
-        Boolean.getBoolean(JavaFxApplication.APPLICATION_TESTING_FLAG)
-            ? event.anyShiftPressed()
-            : event.modifierKeyCodesMatchExactly(MatchingModifier.MATCHING_MODIFIER);
+    var pressedModifiers = event.pressedModifierKeyCodes();
+    var configuredKeyCodes = modifierKeys.stream().map(win32vk -> win32vk.code).toList();
+    var modifierMatches = pressedModifiers.stream().anyMatch(configuredKeyCodes::contains);
     return modifierMatches && keyHandlers.containsKey(event.keyCode());
   }
 
@@ -52,7 +56,7 @@ class KeyHandlerProcessor implements WindowsKeyListener {
     LOGGER.trace("Received event {} in {}", event, keyHandlerClassSimpleName);
 
     if (event.keyDown()) {
-      LOGGER.debug("Executing action in: {}", keyHandlerClassSimpleName);
+      LOGGER.trace("Executing action in: {}", keyHandlerClassSimpleName);
       platformRunLater.accept(keyHandler::performAction);
     }
 

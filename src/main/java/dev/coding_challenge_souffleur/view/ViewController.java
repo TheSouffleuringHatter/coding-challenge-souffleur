@@ -1,6 +1,5 @@
 package dev.coding_challenge_souffleur.view;
 
-import dev.coding_challenge_souffleur.JavaFxApplication;
 import dev.coding_challenge_souffleur.model.AnthropicService;
 import dev.coding_challenge_souffleur.model.MultiSolutionResult;
 import dev.coding_challenge_souffleur.model.ScreenshotService;
@@ -32,6 +31,7 @@ public class ViewController {
   private ScreenshotDisplayService screenshotDisplayService;
   private ContentPaneController contentPaneController;
   private MultiSolutionTabPane multiSolutionTabPane;
+  private boolean exitPlatformOnClose;
   @FXML private VBox contentPane;
   @FXML private FormattedTextFlow problemStatementFlow;
   @FXML private Button closeButton;
@@ -41,7 +41,6 @@ public class ViewController {
   @FXML private VBox problemStatementSection;
   @FXML private HBox screenshotPreviewContainer;
   @FXML private ImageView screenshotPreview;
-
 
   @FXML
   public void initialize() {
@@ -56,7 +55,7 @@ public class ViewController {
           screenshotDisplayService.stopHideTimer();
           headerBox.getScene().getWindow().hide();
 
-          if (!Boolean.getBoolean(JavaFxApplication.APPLICATION_TESTING_FLAG)) {
+          if (exitPlatformOnClose) {
             Platform.exit();
           }
         });
@@ -89,13 +88,15 @@ public class ViewController {
       final PlatformRunLater platformRunLater,
       final ScreenshotDisplayService screenshotDisplayService,
       final ContentPaneController contentPaneController,
-      final MultiSolutionTabPane multiSolutionTabPane) {
+      final MultiSolutionTabPane multiSolutionTabPane,
+      final boolean exitPlatformOnClose) {
     this.anthropicService = anthropicService;
     this.screenshotService = screenshotService;
     this.platformRunLater = platformRunLater;
     this.screenshotDisplayService = screenshotDisplayService;
     this.contentPaneController = contentPaneController;
     this.multiSolutionTabPane = multiSolutionTabPane;
+    this.exitPlatformOnClose = exitPlatformOnClose;
 
     screenshotDisplayService.initialize(screenshotPreviewContainer, screenshotPreview);
 
@@ -114,8 +115,7 @@ public class ViewController {
 
   public void executeMultiSolutionMockAnalysis() {
     updateStatus("Running multi-solution mock analysis...");
-    var future =
-        anthropicService.analyseMultiSolutionMock(this::displayMultiSolutionResult);
+    var future = anthropicService.analyseMultiSolutionMock(this::displayMultiSolutionResult);
 
     handleMultiSolutionCompletion(future, "multi-solution mock analysis");
   }

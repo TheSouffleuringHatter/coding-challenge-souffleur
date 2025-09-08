@@ -12,6 +12,8 @@ import static org.mockito.Mockito.when;
 import com.sun.jna.platform.win32.Win32VK;
 import dev.coding_challenge_souffleur.view.PlatformRunLater;
 import jakarta.enterprise.inject.Instance;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
@@ -84,7 +86,8 @@ class KeyHandlerProcessorTest {
         .when(keyHandlerInstances)
         .forEach(any(Consumer.class));
 
-    processor = new KeyHandlerProcessor(keyHandlerInstances, platformRunLater);
+    processor =
+        new KeyHandlerProcessor(keyHandlerInstances, platformRunLater, List.of(Win32VK.VK_RCONTROL));
   }
 
   /**
@@ -124,10 +127,12 @@ class KeyHandlerProcessorTest {
         .when(platformRunLater)
         .accept(any(Runnable.class));
 
-    processor = new KeyHandlerProcessor(keyHandlerInstances, platformRunLater);
+    processor =
+        new KeyHandlerProcessor(keyHandlerInstances, platformRunLater, List.of(Win32VK.VK_RCONTROL));
 
     lenient().when(mockEvent.keyCode()).thenReturn(eventKeyCode);
-    lenient().when(mockEvent.modifierKeyCodesMatchExactly(any())).thenReturn(modifiersMatch);
+    lenient().when(mockEvent.pressedModifierKeyCodes()).thenReturn(
+        modifiersMatch ? Set.of(Win32VK.VK_RCONTROL.code) : Set.of());
 
     // When
     var result = processor.responsibleFor(mockEvent);
@@ -175,7 +180,8 @@ class KeyHandlerProcessorTest {
         .when(platformRunLater)
         .accept(any(Runnable.class));
 
-    processor = new KeyHandlerProcessor(keyHandlerInstances, platformRunLater);
+    processor =
+        new KeyHandlerProcessor(keyHandlerInstances, platformRunLater, List.of(Win32VK.VK_RCONTROL));
 
     lenient().when(mockEvent.keyCode()).thenReturn(eventKeyCode);
     lenient().when(mockEvent.keyDown()).thenReturn(keyDown);
@@ -223,10 +229,11 @@ class KeyHandlerProcessorTest {
         .when(platformRunLater)
         .accept(any(Runnable.class));
 
-    processor = new KeyHandlerProcessor(keyHandlerInstances, platformRunLater);
+    processor =
+        new KeyHandlerProcessor(keyHandlerInstances, platformRunLater, List.of(Win32VK.VK_RCONTROL));
 
     when(mockEvent.keyCode()).thenReturn(Win32VK.VK_B);
-    when(mockEvent.modifierKeyCodesMatchExactly(any())).thenReturn(true);
+    when(mockEvent.pressedModifierKeyCodes()).thenReturn(Set.of(Win32VK.VK_RCONTROL.code));
 
     // When
     var result = processor.responsibleFor(mockEvent);
@@ -266,7 +273,8 @@ class KeyHandlerProcessorTest {
         .when(platformRunLater)
         .accept(any(Runnable.class));
 
-    processor = new KeyHandlerProcessor(keyHandlerInstances, platformRunLater);
+    processor =
+        new KeyHandlerProcessor(keyHandlerInstances, platformRunLater, List.of(Win32VK.VK_RCONTROL));
 
     when(mockEvent.keyCode()).thenReturn(Win32VK.VK_B);
     when(mockEvent.keyDown()).thenReturn(true);
