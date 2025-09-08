@@ -1,13 +1,14 @@
 package dev.coding_challenge_souffleur.view.keylistener;
 
 import com.sun.jna.platform.win32.Win32VK;
-import dev.coding_challenge_souffleur.JavaFxApplication;
+import dev.coding_challenge_souffleur.config.ModifierKeyType;
 import dev.coding_challenge_souffleur.view.PlatformRunLater;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Any;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 import java.util.EnumMap;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,12 +21,15 @@ class KeyHandlerProcessor implements WindowsKeyListener {
   private static final Logger LOGGER = LoggerFactory.getLogger(KeyHandlerProcessor.class);
   private final PlatformRunLater platformRunLater;
   private final Map<Win32VK, KeyHandler> keyHandlers;
+  private final ModifierKeyType modifierKeyType;
 
   @Inject
   KeyHandlerProcessor(
       @Any final Instance<KeyHandler> keyHandlerInstances,
-      final PlatformRunLater platformRunLater) {
+      final PlatformRunLater platformRunLater,
+      @ConfigProperty(name = "app.keyboard.modifier.key") final ModifierKeyType modifierKeyType) {
     this.platformRunLater = platformRunLater;
+    this.modifierKeyType = modifierKeyType;
 
     keyHandlers = new EnumMap<>(Win32VK.class);
     keyHandlerInstances.forEach(keyHandler -> keyHandlers.put(keyHandler.getKeyCode(), keyHandler));
@@ -35,7 +39,7 @@ class KeyHandlerProcessor implements WindowsKeyListener {
   @Override
   public boolean responsibleFor(final WindowsKeyEvent event) {
     var modifierMatches =
-        Boolean.getBoolean(JavaFxApplication.APPLICATION_TESTING_FLAG)
+        modifierKeyType == ModifierKeyType.ANY_SHIFT
             ? event.anyShiftPressed()
             : event.modifierKeyCodesMatchExactly(MatchingModifier.MATCHING_MODIFIER);
     return modifierMatches && keyHandlers.containsKey(event.keyCode());

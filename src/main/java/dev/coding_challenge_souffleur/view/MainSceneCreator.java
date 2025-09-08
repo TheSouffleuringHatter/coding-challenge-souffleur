@@ -10,6 +10,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
 import java.io.IOException;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
@@ -28,6 +29,7 @@ class MainSceneCreator {
   private final PlatformRunLater platformRunLater;
   private final ScreenshotDisplayService screenshotDisplayService;
   private final ContentPaneController contentPaneController;
+  private final boolean exitPlatformOnClose;
 
   @Produces private ViewController viewController;
   @Produces private Scene mainScene;
@@ -40,12 +42,14 @@ class MainSceneCreator {
       final FileService fileService,
       final PlatformRunLater platformRunLater,
       final ScreenshotDisplayService screenshotDisplayService,
-      final ContentPaneController contentPaneController) {
+      final ContentPaneController contentPaneController,
+      @ConfigProperty(name = "app.exit.platform.on.close") final boolean exitPlatformOnClose) {
     this.anthropicService = anthropicService;
     this.screenshotService = screenshotService;
     this.platformRunLater = platformRunLater;
     this.screenshotDisplayService = screenshotDisplayService;
     this.contentPaneController = contentPaneController;
+    this.exitPlatformOnClose = exitPlatformOnClose;
   }
 
   @PostConstruct
@@ -74,7 +78,8 @@ class MainSceneCreator {
         platformRunLater,
         screenshotDisplayService,
         contentPaneController,
-        this.multiSolutionTabPane);
+        this.multiSolutionTabPane,
+        exitPlatformOnClose);
 
     LOGGER.debug("Main scene created from {}", VIEW_FXML_RESOURCE);
   }

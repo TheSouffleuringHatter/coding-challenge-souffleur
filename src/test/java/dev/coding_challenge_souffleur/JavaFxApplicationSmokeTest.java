@@ -141,7 +141,6 @@ class JavaFxApplicationSmokeTest {
   @Init
   @SuppressWarnings("unused")
   void init() {
-    System.setProperty(JavaFxApplication.APPLICATION_TESTING_FLAG, Boolean.TRUE.toString());
     this.javaFxApplication = new JavaFxApplication();
     javaFxApplication.init();
   }
