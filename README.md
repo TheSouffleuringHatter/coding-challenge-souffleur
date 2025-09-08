@@ -103,20 +103,35 @@ save.screenshot.to.file=false
 app.exit.platform.on.close=true
 app.keyboard.filter.injected.keys=true  
 app.stage.creation.mode=async
-app.keyboard.modifier.key=RIGHT_CTRL
+app.keyboard.modifier.keys=VK_RCONTROL
 ```
 
 ### Configuration Properties
 
-| Property                            | Description                                    | Production Default | Test Default |
-|-------------------------------------|------------------------------------------------|--------------------|--------------|
-| `app.exit.platform.on.close`        | Whether to call `Platform.exit()` when closing | `true`             | `false`      |
-| `app.keyboard.filter.injected.keys` | Filter out injected keystrokes                 | `true`             | `false`      |
-| `app.stage.creation.mode`           | Stage creation timing                          | `async`            | `sync`       |
-| `app.keyboard.modifier.key`         | Modifier key for shortcuts                     | `RIGHT_CTRL`       | `ANY_SHIFT`  |
+| Property                            | Description                                           | Production Default | Test Default          |
+|-------------------------------------|-------------------------------------------------------|--------------------|-----------------------|
+| `app.exit.platform.on.close`        | Whether to call `Platform.exit()` when closing        | `true`             | `false`               |
+| `app.keyboard.filter.injected.keys` | Filter out injected keystrokes                        | `true`             | `false`               |
+| `app.stage.creation.mode`           | Stage creation timing                                 | `async`            | `sync`                |
+| `app.keyboard.modifier.keys`        | Modifier keys for shortcuts (comma-separated Win32VK) | `VK_RCONTROL`      | `VK_LSHIFT,VK_RSHIFT` |
 
 The test environment automatically overrides these settings in
 `src/test/resources/META-INF/microprofile-config.properties` to ensure proper test execution.
+
+#### Modifier Key Examples
+
+The `app.keyboard.modifier.keys` property accepts comma-separated Win32VK constants:
+
+- **Single key**: `VK_RCONTROL` (right Ctrl only)
+- **Multiple keys**: `VK_LSHIFT,VK_RSHIFT` (any shift key)
+- **Mixed modifiers**: `VK_LCONTROL,VK_RCONTROL,VK_MENU` (any Ctrl or Alt)
+
+Common Win32VK constants:
+
+- `VK_LCONTROL` / `VK_RCONTROL` - Left/Right Ctrl
+- `VK_LSHIFT` / `VK_RSHIFT` - Left/Right Shift
+- `VK_LMENU` / `VK_RMENU` - Left/Right Alt
+- `VK_LWIN` / `VK_RWIN` - Left/Right Windows key
 
 ## 📋 System Requirements
 
