@@ -37,14 +37,18 @@ class KeyboardEventProcessor {
       final KeyboardStateManager keyboardStateManager,
       final KeyboardHookManager keyboardHookManager,
       @Any final Instance<WindowsKeyListener> keyListenerInstances,
-      @ConfigProperty(name = "app.keyboard.filter.injected.keys") final boolean filterInjectedKeys) {
+      @ConfigProperty(name = "app.keyboard.filter.injected.keys")
+          final boolean filterInjectedKeys) {
     this.keyboardStateManager = keyboardStateManager;
     this.keyboardHookManager = keyboardHookManager;
     this.filterInjectedKeys = filterInjectedKeys;
 
     this.keyListeners = new ArrayList<>();
     keyListenerInstances.forEach(keyListeners::add);
-    LOGGER.debug("Initialized with {} key listeners", keyListeners.size());
+    LOGGER.debug(
+        "Initialized with {} key listeners, filter injected keys: {}",
+        keyListeners.size(),
+        filterInjectedKeys);
   }
 
   /**
@@ -65,7 +69,7 @@ class KeyboardEventProcessor {
     // Ignore injected keystrokes to avoid feedback loops and incompatibilities with other tools
     var flags = info.flags;
     if (filterInjectedKeys && (flags & INJECTED_FLAGS_MASK) != 0) {
-      LOGGER.warn("Ignoring injected keystroke: flags=0x{}", Integer.toHexString(flags));
+      LOGGER.debug("Ignoring injected keystroke: flags=0x{}", Integer.toHexString(flags));
       return callNextHook(nCode, wParam, info);
     }
 
