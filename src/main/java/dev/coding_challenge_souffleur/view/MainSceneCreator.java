@@ -39,7 +39,6 @@ class MainSceneCreator {
   MainSceneCreator(
       final AnthropicService anthropicService,
       final ScreenshotService screenshotService,
-      final FileService fileService,
       final PlatformRunLater platformRunLater,
       final ScreenshotDisplayService screenshotDisplayService,
       final ContentPaneController contentPaneController,
@@ -78,7 +77,7 @@ class MainSceneCreator {
         platformRunLater,
         screenshotDisplayService,
         contentPaneController,
-        this.multiSolutionTabPane,
+        multiSolutionTabPane,
         exitPlatformOnClose);
 
     LOGGER.debug("Main scene created from {}", VIEW_FXML_RESOURCE);
