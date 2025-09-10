@@ -29,9 +29,9 @@ without anyone knowing.
 **👻 Ghost Mode**: Transparent overlay that appears over any application without interfering with the
 underlying interface.
 
-**🎯 Keyboard Event Absorption**: Uses native Windows keyboard hooks to "suck up" all keyboard events
-within the application, preventing keyloggers or screen readers from detecting your interactions
-with the AI.
+**🎯 Keyboard Only Usage & Keyboard Event Absorption**: Uses native Windows keyboard hooks to "suck
+up" all keyboard events within the application, preventing keyloggers or screen readers from
+detecting your interactions with the AI.
 
 **📑 Multi-Solution Analysis**: Provides up to 3 different solution approaches for each coding
 problem with descriptive tabs like "Hash Map Approach", "Two Pointers", "Sliding Window" —
@@ -77,7 +77,7 @@ Souffleur activation modifier is `Control on the righten side`.
 | `1/2/3` | 📑 Switch Tab | Switch between solution tabs         |
 | `4/5`   | ⬆️⬇️ Scroll   | Navigate through current tab content |
 | `W`     | 🚫 Hide/Show  | Toggle overlay visibility            |
-| `Q`     | 🚫 Exit       | Exit Souffleur                       |
+| `Q`     | ❌ Exit        | Exit Souffleur                       |
 
 ### Typical Workflow
 
