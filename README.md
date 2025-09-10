@@ -149,7 +149,7 @@ the application window.
 This tells Windows to exclude the window from any screen capture, recording, or
 sharing — including OBS, Teams, Zoom, and Windows built-in screenshot tools.
 
-Additionally, the Souffleur window never gets activated and is transparent, event to mouse clicks.
+Additionally, the Souffleur window never gets activated and is transparent, even to mouse clicks.
 
 You can **test** this functionality yourself locally by running Souffleur,
 then running a screen capture tool like
@@ -184,13 +184,6 @@ Implemented in:
 
 ## 🔧 Development
 
-### Building and Testing
-
-- **Build**: `./gradlew build` or `gradlew.bat build`
-- **Run tests**: `./gradlew test`
-- **Run single test**: `./gradlew test --tests "ClassName.methodName"`
-- **Generate coverage**: `./gradlew jacocoTestReport`
-
 ### Architecture Overview
 
 This is a Windows-only JavaFX application with:
@@ -212,7 +205,8 @@ Key packages: `model/` (services), `view/` (JavaFX), `windowskeyboardhook/` (Win
    >
    > https://gizmodo.com/a-student-used-ai-to-beat-amazons-brutal-technical-interview-he-got-an-offer-and-someone-tattled-to-his-university-2000571562
 
-   Yeah, he was right (976 executables lines of code).
+   Yeah, he was right (984 coverable lines of code for 
+   [Commit 6e520e](https://github.com/TheSouffleuringHatter/coding-challenge-souffleur/commit/6e520edae2a0dd4adb15a6dad9fcdce1d257606f)).
 
 2. > A simple key stroke capturing react app can identify when users are pressing unnecessary keys
    > during any rounds.
