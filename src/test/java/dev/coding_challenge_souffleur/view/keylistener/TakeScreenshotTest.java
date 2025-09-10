@@ -2,6 +2,7 @@ package dev.coding_challenge_souffleur.view.keylistener;
 
 import static org.mockito.Mockito.*;
 
+import com.sun.jna.platform.win32.Win32VK;
 import dev.coding_challenge_souffleur.view.ScreenshotDisplayService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +16,7 @@ class TakeScreenshotTest {
 
   @Test
   void performAction_ShouldCallTakeScreenshotAndShowPreview() {
-    new TakeScreenshot(screenshotDisplayService).performAction();
+    new TakeScreenshot(Win32VK.VK_R, screenshotDisplayService).performAction();
 
     verify(screenshotDisplayService, times(1)).takeScreenshotOfForegroundWindowAndShowPreview();
   }

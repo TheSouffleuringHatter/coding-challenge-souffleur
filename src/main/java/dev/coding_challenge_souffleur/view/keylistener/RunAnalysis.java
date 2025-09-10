@@ -4,17 +4,19 @@ import com.sun.jna.platform.win32.Win32VK;
 import dev.coding_challenge_souffleur.view.ViewController;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
 class RunAnalysis implements KeyHandler {
 
-  static final Win32VK ANALYSE_KEY_CODE = Win32VK.VK_T;
-
   private final ViewController viewController;
+  private final Win32VK runAnalysisKeyCode;
 
   @Inject
-  RunAnalysis(final ViewController viewController) {
+  RunAnalysis(@ConfigProperty(name = "app.keyboard.key.run_analysis") final Win32VK runAnalysisKeyCode,
+              final ViewController viewController) {
     this.viewController = viewController;
+    this.runAnalysisKeyCode = runAnalysisKeyCode;
   }
 
   @Override
@@ -24,6 +26,6 @@ class RunAnalysis implements KeyHandler {
 
   @Override
   public Win32VK getKeyCode() {
-    return ANALYSE_KEY_CODE;
+    return runAnalysisKeyCode;
   }
 }

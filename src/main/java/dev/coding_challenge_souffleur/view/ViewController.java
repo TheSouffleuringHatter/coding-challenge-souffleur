@@ -1,12 +1,12 @@
 package dev.coding_challenge_souffleur.view;
 
+import com.sun.jna.platform.win32.Win32VK;
 import dev.coding_challenge_souffleur.model.AnthropicService;
 import dev.coding_challenge_souffleur.model.MultiSolutionResult;
 import dev.coding_challenge_souffleur.model.ScreenshotService;
 import dev.coding_challenge_souffleur.view.components.ContentPaneController;
 import dev.coding_challenge_souffleur.view.components.FormattedTextFlow;
 import dev.coding_challenge_souffleur.view.components.MultiSolutionTabPane;
-import dev.coding_challenge_souffleur.view.keylistener.KeyConstants;
 import dev.coding_challenge_souffleur.view.keylistener.MatchingModifier;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -16,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +43,7 @@ public class ViewController {
   @FXML
   public void initialize() {
     shortcutModifierText.setText(MatchingModifier.MATCHING_MODIFIER.toString());
-    closeButton.setText("❌ (" + Character.toString(KeyConstants.EXIT_KEY_CODE.code) + ")");
+    // Close button text will be set after setup() is called
   }
 
   @FXML
@@ -72,13 +73,16 @@ public class ViewController {
       final PlatformRunLater platformRunLater,
       final ScreenshotDisplayService screenshotDisplayService,
       final ContentPaneController contentPaneController,
-      final MultiSolutionTabPane multiSolutionTabPane) {
+      final MultiSolutionTabPane multiSolutionTabPane,
+      @ConfigProperty(name = "app.keyboard.key.exit") final Win32VK exitKeyCode) {
     this.anthropicService = anthropicService;
     this.screenshotService = screenshotService;
     this.platformRunLater = platformRunLater;
     this.screenshotDisplayService = screenshotDisplayService;
     this.contentPaneController = contentPaneController;
     this.multiSolutionTabPane = multiSolutionTabPane;
+    // Set close button text with exit key
+    closeButton.setText("❌ (" + Character.toString(exitKeyCode.code) + ")");
 
     screenshotDisplayService.initialize(screenshotPreviewContainer, screenshotPreview);
 

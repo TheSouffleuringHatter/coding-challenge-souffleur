@@ -2,6 +2,7 @@ package dev.coding_challenge_souffleur.view.keylistener;
 
 import static org.mockito.Mockito.*;
 
+import com.sun.jna.platform.win32.Win32VK;
 import dev.coding_challenge_souffleur.view.ViewController;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +16,7 @@ class RunAnalysisTest {
 
   @Test
   void performAction_ShouldDelegateToViewController() {
-    new RunAnalysis(viewController).performAction();
+    new RunAnalysis(Win32VK.VK_T, viewController).performAction();
 
     verify(viewController, times(1)).executeMultiSolutionAnalysis();
   }

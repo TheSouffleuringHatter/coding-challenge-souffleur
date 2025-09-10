@@ -4,19 +4,21 @@ import com.sun.jna.platform.win32.Win32VK;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import javafx.stage.Stage;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
 class MoveStageUp implements KeyHandler {
 
   static final int MOVE_AMOUNT = 30;
 
-  static final Win32VK MOVE_UP_KEY_CODE = Win32VK.VK_E;
-
   private final Stage stage;
+  private final Win32VK moveUpKeyCode;
 
   @Inject
-  MoveStageUp(final Stage stage) {
+  MoveStageUp(@ConfigProperty(name = "app.keyboard.key.move_up") final Win32VK moveUpKeyCode,
+              final Stage stage) {
     this.stage = stage;
+    this.moveUpKeyCode = moveUpKeyCode;
   }
 
   @Override
@@ -26,6 +28,6 @@ class MoveStageUp implements KeyHandler {
 
   @Override
   public Win32VK getKeyCode() {
-    return MOVE_UP_KEY_CODE;
+    return moveUpKeyCode;
   }
 }

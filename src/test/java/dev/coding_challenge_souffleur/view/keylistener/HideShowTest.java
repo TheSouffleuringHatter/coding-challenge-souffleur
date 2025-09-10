@@ -2,6 +2,7 @@ package dev.coding_challenge_souffleur.view.keylistener;
 
 import static org.mockito.Mockito.*;
 
+import com.sun.jna.platform.win32.Win32VK;
 import dev.coding_challenge_souffleur.view.WindowFromScreenCaptureHider;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +21,7 @@ class HideShowTest {
 
   @BeforeEach
   void setUp() {
-    hideShow = new HideShow(windowFromScreenCaptureHider, stage);
+    hideShow = new HideShow(Win32VK.VK_W, windowFromScreenCaptureHider, stage);
   }
 
   @Test

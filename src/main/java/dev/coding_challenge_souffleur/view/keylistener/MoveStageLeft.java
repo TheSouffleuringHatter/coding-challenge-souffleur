@@ -6,17 +6,19 @@ import com.sun.jna.platform.win32.Win32VK;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import javafx.stage.Stage;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
 class MoveStageLeft implements KeyHandler {
 
-  static final Win32VK MOVE_LEFT_KEY_CODE = Win32VK.VK_S;
-
   private final Stage stage;
+  private final Win32VK moveLeftKeyCode;
 
   @Inject
-  MoveStageLeft(final Stage stage) {
+  MoveStageLeft(@ConfigProperty(name = "app.keyboard.key.move_left") final Win32VK moveLeftKeyCode,
+                final Stage stage) {
     this.stage = stage;
+    this.moveLeftKeyCode = moveLeftKeyCode;
   }
 
   @Override
@@ -26,6 +28,6 @@ class MoveStageLeft implements KeyHandler {
 
   @Override
   public Win32VK getKeyCode() {
-    return MOVE_LEFT_KEY_CODE;
+    return moveLeftKeyCode;
   }
 }

@@ -2,30 +2,24 @@ package dev.coding_challenge_souffleur.view.keylistener;
 
 import static org.mockito.Mockito.*;
 
-import jakarta.enterprise.inject.Produces;
-import jakarta.inject.Inject;
+import com.sun.jna.platform.win32.Win32VK;
 import javafx.stage.Stage;
-import org.jboss.weld.junit5.auto.AddBeanClasses;
-import org.jboss.weld.junit5.auto.EnableAutoWeld;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-@EnableAutoWeld
-@AddBeanClasses(MoveStageUp.class)
 @ExtendWith(MockitoExtension.class)
 class MoveStageUpTest {
 
-  @Produces @Mock private Stage stage;
-
-  @Inject private MoveStageUp moveStageUp;
+  @Mock private Stage stage;
 
   @Test
   void performAction_ShouldDecreaseStageYCoordinateByMoveAmount() {
     // Arrange
     var initialY = 100.0;
     when(stage.getY()).thenReturn(initialY);
+    var moveStageUp = new MoveStageUp(Win32VK.VK_E, stage);
 
     // Act
     moveStageUp.performAction();

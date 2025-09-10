@@ -2,6 +2,7 @@ package dev.coding_challenge_souffleur.view.keylistener;
 
 import static org.mockito.Mockito.*;
 
+import com.sun.jna.platform.win32.Win32VK;
 import dev.coding_challenge_souffleur.view.components.MultiSolutionTabPane;
 import javafx.collections.FXCollections;
 import javafx.scene.control.SingleSelectionModel;
@@ -28,7 +29,7 @@ class SwitchToTab2Test {
     when(multiSolutionTabPane.getTabs()).thenReturn(tabs);
     when(multiSolutionTabPane.getSelectionModel()).thenReturn(selectionModel);
 
-    new SwitchToTab2(multiSolutionTabPane).performAction();
+    new SwitchToTab2(Win32VK.VK_2, multiSolutionTabPane).performAction();
 
     verify(selectionModel, times(1)).select(1);
   }

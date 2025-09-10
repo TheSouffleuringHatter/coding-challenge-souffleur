@@ -4,17 +4,19 @@ import com.sun.jna.platform.win32.Win32VK;
 import dev.coding_challenge_souffleur.view.ViewController;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
 class ToggleProblemStatement implements KeyHandler {
 
-  static final Win32VK TOGGLE_PROBLEM_KEY_CODE = Win32VK.VK_V;
-
   private final ViewController viewController;
+  private final Win32VK toggleProblemStatementKeyCode;
 
   @Inject
-  ToggleProblemStatement(final ViewController viewController) {
+  ToggleProblemStatement(@ConfigProperty(name = "app.keyboard.key.toggle_problem_statement") final Win32VK toggleProblemStatementKeyCode,
+                         final ViewController viewController) {
     this.viewController = viewController;
+    this.toggleProblemStatementKeyCode = toggleProblemStatementKeyCode;
   }
 
   @Override
@@ -24,6 +26,6 @@ class ToggleProblemStatement implements KeyHandler {
 
   @Override
   public Win32VK getKeyCode() {
-    return TOGGLE_PROBLEM_KEY_CODE;
+    return toggleProblemStatementKeyCode;
   }
 }

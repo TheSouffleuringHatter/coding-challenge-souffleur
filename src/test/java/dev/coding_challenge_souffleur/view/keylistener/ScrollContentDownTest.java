@@ -3,6 +3,7 @@ package dev.coding_challenge_souffleur.view.keylistener;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+import com.sun.jna.platform.win32.Win32VK;
 import dev.coding_challenge_souffleur.view.components.MultiSolutionTabPane;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SingleSelectionModel;
@@ -33,7 +34,7 @@ class ScrollContentDownTest {
     when(multiSolutionTabPane.getSelectionModel()).thenReturn(selectionModel);
     when(selectionModel.getSelectedItem()).thenReturn(tab);
 
-    new ScrollContentDown(multiSolutionTabPane).performAction();
+    new ScrollContentDown(Win32VK.VK_DOWN, multiSolutionTabPane).performAction();
 
     assertEquals(0.8, scrollPane.getVvalue());
   }

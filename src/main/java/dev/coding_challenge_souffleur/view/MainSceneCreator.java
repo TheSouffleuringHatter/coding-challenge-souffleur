@@ -1,9 +1,11 @@
 package dev.coding_challenge_souffleur.view;
 
+import com.sun.jna.platform.win32.Win32VK;
 import dev.coding_challenge_souffleur.model.AnthropicService;
 import dev.coding_challenge_souffleur.model.ScreenshotService;
 import dev.coding_challenge_souffleur.view.components.ContentPaneController;
 import dev.coding_challenge_souffleur.view.components.MultiSolutionTabPane;
+import dev.coding_challenge_souffleur.view.keylistener.ShortcutKeysLabel;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Instance;
@@ -34,6 +36,16 @@ class MainSceneCreator {
   private final ContentPaneController contentPaneController;
   private final Instance<Stage> stageInstance;
   private final boolean exitPlatformOnClose;
+  private final Win32VK exitKeyCode;
+  private final Win32VK hideShowKey;
+  private final Win32VK moveUpKey;
+  private final Win32VK moveDownKey;
+  private final Win32VK moveLeftKey;
+  private final Win32VK moveRightKey;
+  private final Win32VK screenshotKey;
+  private final Win32VK runAnalysisKey;
+  private final Win32VK scrollUpKey;
+  private final Win32VK scrollDownKey;
 
   @Produces private ViewController viewController;
   @Produces private Scene mainScene;
@@ -47,7 +59,17 @@ class MainSceneCreator {
       final ScreenshotDisplayService screenshotDisplayService,
       final ContentPaneController contentPaneController,
       final Instance<Stage> stageInstance,
-      @ConfigProperty(name = "app.exit.platform.on.close") final boolean exitPlatformOnClose) {
+      @ConfigProperty(name = "app.exit.platform.on.close") final boolean exitPlatformOnClose,
+      @ConfigProperty(name = "app.keyboard.key.exit") final Win32VK exitKeyCode,
+      @ConfigProperty(name = "app.keyboard.key.hide_show") final Win32VK hideShowKey,
+      @ConfigProperty(name = "app.keyboard.key.move_up") final Win32VK moveUpKey,
+      @ConfigProperty(name = "app.keyboard.key.move_down") final Win32VK moveDownKey,
+      @ConfigProperty(name = "app.keyboard.key.move_left") final Win32VK moveLeftKey,
+      @ConfigProperty(name = "app.keyboard.key.move_right") final Win32VK moveRightKey,
+      @ConfigProperty(name = "app.keyboard.key.screenshot") final Win32VK screenshotKey,
+      @ConfigProperty(name = "app.keyboard.key.run_analysis") final Win32VK runAnalysisKey,
+      @ConfigProperty(name = "app.keyboard.key.scroll_up") final Win32VK scrollUpKey,
+      @ConfigProperty(name = "app.keyboard.key.scroll_down") final Win32VK scrollDownKey) {
     this.anthropicService = anthropicService;
     this.screenshotService = screenshotService;
     this.platformRunLater = platformRunLater;
@@ -55,6 +77,16 @@ class MainSceneCreator {
     this.contentPaneController = contentPaneController;
     this.stageInstance = stageInstance;
     this.exitPlatformOnClose = exitPlatformOnClose;
+    this.exitKeyCode = exitKeyCode;
+    this.hideShowKey = hideShowKey;
+    this.moveUpKey = moveUpKey;
+    this.moveDownKey = moveDownKey;
+    this.moveLeftKey = moveLeftKey;
+    this.moveRightKey = moveRightKey;
+    this.screenshotKey = screenshotKey;
+    this.runAnalysisKey = runAnalysisKey;
+    this.scrollUpKey = scrollUpKey;
+    this.scrollDownKey = scrollDownKey;
   }
 
   @PostConstruct
@@ -74,6 +106,14 @@ class MainSceneCreator {
 
     this.viewController = fxmlLoader.getController();
 
+    // Find and initialize ShortcutKeysLabel with configuration
+    var shortcutKeysLabel = (ShortcutKeysLabel) scene.lookup("ShortcutKeysLabel");
+    if (shortcutKeysLabel != null) {
+      var initializedLabel = new ShortcutKeysLabel(hideShowKey, moveUpKey, moveDownKey, 
+          moveLeftKey, moveRightKey, screenshotKey, runAnalysisKey, scrollUpKey, scrollDownKey);
+      shortcutKeysLabel.setText(initializedLabel.getText());
+    }
+
     // Create MultiSolutionTabPane and store it for CDI injection
     this.multiSolutionTabPane = new MultiSolutionTabPane();
     this.viewController.setup(
@@ -82,7 +122,8 @@ class MainSceneCreator {
         platformRunLater,
         screenshotDisplayService,
         contentPaneController,
-        multiSolutionTabPane);
+        multiSolutionTabPane,
+        exitKeyCode);
 
     LOGGER.debug("Main scene created from {}", VIEW_FXML_RESOURCE);
   }

@@ -4,17 +4,19 @@ import com.sun.jna.platform.win32.Win32VK;
 import dev.coding_challenge_souffleur.view.components.MultiSolutionTabPane;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
 class SwitchToTab2 implements KeyHandler {
 
-  static final Win32VK SWITCH_TO_TAB2_KEY_CODE = Win32VK.VK_2;
-
   private final MultiSolutionTabPane multiSolutionTabPane;
+  private final Win32VK switchToTab2KeyCode;
 
   @Inject
-  SwitchToTab2(final MultiSolutionTabPane multiSolutionTabPane) {
+  SwitchToTab2(@ConfigProperty(name = "app.keyboard.key.switch_to_tab2") final Win32VK switchToTab2KeyCode,
+               final MultiSolutionTabPane multiSolutionTabPane) {
     this.multiSolutionTabPane = multiSolutionTabPane;
+    this.switchToTab2KeyCode = switchToTab2KeyCode;
   }
 
   @Override
@@ -29,6 +31,6 @@ class SwitchToTab2 implements KeyHandler {
 
   @Override
   public Win32VK getKeyCode() {
-    return SWITCH_TO_TAB2_KEY_CODE;
+    return switchToTab2KeyCode;
   }
 }

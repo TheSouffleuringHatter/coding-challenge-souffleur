@@ -6,17 +6,19 @@ import com.sun.jna.platform.win32.Win32VK;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import javafx.stage.Stage;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
 class MoveStageDown implements KeyHandler {
 
-  static final Win32VK MOVE_DOWN_KEY_CODE = Win32VK.VK_D;
-
   private final Stage stage;
+  private final Win32VK moveDownKeyCode;
 
   @Inject
-  MoveStageDown(final Stage stage) {
+  MoveStageDown(@ConfigProperty(name = "app.keyboard.key.move_down") final Win32VK moveDownKeyCode,
+                final Stage stage) {
     this.stage = stage;
+    this.moveDownKeyCode = moveDownKeyCode;
   }
 
   @Override
@@ -26,6 +28,6 @@ class MoveStageDown implements KeyHandler {
 
   @Override
   public Win32VK getKeyCode() {
-    return MOVE_DOWN_KEY_CODE;
+    return moveDownKeyCode;
   }
 }

@@ -7,6 +7,7 @@ import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.base.NodeMatchers.isInvisible;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 
+import com.sun.jna.platform.win32.Win32VK;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javafx.scene.Node;
@@ -21,6 +22,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import org.eclipse.microprofile.config.ConfigProvider;
 import org.jboss.weld.environment.se.WeldContainer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,24 +52,16 @@ class JavaFxApplicationSmokeTest {
    */
   private static final KeyCombination.Modifier MATCHING_MODIFIER = KeyCombination.SHIFT_DOWN;
 
-  private static final KeyCodeCombination HIDE_SHOW_KEY_CODE_COMBINATION =
-      new KeyCodeCombination(KeyCode.W, MATCHING_MODIFIER);
-  private static final KeyCodeCombination TAKE_SCREENSHOT_KEY_CODE_COMBINATION =
-      new KeyCodeCombination(KeyCode.R, MATCHING_MODIFIER);
-  private static final KeyCodeCombination RUN_MOCK_ANALYSIS_KEY_CODE_COMBINATION =
-      new KeyCodeCombination(KeyCode.Z, MATCHING_MODIFIER);
-  private static final KeyCodeCombination EXIT_KEY_CODE_COMBINATION =
-      new KeyCodeCombination(KeyCode.Q, MATCHING_MODIFIER);
-  private static final KeyCodeCombination SCROLL_DOWN_KEY_CODE_COMBINATION =
-      new KeyCodeCombination(KeyCode.DIGIT5, MATCHING_MODIFIER);
-  private static final KeyCodeCombination TOGGLE_PROBLEM_STATEMENT_KEY_CODE_COMBINATION =
-      new KeyCodeCombination(KeyCode.V, MATCHING_MODIFIER);
-  private static final KeyCodeCombination SWITCH_TO_TAB1 =
-      new KeyCodeCombination(KeyCode.DIGIT1, MATCHING_MODIFIER);
-  private static final KeyCodeCombination SWITCH_TO_TAB2 =
-      new KeyCodeCombination(KeyCode.DIGIT2, MATCHING_MODIFIER);
-  private static final KeyCodeCombination SWITCH_TO_TAB3 =
-      new KeyCodeCombination(KeyCode.DIGIT3, MATCHING_MODIFIER);
+  // Configuration-based key combinations - loaded from MicroProfile Config
+  private KeyCodeCombination hideShowKeyCombination;
+  private KeyCodeCombination screenshotKeyCombination;
+  private KeyCodeCombination runMockAnalysisKeyCombination;
+  private KeyCodeCombination exitKeyCombination;
+  private KeyCodeCombination scrollDownKeyCombination;
+  private KeyCodeCombination toggleProblemStatementKeyCombination;
+  private KeyCodeCombination switchToTab1Combination;
+  private KeyCodeCombination switchToTab2Combination;
+  private KeyCodeCombination switchToTab3Combination;
 
   private static final String TOGGLE_PROBLEM_STATEMENT_BUTTON_SELECTOR =
       "#toggleProblemStatementButton";
@@ -88,9 +82,62 @@ class JavaFxApplicationSmokeTest {
   private JavaFxApplication javaFxApplication;
   private WeldContainer aiOverlayApplicationWeldContainer;
 
-  private static void scrollDownUntilVisible(final FxRobot robot, String nodeQuery) {
+  private static KeyCodeCombination createKeyCombination(Win32VK win32VK) {
+    var keyCode = convertWin32VKToKeyCode(win32VK);
+    return new KeyCodeCombination(keyCode, MATCHING_MODIFIER);
+  }
+
+  private static KeyCode convertWin32VKToKeyCode(Win32VK win32VK) {
+    return switch (win32VK) {
+      case VK_W -> KeyCode.W;
+      case VK_R -> KeyCode.R;
+      case VK_Z -> KeyCode.Z;
+      case VK_Q -> KeyCode.Q;
+      case VK_5 -> KeyCode.DIGIT5;
+      case VK_V -> KeyCode.V;
+      case VK_1 -> KeyCode.DIGIT1;
+      case VK_2 -> KeyCode.DIGIT2;
+      case VK_3 -> KeyCode.DIGIT3;
+      default -> throw new IllegalArgumentException("Unsupported Win32VK: " + win32VK);
+    };
+  }
+
+  private void initializeKeyboardCombinations() {
+    var config = ConfigProvider.getConfig();
+
+    hideShowKeyCombination =
+        createKeyCombination(
+            Win32VK.valueOf(config.getValue("app.keyboard.key.hide_show", String.class)));
+    screenshotKeyCombination =
+        createKeyCombination(
+            Win32VK.valueOf(config.getValue("app.keyboard.key.screenshot", String.class)));
+    runMockAnalysisKeyCombination =
+        createKeyCombination(
+            Win32VK.valueOf(config.getValue("app.keyboard.key.run_mock_analysis", String.class)));
+    exitKeyCombination =
+        createKeyCombination(
+            Win32VK.valueOf(config.getValue("app.keyboard.key.exit", String.class)));
+    scrollDownKeyCombination =
+        createKeyCombination(
+            Win32VK.valueOf(config.getValue("app.keyboard.key.scroll_down", String.class)));
+    toggleProblemStatementKeyCombination =
+        createKeyCombination(
+            Win32VK.valueOf(
+                config.getValue("app.keyboard.key.toggle_problem_statement", String.class)));
+    switchToTab1Combination =
+        createKeyCombination(
+            Win32VK.valueOf(config.getValue("app.keyboard.key.switch_to_tab1", String.class)));
+    switchToTab2Combination =
+        createKeyCombination(
+            Win32VK.valueOf(config.getValue("app.keyboard.key.switch_to_tab2", String.class)));
+    switchToTab3Combination =
+        createKeyCombination(
+            Win32VK.valueOf(config.getValue("app.keyboard.key.switch_to_tab3", String.class)));
+  }
+
+  private void scrollDownUntilVisible(final FxRobot robot, String nodeQuery) {
     for (var i = 0; i < MAX_SCROLL_ATTEMPTS; i++) {
-      robot.push(SCROLL_DOWN_KEY_CODE_COMBINATION);
+      robot.push(scrollDownKeyCombination);
       robot.sleep(100);
 
       try {
@@ -143,6 +190,7 @@ class JavaFxApplicationSmokeTest {
   void init() {
     this.javaFxApplication = new JavaFxApplication();
     javaFxApplication.init();
+    initializeKeyboardCombinations();
   }
 
   @Start
@@ -190,13 +238,13 @@ class JavaFxApplicationSmokeTest {
     verifyThat(HEADER_BOX_SELECTOR, isVisible());
     verifyThat(CONTENT_PANE_SELECTOR, isInvisible());
 
-    robot.push(HIDE_SHOW_KEY_CODE_COMBINATION);
+    robot.push(hideShowKeyCombination);
     assertTrue(robot.lookup(MAIN_CONTAINER_SELECTOR).queryAll().isEmpty());
 
-    robot.push(HIDE_SHOW_KEY_CODE_COMBINATION);
+    robot.push(hideShowKeyCombination);
     verifyThat(MAIN_CONTAINER_SELECTOR, isVisible());
 
-    robot.push(TAKE_SCREENSHOT_KEY_CODE_COMBINATION);
+    robot.push(screenshotKeyCombination);
     verifyThat(SCREENSHOT_PREVIEW_SELECTOR, isVisible());
   }
 
@@ -213,13 +261,13 @@ class JavaFxApplicationSmokeTest {
     assertTrue(initialDescText.contains("combinations of indices"));
     assertTrue(initialDescText.contains("Nested loops"));
 
-    switchToTabAndAssertContent(robot, tabPane, 1, SWITCH_TO_TAB2, "HASH MAP");
-    switchToTabAndAssertContent(robot, tabPane, 2, SWITCH_TO_TAB3, "FREQUENCY TRACKING");
-    switchToTabAndAssertContent(robot, tabPane, 0, SWITCH_TO_TAB1, "Nested loops");
+    switchToTabAndAssertContent(robot, tabPane, 1, switchToTab2Combination, "HASH MAP");
+    switchToTabAndAssertContent(robot, tabPane, 2, switchToTab3Combination, "FREQUENCY TRACKING");
+    switchToTabAndAssertContent(robot, tabPane, 0, switchToTab1Combination, "Nested loops");
   }
 
   private void runMockAnalysisAndWait(final FxRobot robot) throws TimeoutException {
-    robot.push(RUN_MOCK_ANALYSIS_KEY_CODE_COMBINATION);
+    robot.push(runMockAnalysisKeyCombination);
 
     // Wait until the content pane is visible and the solution tab pane is present
     WaitForAsyncUtils.waitFor(
@@ -277,7 +325,7 @@ class JavaFxApplicationSmokeTest {
     var closeButton = robot.lookup(CLOSE_BUTTON_SELECTOR).queryButton();
     verifyThat(closeButton, isVisible());
 
-    robot.push(EXIT_KEY_CODE_COMBINATION);
+    robot.push(exitKeyCombination);
 
     WaitForAsyncUtils.waitFor(
         2, TimeUnit.SECONDS, () -> robot.lookup(MAIN_CONTAINER_SELECTOR).queryAll().isEmpty());
@@ -286,10 +334,10 @@ class JavaFxApplicationSmokeTest {
   private void assertProblemStatementSection(final FxRobot robot) {
     scrollDownUntilVisible(robot, TOGGLE_PROBLEM_STATEMENT_BUTTON_SELECTOR);
 
-    robot.push(TOGGLE_PROBLEM_STATEMENT_KEY_CODE_COMBINATION);
+    robot.push(toggleProblemStatementKeyCombination);
     scrollDownUntilVisible(robot, PROBLEM_STATEMENT_SECTION_SELECTOR);
 
-    robot.push(TOGGLE_PROBLEM_STATEMENT_KEY_CODE_COMBINATION);
+    robot.push(toggleProblemStatementKeyCombination);
     verifyThat(TOGGLE_PROBLEM_STATEMENT_BUTTON_SELECTOR, isVisible());
     verifyThat(PROBLEM_STATEMENT_SECTION_SELECTOR, isInvisible());
   }

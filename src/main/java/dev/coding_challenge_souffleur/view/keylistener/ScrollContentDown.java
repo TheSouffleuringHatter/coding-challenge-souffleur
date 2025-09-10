@@ -5,19 +5,21 @@ import dev.coding_challenge_souffleur.view.components.MultiSolutionTabPane;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import javafx.scene.control.ScrollPane;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
 class ScrollContentDown implements KeyHandler {
 
-  static final Win32VK SCROLL_DOWN_KEY_CODE = Win32VK.VK_5;
-
   static final double SCROLL_INCREMENT = 0.2;
 
   private final MultiSolutionTabPane multiSolutionTabPane;
+  private final Win32VK scrollDownKeyCode;
 
   @Inject
-  ScrollContentDown(final MultiSolutionTabPane multiSolutionTabPane) {
+  ScrollContentDown(@ConfigProperty(name = "app.keyboard.key.scroll_down") final Win32VK scrollDownKeyCode,
+                    final MultiSolutionTabPane multiSolutionTabPane) {
     this.multiSolutionTabPane = multiSolutionTabPane;
+    this.scrollDownKeyCode = scrollDownKeyCode;
   }
 
   @Override
@@ -34,6 +36,6 @@ class ScrollContentDown implements KeyHandler {
 
   @Override
   public Win32VK getKeyCode() {
-    return SCROLL_DOWN_KEY_CODE;
+    return scrollDownKeyCode;
   }
 }
