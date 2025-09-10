@@ -6,12 +6,17 @@ import dev.coding_challenge_souffleur.view.components.ContentPaneController;
 import dev.coding_challenge_souffleur.view.components.MultiSolutionTabPane;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Instance;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import java.io.IOException;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +32,8 @@ class MainSceneCreator {
   private final PlatformRunLater platformRunLater;
   private final ScreenshotDisplayService screenshotDisplayService;
   private final ContentPaneController contentPaneController;
+  private final Instance<Stage> stageInstance;
+  private final boolean exitPlatformOnClose;
 
   @Produces private ViewController viewController;
   @Produces private Scene mainScene;
@@ -38,12 +45,16 @@ class MainSceneCreator {
       final ScreenshotService screenshotService,
       final PlatformRunLater platformRunLater,
       final ScreenshotDisplayService screenshotDisplayService,
-      final ContentPaneController contentPaneController) {
+      final ContentPaneController contentPaneController,
+      final Instance<Stage> stageInstance,
+      @ConfigProperty(name = "app.exit.platform.on.close") final boolean exitPlatformOnClose) {
     this.anthropicService = anthropicService;
     this.screenshotService = screenshotService;
     this.platformRunLater = platformRunLater;
     this.screenshotDisplayService = screenshotDisplayService;
     this.contentPaneController = contentPaneController;
+    this.stageInstance = stageInstance;
+    this.exitPlatformOnClose = exitPlatformOnClose;
   }
 
   @PostConstruct
@@ -74,5 +85,20 @@ class MainSceneCreator {
         multiSolutionTabPane);
 
     LOGGER.debug("Main scene created from {}", VIEW_FXML_RESOURCE);
+  }
+
+  @Produces
+  @Named("exitApplication")
+  Runnable createExitApplicationAction() {
+    return () ->
+        platformRunLater.accept(
+            () -> {
+              screenshotDisplayService.stopHideTimer();
+              stageInstance.get().hide();
+
+              if (exitPlatformOnClose) {
+                Platform.exit();
+              }
+            });
   }
 }

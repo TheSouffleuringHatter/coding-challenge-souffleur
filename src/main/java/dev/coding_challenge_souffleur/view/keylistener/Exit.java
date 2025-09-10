@@ -1,23 +1,23 @@
 package dev.coding_challenge_souffleur.view.keylistener;
 
 import com.sun.jna.platform.win32.Win32VK;
-import dev.coding_challenge_souffleur.view.ApplicationExitService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 @ApplicationScoped
 class Exit implements KeyHandler {
 
-  private final ApplicationExitService applicationExitService;
+  private final Runnable exitApplication;
 
   @Inject
-  Exit(final ApplicationExitService applicationExitService) {
-    this.applicationExitService = applicationExitService;
+  Exit(@Named("exitApplication") final Runnable exitApplication) {
+    this.exitApplication = exitApplication;
   }
 
   @Override
   public void performAction() {
-    applicationExitService.exitApplication();
+    exitApplication.run();
   }
 
   @Override

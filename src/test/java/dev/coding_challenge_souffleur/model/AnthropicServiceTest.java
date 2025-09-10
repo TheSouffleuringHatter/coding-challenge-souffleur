@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 class AnthropicServiceTest {
 
   private static byte[] testImage;
+
   @Inject private AnthropicService anthropicService;
 
   @BeforeAll
