@@ -184,6 +184,8 @@ Implemented in:
 
 ## 🔧 Development
 
+- Java 21, Gradle
+
 ### Architecture Overview
 
 This is a Windows-only JavaFX application with:
@@ -196,6 +198,16 @@ This is a Windows-only JavaFX application with:
 Main entry: `ApplicationLauncher.java` → `JavaFxApplication.java`
 
 Key packages: `model/` (services), `view/` (JavaFX), `windowskeyboardhook/` (Windows integration)
+
+### Coding guidelines
+
+- Apply "Keep it simple, stupid!" principle
+- Favor straight-foward implementations instead of over-sophisticated ones
+- Test suite available in `src/test/java`, including smoke tests
+- Use [Java 21+ features](https://openjdk.java.net/projects/jdk/11/)
+- Use [Google Java Style](https://google.github.io/styleguide/javaguide.html)
+- Use [SonarCloud](https://sonarcloud.io/)
+- Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
 
 ## 💡 Inspired by...
 
