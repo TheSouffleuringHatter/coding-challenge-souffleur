@@ -1,6 +1,5 @@
 package dev.coding_challenge_souffleur.view.keylistener;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
