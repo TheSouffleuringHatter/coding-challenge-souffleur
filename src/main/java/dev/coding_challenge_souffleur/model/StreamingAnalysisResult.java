@@ -54,6 +54,10 @@ public class StreamingAnalysisResult {
     return sections.get(SolutionSection.SPACE_COMPLEXITY);
   }
 
+  public String getValueForSection(final SolutionSection section) {
+    return sections.get(section);
+  }
+
   void setSection(final SolutionSection solutionSection, final String value) {
     if (value == null) {
       throw new IllegalArgumentException(

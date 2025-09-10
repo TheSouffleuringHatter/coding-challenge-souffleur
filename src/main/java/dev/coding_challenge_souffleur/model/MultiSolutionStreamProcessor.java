@@ -59,7 +59,7 @@ class MultiSolutionStreamProcessor {
     var contentOpt = extractSectionContent(text, solutionSection);
     if (contentOpt.isPresent()) {
       var newValue = contentOpt.get();
-      var currentValue = Optional.ofNullable(solutionSection.getValue(result)).orElse("");
+      var currentValue = Optional.ofNullable(result.getValueForSection(solutionSection)).orElse("");
       if (!newValue.equals(currentValue)) {
         LOGGER.trace("Updated {} from parsed content", solutionSection.name());
         result.setSection(solutionSection, newValue);
