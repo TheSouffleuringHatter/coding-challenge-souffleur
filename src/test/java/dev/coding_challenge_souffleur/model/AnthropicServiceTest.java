@@ -19,14 +19,17 @@ class AnthropicServiceTest {
 
   private static byte[] testImage;
   @Inject private AnthropicService anthropicService;
-  @Inject private FileService fileService;
 
   @BeforeAll
   static void setupTestImage() throws IOException {
-    var inputStream =
+    try (var inputStream =
         AnthropicServiceTest.class.getResourceAsStream(
-            "/leetcode-screenshot-course-schedule-ii.png");
-    testImage = inputStream.readAllBytes();
+            "/leetcode-screenshot-course-schedule-ii.png")) {
+      if (inputStream == null) {
+        throw new IllegalStateException("Test image resource not found");
+      }
+      testImage = inputStream.readAllBytes();
+    }
   }
 
   @Test
@@ -39,7 +42,7 @@ class AnthropicServiceTest {
     assertTrue(
         multiSolutionResult
             .getSharedProblemStatement()
-            .get()
+            .orElseThrow(() -> new AssertionError("Expected problem statement to be present"))
             .contains("Given four integer arrays"));
 
     var firstSolutionOpt = multiSolutionResult.getSolution(0);

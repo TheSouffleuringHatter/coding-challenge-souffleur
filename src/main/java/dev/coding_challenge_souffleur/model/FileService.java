@@ -36,21 +36,4 @@ public class FileService {
       }
     }
   }
-
-  /**
-   * Loads a resource file from the classpath, returning a default value if the file cannot be
-   * loaded.
-   *
-   * @param resourcePath The path to the resource file
-   * @param defaultValue The default value to return if loading fails
-   * @return The content of the resource file, or the default value if loading fails
-   */
-  public String loadResourceFileOrDefault(final String resourcePath, final String defaultValue) {
-    try {
-      return loadResourceFile(resourcePath);
-    } catch (final IOException e) {
-      LOGGER.warn("Failed to load resource file: {}, using default value", resourcePath, e);
-      return defaultValue;
-    }
-  }
 }

@@ -92,7 +92,7 @@ class MultiSolutionStreamProcessor {
   private static String extractCompleteResponse(final MessageAccumulator messageAccumulator) {
     return messageAccumulator.message().content().stream()
         .filter(block -> block.isText() && block.text().isPresent())
-        .map(block -> block.text().get().text())
+        .map(block -> block.text().orElseThrow().text())
         .collect(Collectors.joining());
   }
 

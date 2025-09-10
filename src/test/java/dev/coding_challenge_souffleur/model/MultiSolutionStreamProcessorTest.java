@@ -143,9 +143,9 @@ class MultiSolutionStreamProcessorTest {
 
     assertEquals(1, result.getSolutionCount());
     assertTrue(result.getSharedProblemStatement().isPresent());
-    assertEquals("Test problem statement", result.getSharedProblemStatement().get());
+    assertEquals("Test problem statement", result.getSharedProblemStatement().orElseThrow());
 
-    var solution = result.getSolution(0).get();
+    var solution = result.getSolution(0).orElseThrow();
     assertNotNull(solution.getSolutionTitle());
     assertEquals("Hash Map Approach", solution.getSolutionTitle());
     assertNotNull(solution.getSolutionDescription());
@@ -160,11 +160,11 @@ class MultiSolutionStreamProcessorTest {
     assertEquals(2, result.getSolutionCount());
     assertTrue(result.getSharedProblemStatement().isPresent());
 
-    var solution1 = result.getSolution(0).get();
+    var solution1 = result.getSolution(0).orElseThrow();
     assertEquals("Solution 1", solution1.getSolutionTitle());
     assertEquals("First solution", solution1.getSolutionDescription());
 
-    var solution2 = result.getSolution(1).get();
+    var solution2 = result.getSolution(1).orElseThrow();
     assertEquals("Solution 2", solution2.getSolutionTitle());
     assertEquals("Second solution", solution2.getSolutionDescription());
   }
@@ -203,7 +203,7 @@ class MultiSolutionStreamProcessorTest {
     processor.processStreamEvents(result, accumulatedText, null, SOLUTION_CONTINUATION);
 
     assertEquals(1, result.getSolutionCount());
-    var solution = result.getSolution(0).get();
+    var solution = result.getSolution(0).orElseThrow();
     assertNotNull(solution.getSolutionTitle());
     assertNotNull(solution.getSolutionDescription());
     assertNull(solution.getSolutionCode()); // Not yet added
