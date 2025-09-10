@@ -101,7 +101,7 @@ anthropic.api.key=your-api-key-here
 save.screenshot.to.file=false
 # Application Behavior Configuration
 app.exit.platform.on.close=true
-app.keyboard.filter.injected.keys=true  
+app.keyboard.filter.injected.keys=true
 app.stage.creation.async=true
 app.keyboard.modifier.keys=VK_RCONTROL
 ```
@@ -197,17 +197,22 @@ This is a Windows-only JavaFX application with:
 
 Main entry: `ApplicationLauncher.java` → `JavaFxApplication.java`
 
-Key packages: `model/` (services), `view/` (JavaFX), `windowskeyboardhook/` (Windows integration)
+Key packages:
+
+- `dev.coding_challenge_souffleur.model` (application logic)
+- `dev.coding_challenge_souffleur.view` (JavaFX)
+- `windowskeyboardhook` (Windows keyboard integration)
 
 ### Coding guidelines
 
 - Apply "Keep it simple, stupid!" principle
-- Favor straight-foward implementations instead of over-sophisticated ones
+- Favor straight-forward implementations instead of over-sophisticated ones
+- No backwards-compatibility needed, we got Git for this
 - Test suite available in `src/test/java`, including smoke tests
 - Use [Java 21+ features](https://openjdk.java.net/projects/jdk/11/)
 - Use [Google Java Style](https://google.github.io/styleguide/javaguide.html)
-- Use [SonarCloud](https://sonarcloud.io/)
-- Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
+- Use [SonarCloud](https://sonarcloud.io/project/overview?id=coding-challenge-souffleur)
+- Use [Conventional Commits](https://www.conventionalcommits.org/en)
 
 ## 💡 Inspired by...
 
