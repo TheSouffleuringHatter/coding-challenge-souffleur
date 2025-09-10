@@ -109,8 +109,17 @@ class MainSceneCreator {
     // Find and initialize ShortcutKeysLabel with configuration
     var shortcutKeysLabel = (ShortcutKeysLabel) scene.lookup("ShortcutKeysLabel");
     if (shortcutKeysLabel != null) {
-      var initializedLabel = new ShortcutKeysLabel(hideShowKey, moveUpKey, moveDownKey, 
-          moveLeftKey, moveRightKey, screenshotKey, runAnalysisKey, scrollUpKey, scrollDownKey);
+      var initializedLabel =
+          new ShortcutKeysLabel(
+              hideShowKey,
+              moveUpKey,
+              moveDownKey,
+              moveLeftKey,
+              moveRightKey,
+              screenshotKey,
+              runAnalysisKey,
+              scrollUpKey,
+              scrollDownKey);
       shortcutKeysLabel.setText(initializedLabel.getText());
     }
 

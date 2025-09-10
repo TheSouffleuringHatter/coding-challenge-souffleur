@@ -14,8 +14,9 @@ class ScrollContentUp implements KeyHandler {
   private final Win32VK scrollUpKeyCode;
 
   @Inject
-  ScrollContentUp(@ConfigProperty(name = "app.keyboard.key.scroll_up") final Win32VK scrollUpKeyCode,
-                  final MultiSolutionTabPane multiSolutionTabPane) {
+  ScrollContentUp(
+      @ConfigProperty(name = "app.keyboard.key.scroll_up") final Win32VK scrollUpKeyCode,
+      final MultiSolutionTabPane multiSolutionTabPane) {
     this.multiSolutionTabPane = multiSolutionTabPane;
     this.scrollUpKeyCode = scrollUpKeyCode;
   }

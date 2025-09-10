@@ -13,8 +13,9 @@ class TakeScreenshot implements KeyHandler {
   private final Win32VK screenshotKeyCode;
 
   @Inject
-  TakeScreenshot(@ConfigProperty(name = "app.keyboard.key.screenshot") final Win32VK screenshotKeyCode,
-                 final ScreenshotDisplayService screenshotDisplayService) {
+  TakeScreenshot(
+      @ConfigProperty(name = "app.keyboard.key.screenshot") final Win32VK screenshotKeyCode,
+      final ScreenshotDisplayService screenshotDisplayService) {
     this.screenshotDisplayService = screenshotDisplayService;
     this.screenshotKeyCode = screenshotKeyCode;
   }

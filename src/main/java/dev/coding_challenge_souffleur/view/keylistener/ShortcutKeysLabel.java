@@ -9,15 +9,16 @@ public class ShortcutKeysLabel extends Label {
     super();
   }
 
-  public ShortcutKeysLabel(Win32VK hideShowKey,
-                           Win32VK moveUpKey,
-                           Win32VK moveDownKey,
-                           Win32VK moveLeftKey,
-                           Win32VK moveRightKey,
-                           Win32VK screenshotKey,
-                           Win32VK runAnalysisKey,
-                           Win32VK scrollUpKey,
-                           Win32VK scrollDownKey) {
+  public ShortcutKeysLabel(
+      Win32VK hideShowKey,
+      Win32VK moveUpKey,
+      Win32VK moveDownKey,
+      Win32VK moveLeftKey,
+      Win32VK moveRightKey,
+      Win32VK screenshotKey,
+      Win32VK runAnalysisKey,
+      Win32VK scrollUpKey,
+      Win32VK scrollDownKey) {
     super();
     var keysText =
         String.format(

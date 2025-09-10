@@ -51,18 +51,6 @@ class JavaFxApplicationSmokeTest {
    * <p>Background: It is not possible to isolate KeyCombination to usage of right CTRL.
    */
   private static final KeyCombination.Modifier MATCHING_MODIFIER = KeyCombination.SHIFT_DOWN;
-
-  // Configuration-based key combinations - loaded from MicroProfile Config
-  private KeyCodeCombination hideShowKeyCombination;
-  private KeyCodeCombination screenshotKeyCombination;
-  private KeyCodeCombination runMockAnalysisKeyCombination;
-  private KeyCodeCombination exitKeyCombination;
-  private KeyCodeCombination scrollDownKeyCombination;
-  private KeyCodeCombination toggleProblemStatementKeyCombination;
-  private KeyCodeCombination switchToTab1Combination;
-  private KeyCodeCombination switchToTab2Combination;
-  private KeyCodeCombination switchToTab3Combination;
-
   private static final String TOGGLE_PROBLEM_STATEMENT_BUTTON_SELECTOR =
       "#toggleProblemStatementButton";
   private static final String PROBLEM_STATEMENT_SECTION_SELECTOR = "#problemStatementSection";
@@ -78,6 +66,17 @@ class JavaFxApplicationSmokeTest {
   private static final String STATUS_LABEL_SELECTOR = "#statusLabel";
   private static final String HEADER_BOX_SELECTOR = "#headerBox";
   private static final String SCREENSHOT_PREVIEW_SELECTOR = "#screenshotPreview";
+
+  // Configuration-based key combinations - loaded from MicroProfile Config
+  private KeyCodeCombination hideShowKeyCombination;
+  private KeyCodeCombination screenshotKeyCombination;
+  private KeyCodeCombination runMockAnalysisKeyCombination;
+  private KeyCodeCombination exitKeyCombination;
+  private KeyCodeCombination scrollDownKeyCombination;
+  private KeyCodeCombination toggleProblemStatementKeyCombination;
+  private KeyCodeCombination switchToTab1Combination;
+  private KeyCodeCombination switchToTab2Combination;
+  private KeyCodeCombination switchToTab3Combination;
 
   private JavaFxApplication javaFxApplication;
   private WeldContainer aiOverlayApplicationWeldContainer;
@@ -100,6 +99,29 @@ class JavaFxApplicationSmokeTest {
       case VK_3 -> KeyCode.DIGIT3;
       default -> throw new IllegalArgumentException("Unsupported Win32VK: " + win32VK);
     };
+  }
+
+  private static String getFlowText(final Node flowNode) {
+    if (flowNode instanceof TextFlow textFlow) {
+      var sb = new StringBuilder();
+      for (var child : textFlow.getChildren()) {
+        if (child instanceof Text text) {
+          sb.append(text.getText());
+        }
+      }
+      return sb.toString();
+    }
+
+    LOGGER.debug("Node {} is not a TextFlow", flowNode);
+    return "";
+  }
+
+  private static void assertSelectedTabHasCoreNodes(final VBox contentBox) {
+    assertFalse(contentBox.lookupAll(SOLUTION_DESCRIPTION_FLOW_SELECTOR).isEmpty());
+    assertFalse(contentBox.lookupAll(EDGE_CASES_FLOW_SELECTOR).isEmpty());
+    assertFalse(contentBox.lookupAll(SOLUTION_CODE_FLOW_SELECTOR).isEmpty());
+    assertFalse(contentBox.lookupAll(TIME_COMPLEXITY_FLOW_SELECTOR).isEmpty());
+    assertFalse(contentBox.lookupAll(SPACE_COMPLEXITY_FLOW_SELECTOR).isEmpty());
   }
 
   private void initializeKeyboardCombinations() {
@@ -160,29 +182,6 @@ class JavaFxApplicationSmokeTest {
             + " visible after "
             + MAX_SCROLL_ATTEMPTS
             + " scroll attempts");
-  }
-
-  private static String getFlowText(final Node flowNode) {
-    if (flowNode instanceof TextFlow textFlow) {
-      var sb = new StringBuilder();
-      for (var child : textFlow.getChildren()) {
-        if (child instanceof Text text) {
-          sb.append(text.getText());
-        }
-      }
-      return sb.toString();
-    }
-
-    LOGGER.debug("Node {} is not a TextFlow", flowNode);
-    return "";
-  }
-
-  private static void assertSelectedTabHasCoreNodes(final VBox contentBox) {
-    assertFalse(contentBox.lookupAll(SOLUTION_DESCRIPTION_FLOW_SELECTOR).isEmpty());
-    assertFalse(contentBox.lookupAll(EDGE_CASES_FLOW_SELECTOR).isEmpty());
-    assertFalse(contentBox.lookupAll(SOLUTION_CODE_FLOW_SELECTOR).isEmpty());
-    assertFalse(contentBox.lookupAll(TIME_COMPLEXITY_FLOW_SELECTOR).isEmpty());
-    assertFalse(contentBox.lookupAll(SPACE_COMPLEXITY_FLOW_SELECTOR).isEmpty());
   }
 
   @Init

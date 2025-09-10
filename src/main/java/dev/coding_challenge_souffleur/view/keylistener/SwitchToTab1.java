@@ -13,8 +13,9 @@ class SwitchToTab1 implements KeyHandler {
   private final Win32VK switchToTab1KeyCode;
 
   @Inject
-  SwitchToTab1(@ConfigProperty(name = "app.keyboard.key.switch_to_tab1") final Win32VK switchToTab1KeyCode,
-               final MultiSolutionTabPane multiSolutionTabPane) {
+  SwitchToTab1(
+      @ConfigProperty(name = "app.keyboard.key.switch_to_tab1") final Win32VK switchToTab1KeyCode,
+      final MultiSolutionTabPane multiSolutionTabPane) {
     this.multiSolutionTabPane = multiSolutionTabPane;
     this.switchToTab1KeyCode = switchToTab1KeyCode;
   }

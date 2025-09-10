@@ -17,9 +17,10 @@ class HideShow implements KeyHandler {
   private boolean applicationIsVisible = true;
 
   @Inject
-  HideShow(@ConfigProperty(name = "app.keyboard.key.hide_show") final Win32VK hideShowKeyCode,
-           final WindowFromScreenCaptureHider windowFromScreenCaptureHider, 
-           final Stage stage) {
+  HideShow(
+      @ConfigProperty(name = "app.keyboard.key.hide_show") final Win32VK hideShowKeyCode,
+      final WindowFromScreenCaptureHider windowFromScreenCaptureHider,
+      final Stage stage) {
     this.windowFromScreenCaptureHider = windowFromScreenCaptureHider;
     this.stage = stage;
     this.hideShowKeyCode = hideShowKeyCode;

@@ -15,8 +15,9 @@ class MoveStageUp implements KeyHandler {
   private final Win32VK moveUpKeyCode;
 
   @Inject
-  MoveStageUp(@ConfigProperty(name = "app.keyboard.key.move_up") final Win32VK moveUpKeyCode,
-              final Stage stage) {
+  MoveStageUp(
+      @ConfigProperty(name = "app.keyboard.key.move_up") final Win32VK moveUpKeyCode,
+      final Stage stage) {
     this.stage = stage;
     this.moveUpKeyCode = moveUpKeyCode;
   }

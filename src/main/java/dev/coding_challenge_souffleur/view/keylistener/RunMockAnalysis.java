@@ -13,8 +13,10 @@ class RunMockAnalysis implements KeyHandler {
   private final Win32VK runMockAnalysisKeyCode;
 
   @Inject
-  RunMockAnalysis(@ConfigProperty(name = "app.keyboard.key.run_mock_analysis") final Win32VK runMockAnalysisKeyCode,
-                  final ViewController viewController) {
+  RunMockAnalysis(
+      @ConfigProperty(name = "app.keyboard.key.run_mock_analysis")
+          final Win32VK runMockAnalysisKeyCode,
+      final ViewController viewController) {
     this.viewController = viewController;
     this.runMockAnalysisKeyCode = runMockAnalysisKeyCode;
   }

@@ -13,8 +13,9 @@ class Exit implements KeyHandler {
   private final Win32VK exitKeyCode;
 
   @Inject
-  Exit(@ConfigProperty(name = "app.keyboard.key.exit") final Win32VK exitKeyCode,
-       @Named("exitApplication") final Runnable exitApplication) {
+  Exit(
+      @ConfigProperty(name = "app.keyboard.key.exit") final Win32VK exitKeyCode,
+      @Named("exitApplication") final Runnable exitApplication) {
     this.exitApplication = exitApplication;
     this.exitKeyCode = exitKeyCode;
   }

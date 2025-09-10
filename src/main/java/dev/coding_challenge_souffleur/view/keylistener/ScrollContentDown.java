@@ -16,8 +16,9 @@ class ScrollContentDown implements KeyHandler {
   private final Win32VK scrollDownKeyCode;
 
   @Inject
-  ScrollContentDown(@ConfigProperty(name = "app.keyboard.key.scroll_down") final Win32VK scrollDownKeyCode,
-                    final MultiSolutionTabPane multiSolutionTabPane) {
+  ScrollContentDown(
+      @ConfigProperty(name = "app.keyboard.key.scroll_down") final Win32VK scrollDownKeyCode,
+      final MultiSolutionTabPane multiSolutionTabPane) {
     this.multiSolutionTabPane = multiSolutionTabPane;
     this.scrollDownKeyCode = scrollDownKeyCode;
   }

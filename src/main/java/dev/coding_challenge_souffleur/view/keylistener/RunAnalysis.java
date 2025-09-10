@@ -13,8 +13,9 @@ class RunAnalysis implements KeyHandler {
   private final Win32VK runAnalysisKeyCode;
 
   @Inject
-  RunAnalysis(@ConfigProperty(name = "app.keyboard.key.run_analysis") final Win32VK runAnalysisKeyCode,
-              final ViewController viewController) {
+  RunAnalysis(
+      @ConfigProperty(name = "app.keyboard.key.run_analysis") final Win32VK runAnalysisKeyCode,
+      final ViewController viewController) {
     this.viewController = viewController;
     this.runAnalysisKeyCode = runAnalysisKeyCode;
   }

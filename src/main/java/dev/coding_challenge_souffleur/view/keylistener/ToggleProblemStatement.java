@@ -13,8 +13,10 @@ class ToggleProblemStatement implements KeyHandler {
   private final Win32VK toggleProblemStatementKeyCode;
 
   @Inject
-  ToggleProblemStatement(@ConfigProperty(name = "app.keyboard.key.toggle_problem_statement") final Win32VK toggleProblemStatementKeyCode,
-                         final ViewController viewController) {
+  ToggleProblemStatement(
+      @ConfigProperty(name = "app.keyboard.key.toggle_problem_statement")
+          final Win32VK toggleProblemStatementKeyCode,
+      final ViewController viewController) {
     this.viewController = viewController;
     this.toggleProblemStatementKeyCode = toggleProblemStatementKeyCode;
   }

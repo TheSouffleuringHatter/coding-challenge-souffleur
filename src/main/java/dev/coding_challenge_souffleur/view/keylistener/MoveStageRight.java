@@ -15,8 +15,9 @@ class MoveStageRight implements KeyHandler {
   private final Win32VK moveRightKeyCode;
 
   @Inject
-  MoveStageRight(@ConfigProperty(name = "app.keyboard.key.move_right") final Win32VK moveRightKeyCode,
-                 final Stage stage) {
+  MoveStageRight(
+      @ConfigProperty(name = "app.keyboard.key.move_right") final Win32VK moveRightKeyCode,
+      final Stage stage) {
     this.stage = stage;
     this.moveRightKeyCode = moveRightKeyCode;
   }

@@ -15,8 +15,9 @@ class MoveStageDown implements KeyHandler {
   private final Win32VK moveDownKeyCode;
 
   @Inject
-  MoveStageDown(@ConfigProperty(name = "app.keyboard.key.move_down") final Win32VK moveDownKeyCode,
-                final Stage stage) {
+  MoveStageDown(
+      @ConfigProperty(name = "app.keyboard.key.move_down") final Win32VK moveDownKeyCode,
+      final Stage stage) {
     this.stage = stage;
     this.moveDownKeyCode = moveDownKeyCode;
   }
