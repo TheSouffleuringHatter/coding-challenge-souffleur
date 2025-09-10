@@ -56,15 +56,15 @@ public class ScreenshotDisplayService {
         });
   }
 
+  public void stopHideTimer() {
+    hideScreenshotTimer.stop();
+    LOGGER.debug("Screenshot timer stopped");
+  }
+
   void initialize(final HBox screenshotPreviewContainer, final ImageView screenshotPreview) {
     this.screenshotPreviewContainer = Objects.requireNonNull(screenshotPreviewContainer);
     this.screenshotPreview = Objects.requireNonNull(screenshotPreview);
     LOGGER.debug("ScreenshotDisplayService initialized");
-  }
-
-  void stopHideTimer() {
-    hideScreenshotTimer.stop();
-    LOGGER.debug("Screenshot timer stopped");
   }
 
   private void showScreenshotPreviewContainer() {

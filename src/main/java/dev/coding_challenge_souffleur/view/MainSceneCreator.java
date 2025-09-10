@@ -12,7 +12,6 @@ import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +27,6 @@ class MainSceneCreator {
   private final PlatformRunLater platformRunLater;
   private final ScreenshotDisplayService screenshotDisplayService;
   private final ContentPaneController contentPaneController;
-  private final boolean exitPlatformOnClose;
 
   @Produces private ViewController viewController;
   @Produces private Scene mainScene;
@@ -40,14 +38,12 @@ class MainSceneCreator {
       final ScreenshotService screenshotService,
       final PlatformRunLater platformRunLater,
       final ScreenshotDisplayService screenshotDisplayService,
-      final ContentPaneController contentPaneController,
-      @ConfigProperty(name = "app.exit.platform.on.close") final boolean exitPlatformOnClose) {
+      final ContentPaneController contentPaneController) {
     this.anthropicService = anthropicService;
     this.screenshotService = screenshotService;
     this.platformRunLater = platformRunLater;
     this.screenshotDisplayService = screenshotDisplayService;
     this.contentPaneController = contentPaneController;
-    this.exitPlatformOnClose = exitPlatformOnClose;
   }
 
   @PostConstruct
@@ -75,8 +71,7 @@ class MainSceneCreator {
         platformRunLater,
         screenshotDisplayService,
         contentPaneController,
-        multiSolutionTabPane,
-        exitPlatformOnClose);
+        multiSolutionTabPane);
 
     LOGGER.debug("Main scene created from {}", VIEW_FXML_RESOURCE);
   }

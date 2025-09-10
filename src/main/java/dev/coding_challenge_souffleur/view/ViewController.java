@@ -6,11 +6,10 @@ import dev.coding_challenge_souffleur.model.ScreenshotService;
 import dev.coding_challenge_souffleur.view.components.ContentPaneController;
 import dev.coding_challenge_souffleur.view.components.FormattedTextFlow;
 import dev.coding_challenge_souffleur.view.components.MultiSolutionTabPane;
-import dev.coding_challenge_souffleur.view.keylistener.Exit;
+import dev.coding_challenge_souffleur.view.keylistener.KeyConstants;
 import dev.coding_challenge_souffleur.view.keylistener.MatchingModifier;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -31,11 +30,9 @@ public class ViewController {
   private ScreenshotDisplayService screenshotDisplayService;
   private ContentPaneController contentPaneController;
   private MultiSolutionTabPane multiSolutionTabPane;
-  private boolean exitPlatformOnClose;
   @FXML private VBox contentPane;
   @FXML private FormattedTextFlow problemStatementFlow;
   @FXML private Button closeButton;
-  @FXML private HBox headerBox;
   @FXML private Label shortcutModifierText;
   @FXML private Label statusLabel;
   @FXML private VBox problemStatementSection;
@@ -45,20 +42,7 @@ public class ViewController {
   @FXML
   public void initialize() {
     shortcutModifierText.setText(MatchingModifier.MATCHING_MODIFIER.toString());
-    closeButton.setText("❌ (" + Character.toString(Exit.EXIT_KEY_CODE.code) + ")");
-  }
-
-  @FXML
-  public void exit() {
-    platformRunLater.accept(
-        () -> {
-          screenshotDisplayService.stopHideTimer();
-          headerBox.getScene().getWindow().hide();
-
-          if (exitPlatformOnClose) {
-            Platform.exit();
-          }
-        });
+    closeButton.setText("❌ (" + Character.toString(KeyConstants.EXIT_KEY_CODE.code) + ")");
   }
 
   @FXML
@@ -88,15 +72,13 @@ public class ViewController {
       final PlatformRunLater platformRunLater,
       final ScreenshotDisplayService screenshotDisplayService,
       final ContentPaneController contentPaneController,
-      final MultiSolutionTabPane multiSolutionTabPane,
-      final boolean exitPlatformOnClose) {
+      final MultiSolutionTabPane multiSolutionTabPane) {
     this.anthropicService = anthropicService;
     this.screenshotService = screenshotService;
     this.platformRunLater = platformRunLater;
     this.screenshotDisplayService = screenshotDisplayService;
     this.contentPaneController = contentPaneController;
     this.multiSolutionTabPane = multiSolutionTabPane;
-    this.exitPlatformOnClose = exitPlatformOnClose;
 
     screenshotDisplayService.initialize(screenshotPreviewContainer, screenshotPreview);
 

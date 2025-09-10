@@ -1,29 +1,27 @@
 package dev.coding_challenge_souffleur.view.keylistener;
 
 import com.sun.jna.platform.win32.Win32VK;
-import dev.coding_challenge_souffleur.view.ViewController;
+import dev.coding_challenge_souffleur.view.ApplicationExitService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class Exit implements KeyHandler {
+class Exit implements KeyHandler {
 
-  public static final Win32VK EXIT_KEY_CODE = Win32VK.VK_Q;
-
-  private final ViewController viewController;
+  private final ApplicationExitService applicationExitService;
 
   @Inject
-  Exit(final ViewController viewController) {
-    this.viewController = viewController;
+  Exit(final ApplicationExitService applicationExitService) {
+    this.applicationExitService = applicationExitService;
   }
 
   @Override
   public void performAction() {
-    viewController.exit();
+    applicationExitService.exitApplication();
   }
 
   @Override
   public Win32VK getKeyCode() {
-    return EXIT_KEY_CODE;
+    return KeyConstants.EXIT_KEY_CODE;
   }
 }

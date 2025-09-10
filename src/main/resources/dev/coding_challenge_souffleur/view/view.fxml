@@ -26,7 +26,7 @@
       fx:id="shortcutModifierText"/>
     <ShortcutKeysLabel styleClass="header-label"/>
     <Region HBox.hgrow="ALWAYS"/>
-    <Button onAction="#exit" styleClass="close-button" text="❌" fx:id="closeButton"/>
+    <Button styleClass="close-button" text="❌" fx:id="closeButton"/>
   </HBox>
   <VBox managed="false" styleClass="content-pane" visible="false" fx:id="contentPane">
     <Label styleClass="status-label" text="Analyzing..." fx:id="statusLabel"/>
