@@ -20,6 +20,9 @@ class KeyboardStateManager {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(KeyboardStateManager.class);
 
+  private static final String KEY_PRESSED = "pressed";
+  private static final String KEY_RELEASED = "released";
+
   // Track all pressed modifier key codes
   private final Set<Integer> pressedModifierKeyCodes = ConcurrentHashMap.newKeySet();
 
@@ -187,13 +190,13 @@ class KeyboardStateManager {
 
   // Shift key methods
   private void updateLeftShift(final boolean pressed) {
+    LOGGER.trace("Left shift key {}", pressed ? KEY_PRESSED : KEY_RELEASED);
     leftShiftDown.set(pressed);
-    LOGGER.trace("Left shift key {}", pressed ? "pressed" : "released");
   }
 
   private void updateRightShift(final boolean pressed) {
+    LOGGER.trace("Right shift key {}", pressed ? KEY_PRESSED : KEY_RELEASED);
     rightShiftDown.set(pressed);
-    LOGGER.trace("Right shift key {}", pressed ? "pressed" : "released");
   }
 
   boolean isLeftShiftPressed() {
@@ -210,13 +213,13 @@ class KeyboardStateManager {
 
   // Ctrl key methods
   private void updateLeftCtrl(final boolean pressed) {
+    LOGGER.trace("Left ctrl key {}", pressed ? KEY_PRESSED : KEY_RELEASED);
     leftCtrlDown.set(pressed);
-    LOGGER.trace("Left ctrl key {}", pressed ? "pressed" : "released");
   }
 
   private void updateRightCtrl(final boolean pressed) {
+    LOGGER.trace("Right ctrl key {}", pressed ? KEY_PRESSED : KEY_RELEASED);
     rightCtrlDown.set(pressed);
-    LOGGER.trace("Right ctrl key {}", pressed ? "pressed" : "released");
   }
 
   boolean isLeftCtrlPressed() {
@@ -233,13 +236,13 @@ class KeyboardStateManager {
 
   // Alt key methods
   private void updateLeftAlt(final boolean pressed) {
+    LOGGER.trace("Left alt key {}", pressed ? KEY_PRESSED : KEY_RELEASED);
     leftAltDown.set(pressed);
-    LOGGER.trace("Left alt key {}", pressed ? "pressed" : "released");
   }
 
   private void updateRightAlt(final boolean pressed) {
+    LOGGER.trace("Right alt key {}", pressed ? KEY_PRESSED : KEY_RELEASED);
     rightAltDown.set(pressed);
-    LOGGER.trace("Right alt key {}", pressed ? "pressed" : "released");
   }
 
   boolean isLeftAltPressed() {

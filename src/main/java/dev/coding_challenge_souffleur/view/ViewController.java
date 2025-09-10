@@ -143,9 +143,10 @@ public class ViewController {
 
     var optionalScreenshot = screenshotService.takeScreenshotOfDesktop();
     if (optionalScreenshot.isEmpty()) {
-      statusCallback.accept("Failed to take screenshot");
-      LOGGER.debug("Failed to take screenshot");
-      return CompletableFuture.failedFuture(new IllegalStateException("Failed to take screenshot"));
+      var failureMessage = "Failed to take screenshot";
+      statusCallback.accept(failureMessage);
+      LOGGER.debug(failureMessage);
+      return CompletableFuture.failedFuture(new IllegalStateException(failureMessage));
     }
 
     var screenshot = optionalScreenshot.get();
