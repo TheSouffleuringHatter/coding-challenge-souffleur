@@ -92,7 +92,7 @@ Souffleur activation modifier is `Control on the righten side`.
 ## 🛠 Configuration
 
 Create `.env` or edit `src/main/resources/META-INF/microprofile-config.properties`:
- 
+
 ```properties
 # AI Model Configuration
 anthropic.model=claude-sonnet-4-0
@@ -205,7 +205,7 @@ Key packages: `model/` (services), `view/` (JavaFX), `windowskeyboardhook/` (Win
    >
    > https://gizmodo.com/a-student-used-ai-to-beat-amazons-brutal-technical-interview-he-got-an-offer-and-someone-tattled-to-his-university-2000571562
 
-   Yeah, he was right (984 coverable lines of code for 
+   Yeah, he was right (984 coverable lines of code for
    [Commit 6e520e](https://github.com/TheSouffleuringHatter/coding-challenge-souffleur/commit/6e520edae2a0dd4adb15a6dad9fcdce1d257606f)).
 
 2. > A simple key stroke capturing react app can identify when users are pressing unnecessary keys

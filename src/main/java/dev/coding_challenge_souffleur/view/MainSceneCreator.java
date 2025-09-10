@@ -1,7 +1,6 @@
 package dev.coding_challenge_souffleur.view;
 
 import dev.coding_challenge_souffleur.model.AnthropicService;
-import dev.coding_challenge_souffleur.model.FileService;
 import dev.coding_challenge_souffleur.model.ScreenshotService;
 import dev.coding_challenge_souffleur.view.components.ContentPaneController;
 import dev.coding_challenge_souffleur.view.components.MultiSolutionTabPane;

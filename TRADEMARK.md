@@ -1,15 +1,15 @@
 # Trademark Policy for Coding Challenge Souffleur
 
-The name **Coding Challenge Souffleur** and related logos, designs, and branding ("Trademarks") 
+The name **Coding Challenge Souffleur** and related logos, designs, and branding ("Trademarks")
 are the exclusive property of Coding Challenge Souffleur, located in Germany.
 
 ## Usage Guidelines
 
 - You may **not** use the Trademarks in a way that suggests any official association, endorsement,
   or sponsorship by Coding Challenge Souffleur without prior written permission.
-- You may use the Trademarks solely for factual reference (e.g. "based on code from 
+- You may use the Trademarks solely for factual reference (e.g. "based on code from
   Coding Challenge Souffleur") and must not modify or imitate the Trademarks.
-- Any permitted use must not mislead others or damage the reputation of 
+- Any permitted use must not mislead others or damage the reputation of
   Coding Challenge Souffleur (DE).
 
 ## Open Source Projects
