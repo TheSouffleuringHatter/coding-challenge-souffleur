@@ -1,7 +1,6 @@
 package dev.coding_challenge_souffleur.view.components;
 
 import dev.coding_challenge_souffleur.model.MultiSolutionResult;
-import dev.coding_challenge_souffleur.view.PlatformRunLater;
 import javafx.scene.control.TabPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,19 +24,20 @@ public class MultiSolutionTabPane extends TabPane {
    * preserves existing tabs and only updates their content, preventing flickering and maintaining
    * user's tab selection state during streaming updates.
    *
-   * @param result the multi-solution result to display
+   * @param multiSolutionResult the multi-solution multiSolutionResult to display
    */
-  public void displayResult(final MultiSolutionResult result) {
-    LOGGER.trace("Displaying multi-solution result in TabPane...");
+  public void displayResult(final MultiSolutionResult multiSolutionResult) {
+    LOGGER.trace("Displaying multi-solution multiSolutionResult in TabPane...");
 
-    var solutionCount = Math.max(1, result.getSolutionCount());
+    var solutionCount = Math.max(1, multiSolutionResult.getSolutionCount());
     for (var i = 0; i < solutionCount; i++) {
-      if (result.getSolution(i).isEmpty()) {
+      LOGGER.trace("Updating tab content for solution {}", i + 1);
+
+      final var optionalSolution = multiSolutionResult.getSolution(i);
+      if (optionalSolution.isEmpty()) {
         return;
       }
-
-      LOGGER.trace("Updating tab content for solution {}", i + 1);
-      var solution = result.getSolution(i).get();
+      var solution = optionalSolution.get();
 
       var tabContent = getOrCreateTabContent(i);
       tabContent.displaySolution(solution, i);
