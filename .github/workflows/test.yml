@@ -9,24 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: windows-latest
-    steps:
-      - uses: ./.github/actions/setup-environment
-
-      - name: Compile project
-        run: ./gradlew compileTestJava --continue --info
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: compiled-classes
-          path: |
-            build/classes/
-            build/generated/
-            build/resources/
-
   test:
-    needs: build
     runs-on: windows-latest
     strategy:
       matrix:
@@ -40,11 +23,6 @@ jobs:
 
     steps:
       - uses: ./.github/actions/setup-environment
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: compiled-classes
-          path: .
 
       - name: Run specific tests
         if: matrix.exclude == ''
@@ -67,7 +45,7 @@ jobs:
             build/jacoco/test.exec
 
   sonar:
-    needs: [build, test]
+    needs: test
     runs-on: windows-latest
     if: always()
     steps:
@@ -83,11 +61,6 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: compiled-classes
-          path: .
-
-      - uses: actions/download-artifact@v4
-        with:
           pattern: results-*
           path: artifacts
           merge-multiple: true
@@ -100,7 +73,7 @@ jobs:
         shell: bash
 
       - name: Run Sonar
-        run: ./gradlew sonar --continue --info
+        run: ./gradlew compileTestJava sonar --continue --info
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
