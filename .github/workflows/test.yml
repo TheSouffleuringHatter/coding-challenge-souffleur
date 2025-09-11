@@ -1,3 +1,4 @@
+
 name: Test
 on:
   push:
@@ -13,13 +14,14 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        test-group:
+        include:
           - name: "anthropic"
             tests: "dev.coding_challenge_souffleur.model.AnthropicServiceTest"
           - name: "javafx"
             tests: "dev.coding_challenge_souffleur.JavaFxApplicationSmokeTest"
           - name: "other"
-            tests: "* --exclude-tests dev.coding_challenge_souffleur.model.AnthropicServiceTest --exclude-tests dev.coding_challenge_souffleur.JavaFxApplicationSmokeTest"
+            tests: "*"
+            exclude: "dev.coding_challenge_souffleur.model.AnthropicServiceTest,dev.coding_challenge_souffleur.JavaFxApplicationSmokeTest"
 
     steps:
       - uses: actions/checkout@v5
@@ -35,15 +37,22 @@ jobs:
         with:
           cache-read-only: ${{ github.event_name == 'pull_request' }}
 
-      - name: Run tests
-        run: ./gradlew test --tests "${{ matrix.test-group.tests }}" jacocoTestReport --continue --info
+      - name: Run specific tests
+        if: matrix.exclude == ''
+        run: ./gradlew test --tests "${{ matrix.tests }}" jacocoTestReport --continue --info
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - name: Run other tests (with exclusions)
+        if: matrix.exclude != ''
+        run: ./gradlew test jacocoTestReport --continue --info -Dtest.exclude="${{ matrix.exclude }}"
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: results-${{ matrix.test-group.name }}
+          name: results-${{ matrix.name }}
           path: |
             build/test-results/test/*.xml
             build/jacoco/test.exec
