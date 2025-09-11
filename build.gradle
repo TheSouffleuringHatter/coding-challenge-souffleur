@@ -70,10 +70,6 @@ dependencies {
 }
 
 test {
-  if (project.hasProperty('excludeTests')) {
-    exclude project.property('excludeTests').split(',')
-  }
-
   useJUnitPlatform()
 
   // See https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
