@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import dev.coding_challenge_souffleur.ConfigurationKeys;
 
 /** Responsible for processing keyboard events and notifying listeners. */
 @ApplicationScoped
@@ -37,7 +38,7 @@ class KeyboardEventProcessor {
       final KeyboardStateManager keyboardStateManager,
       final KeyboardHookManager keyboardHookManager,
       @Any final Instance<WindowsKeyListener> keyListenerInstances,
-      @ConfigProperty(name = "app.keyboard.filter.injected.keys")
+      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_FILTER_INJECTED_KEYS)
           final boolean filterInjectedKeys) {
     this.keyboardStateManager = keyboardStateManager;
     this.keyboardHookManager = keyboardHookManager;

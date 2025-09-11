@@ -1,5 +1,6 @@
 package dev.coding_challenge_souffleur.view;
 
+import dev.coding_challenge_souffleur.ConfigurationKeys;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
@@ -32,7 +33,7 @@ public class StageInitializer {
   StageInitializer(
       final WindowFromScreenCaptureHider windowFromScreenCaptureHider,
       final Scene mainScene,
-      @ConfigProperty(name = "app.stage.creation.async") final boolean asyncStageCreation) {
+      @ConfigProperty(name = ConfigurationKeys.APP_STAGE_CREATION_ASYNC) final boolean asyncStageCreation) {
     this.mainScene = mainScene;
     this.windowFromScreenCaptureHider = windowFromScreenCaptureHider;
     this.asyncStageCreation = asyncStageCreation;

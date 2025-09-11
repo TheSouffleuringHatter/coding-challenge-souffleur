@@ -8,6 +8,7 @@ import com.anthropic.models.messages.ContentBlockParam;
 import com.anthropic.models.messages.ImageBlockParam;
 import com.anthropic.models.messages.MessageCreateParams;
 import com.anthropic.models.messages.Model;
+import dev.coding_challenge_souffleur.ConfigurationKeys;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -48,7 +49,7 @@ public class AnthropicService {
       final ImageService imageService,
       final MultiSolutionStreamProcessor multiSolutionStreamProcessor,
       final FileService fileService,
-      @ConfigProperty(name = "anthropic.model") final Model claudeModel) {
+      @ConfigProperty(name = ConfigurationKeys.ANTHROPIC_MODEL) final Model claudeModel) {
     this.anthropicClient = anthropicClient;
     this.imageService = imageService;
     this.multiSolutionProcessor = multiSolutionStreamProcessor;

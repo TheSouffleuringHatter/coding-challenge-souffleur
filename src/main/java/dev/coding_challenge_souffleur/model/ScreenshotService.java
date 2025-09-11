@@ -4,6 +4,7 @@ import com.sun.jna.Native;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef.RECT;
 import com.sun.jna.win32.W32APIOptions;
+import dev.coding_challenge_souffleur.ConfigurationKeys;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.io.IOException;
@@ -36,7 +37,7 @@ public class ScreenshotService {
 
   @Inject
   public ScreenshotService(
-      @ConfigProperty(name = "save.screenshot.to.file") final boolean saveScreenshotToFile,
+      @ConfigProperty(name = ConfigurationKeys.SAVE_SCREENSHOT_TO_FILE) final boolean saveScreenshotToFile,
       final ImageService imageService) {
     this.saveScreenshotToFile = saveScreenshotToFile;
     this.imageService = imageService;

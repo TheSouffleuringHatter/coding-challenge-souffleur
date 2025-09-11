@@ -3,6 +3,7 @@ package dev.coding_challenge_souffleur.view.keylistener;
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
 import com.sun.jna.platform.win32.Win32VK;
+import dev.coding_challenge_souffleur.ConfigurationKeys;
 import dev.coding_challenge_souffleur.view.PlatformRunLater;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -31,7 +32,7 @@ class KeyHandlerProcessor implements WindowsKeyListener {
   @Inject
   KeyHandlerProcessor(
       final PlatformRunLater platformRunLater,
-      @ConfigProperty(name = "app.keyboard.modifier.keys") final List<Win32VK> modifierKeys,
+      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_MODIFIER_KEYS) final List<Win32VK> modifierKeys,
       final KeyCommandDependencies keyCommandDependencies,
       final Config config) {
     this.platformRunLater = platformRunLater;

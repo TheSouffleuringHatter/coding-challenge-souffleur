@@ -3,6 +3,7 @@ package dev.coding_challenge_souffleur.view.keylistener;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+import dev.coding_challenge_souffleur.ConfigurationKeys;
 import dev.coding_challenge_souffleur.view.HideShowState;
 import dev.coding_challenge_souffleur.view.ScreenshotDisplayService;
 import dev.coding_challenge_souffleur.view.ViewController;
@@ -64,26 +65,26 @@ class KeyCommandTest {
 
   @Test
   void shouldHaveCorrectConfigProperties() {
-    assertEquals("app.keyboard.key.exit", KeyCommand.EXIT.getKeyConfigProperty());
-    assertEquals("app.keyboard.key.hide_show", KeyCommand.HIDE_SHOW.getKeyConfigProperty());
-    assertEquals("app.keyboard.key.screenshot", KeyCommand.TAKE_SCREENSHOT.getKeyConfigProperty());
-    assertEquals("app.keyboard.key.move_left", KeyCommand.MOVE_LEFT.getKeyConfigProperty());
-    assertEquals("app.keyboard.key.move_right", KeyCommand.MOVE_RIGHT.getKeyConfigProperty());
-    assertEquals("app.keyboard.key.move_down", KeyCommand.MOVE_DOWN.getKeyConfigProperty());
-    assertEquals("app.keyboard.key.move_up", KeyCommand.MOVE_UP.getKeyConfigProperty());
-    assertEquals("app.keyboard.key.run_analysis", KeyCommand.RUN_ANALYSIS.getKeyConfigProperty());
+    assertEquals(ConfigurationKeys.APP_KEYBOARD_KEY_EXIT, KeyCommand.EXIT.getKeyConfigProperty());
+    assertEquals(ConfigurationKeys.APP_KEYBOARD_KEY_HIDE_SHOW, KeyCommand.HIDE_SHOW.getKeyConfigProperty());
+    assertEquals(ConfigurationKeys.APP_KEYBOARD_KEY_SCREENSHOT, KeyCommand.TAKE_SCREENSHOT.getKeyConfigProperty());
+    assertEquals(ConfigurationKeys.APP_KEYBOARD_KEY_MOVE_LEFT, KeyCommand.MOVE_LEFT.getKeyConfigProperty());
+    assertEquals(ConfigurationKeys.APP_KEYBOARD_KEY_MOVE_RIGHT, KeyCommand.MOVE_RIGHT.getKeyConfigProperty());
+    assertEquals(ConfigurationKeys.APP_KEYBOARD_KEY_MOVE_DOWN, KeyCommand.MOVE_DOWN.getKeyConfigProperty());
+    assertEquals(ConfigurationKeys.APP_KEYBOARD_KEY_MOVE_UP, KeyCommand.MOVE_UP.getKeyConfigProperty());
+    assertEquals(ConfigurationKeys.APP_KEYBOARD_KEY_RUN_ANALYSIS, KeyCommand.RUN_ANALYSIS.getKeyConfigProperty());
     assertEquals(
-        "app.keyboard.key.run_mock_analysis", KeyCommand.RUN_MOCK_ANALYSIS.getKeyConfigProperty());
-    assertEquals("app.keyboard.key.scroll_down", KeyCommand.SCROLL_DOWN.getKeyConfigProperty());
-    assertEquals("app.keyboard.key.scroll_up", KeyCommand.SCROLL_UP.getKeyConfigProperty());
+        ConfigurationKeys.APP_KEYBOARD_KEY_RUN_MOCK_ANALYSIS, KeyCommand.RUN_MOCK_ANALYSIS.getKeyConfigProperty());
+    assertEquals(ConfigurationKeys.APP_KEYBOARD_KEY_SCROLL_DOWN, KeyCommand.SCROLL_DOWN.getKeyConfigProperty());
+    assertEquals(ConfigurationKeys.APP_KEYBOARD_KEY_SCROLL_UP, KeyCommand.SCROLL_UP.getKeyConfigProperty());
     assertEquals(
-        "app.keyboard.key.switch_to_tab1", KeyCommand.SWITCH_TO_TAB1.getKeyConfigProperty());
+        ConfigurationKeys.APP_KEYBOARD_KEY_SWITCH_TO_TAB1, KeyCommand.SWITCH_TO_TAB1.getKeyConfigProperty());
     assertEquals(
-        "app.keyboard.key.switch_to_tab2", KeyCommand.SWITCH_TO_TAB2.getKeyConfigProperty());
+        ConfigurationKeys.APP_KEYBOARD_KEY_SWITCH_TO_TAB2, KeyCommand.SWITCH_TO_TAB2.getKeyConfigProperty());
     assertEquals(
-        "app.keyboard.key.switch_to_tab3", KeyCommand.SWITCH_TO_TAB3.getKeyConfigProperty());
+        ConfigurationKeys.APP_KEYBOARD_KEY_SWITCH_TO_TAB3, KeyCommand.SWITCH_TO_TAB3.getKeyConfigProperty());
     assertEquals(
-        "app.keyboard.key.toggle_problem_statement",
+        ConfigurationKeys.APP_KEYBOARD_KEY_TOGGLE_PROBLEM_STATEMENT,
         KeyCommand.TOGGLE_PROBLEM_STATEMENT.getKeyConfigProperty());
   }
 }

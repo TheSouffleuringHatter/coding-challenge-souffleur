@@ -1,53 +1,54 @@
 package dev.coding_challenge_souffleur.view.keylistener;
 
+import dev.coding_challenge_souffleur.ConfigurationKeys;
 import java.util.function.Consumer;
 import javafx.scene.control.ScrollPane;
 
 enum KeyCommand {
-  EXIT("app.keyboard.key.exit", (deps) -> deps.exitApplication().run()),
+  EXIT(ConfigurationKeys.APP_KEYBOARD_KEY_EXIT, (deps) -> deps.exitApplication().run()),
 
-  HIDE_SHOW("app.keyboard.key.hide_show", (deps) -> deps.hideShowState().toggleVisibility()),
+  HIDE_SHOW(ConfigurationKeys.APP_KEYBOARD_KEY_HIDE_SHOW, (deps) -> deps.hideShowState().toggleVisibility()),
 
   TAKE_SCREENSHOT(
-      "app.keyboard.key.screenshot",
+      ConfigurationKeys.APP_KEYBOARD_KEY_SCREENSHOT,
       (deps) -> deps.screenshotDisplayService().takeScreenshotOfForegroundWindowAndShowPreview()),
 
   MOVE_LEFT(
-      "app.keyboard.key.move_left",
+      ConfigurationKeys.APP_KEYBOARD_KEY_MOVE_LEFT,
       (deps) -> deps.stage().setX(deps.stage().getX() - Constants.MOVE_AMOUNT)),
 
   MOVE_RIGHT(
-      "app.keyboard.key.move_right",
+      ConfigurationKeys.APP_KEYBOARD_KEY_MOVE_RIGHT,
       (deps) -> deps.stage().setX(deps.stage().getX() + Constants.MOVE_AMOUNT)),
 
   MOVE_DOWN(
-      "app.keyboard.key.move_down",
+      ConfigurationKeys.APP_KEYBOARD_KEY_MOVE_DOWN,
       (deps) -> deps.stage().setY(deps.stage().getY() + Constants.MOVE_AMOUNT)),
 
   MOVE_UP(
-      "app.keyboard.key.move_up",
+      ConfigurationKeys.APP_KEYBOARD_KEY_MOVE_UP,
       (deps) -> deps.stage().setY(deps.stage().getY() - Constants.MOVE_AMOUNT)),
 
   RUN_ANALYSIS(
-      "app.keyboard.key.run_analysis",
+      ConfigurationKeys.APP_KEYBOARD_KEY_RUN_ANALYSIS,
       (deps) -> deps.viewController().executeMultiSolutionAnalysis()),
 
   RUN_MOCK_ANALYSIS(
-      "app.keyboard.key.run_mock_analysis",
+      ConfigurationKeys.APP_KEYBOARD_KEY_RUN_MOCK_ANALYSIS,
       (deps) -> deps.viewController().executeMultiSolutionMockAnalysis()),
 
-  SCROLL_DOWN("app.keyboard.key.scroll_down", deps -> scroll(deps, 0.2)),
+  SCROLL_DOWN(ConfigurationKeys.APP_KEYBOARD_KEY_SCROLL_DOWN, deps -> scroll(deps, 0.2)),
 
-  SCROLL_UP("app.keyboard.key.scroll_up", deps -> scroll(deps, -0.2)),
+  SCROLL_UP(ConfigurationKeys.APP_KEYBOARD_KEY_SCROLL_UP, deps -> scroll(deps, -0.2)),
 
-  SWITCH_TO_TAB1("app.keyboard.key.switch_to_tab1", deps -> switchToTab(deps, 0)),
+  SWITCH_TO_TAB1(ConfigurationKeys.APP_KEYBOARD_KEY_SWITCH_TO_TAB1, deps -> switchToTab(deps, 0)),
 
-  SWITCH_TO_TAB2("app.keyboard.key.switch_to_tab2", deps -> switchToTab(deps, 1)),
+  SWITCH_TO_TAB2(ConfigurationKeys.APP_KEYBOARD_KEY_SWITCH_TO_TAB2, deps -> switchToTab(deps, 1)),
 
-  SWITCH_TO_TAB3("app.keyboard.key.switch_to_tab3", deps -> switchToTab(deps, 2)),
+  SWITCH_TO_TAB3(ConfigurationKeys.APP_KEYBOARD_KEY_SWITCH_TO_TAB3, deps -> switchToTab(deps, 2)),
 
   TOGGLE_PROBLEM_STATEMENT(
-      "app.keyboard.key.toggle_problem_statement",
+      ConfigurationKeys.APP_KEYBOARD_KEY_TOGGLE_PROBLEM_STATEMENT,
       (deps) -> deps.viewController().toggleProblemStatement());
 
   private final String keyConfigProperty;

@@ -134,45 +134,55 @@ class JavaFxApplicationSmokeTest {
   private void initializeKeyboardCombinations() {
     var config = ConfigProvider.getConfig();
 
-    var modifierKeys = config.getValues("app.keyboard.modifier.keys", Win32VK.class);
+    var modifierKeys =
+        config.getValues(ConfigurationKeys.APP_KEYBOARD_MODIFIER_KEYS, Win32VK.class);
     var matchingModifier = convertWin32VKsToModifier(modifierKeys);
 
     hideShowKeyCombination =
         createKeyCombination(
-            Win32VK.valueOf(config.getValue("app.keyboard.key.hide_show", String.class)),
+            Win32VK.valueOf(
+                config.getValue(ConfigurationKeys.APP_KEYBOARD_KEY_HIDE_SHOW, String.class)),
             matchingModifier);
     screenshotKeyCombination =
         createKeyCombination(
-            Win32VK.valueOf(config.getValue("app.keyboard.key.screenshot", String.class)),
+            Win32VK.valueOf(
+                config.getValue(ConfigurationKeys.APP_KEYBOARD_KEY_SCREENSHOT, String.class)),
             matchingModifier);
     runMockAnalysisKeyCombination =
         createKeyCombination(
-            Win32VK.valueOf(config.getValue("app.keyboard.key.run_mock_analysis", String.class)),
+            Win32VK.valueOf(
+                config.getValue(
+                    ConfigurationKeys.APP_KEYBOARD_KEY_RUN_MOCK_ANALYSIS, String.class)),
             matchingModifier);
     exitKeyCombination =
         createKeyCombination(
-            Win32VK.valueOf(config.getValue("app.keyboard.key.exit", String.class)),
+            Win32VK.valueOf(config.getValue(ConfigurationKeys.APP_KEYBOARD_KEY_EXIT, String.class)),
             matchingModifier);
     scrollDownKeyCombination =
         createKeyCombination(
-            Win32VK.valueOf(config.getValue("app.keyboard.key.scroll_down", String.class)),
+            Win32VK.valueOf(
+                config.getValue(ConfigurationKeys.APP_KEYBOARD_KEY_SCROLL_DOWN, String.class)),
             matchingModifier);
     toggleProblemStatementKeyCombination =
         createKeyCombination(
             Win32VK.valueOf(
-                config.getValue("app.keyboard.key.toggle_problem_statement", String.class)),
+                config.getValue(
+                    ConfigurationKeys.APP_KEYBOARD_KEY_TOGGLE_PROBLEM_STATEMENT, String.class)),
             matchingModifier);
     switchToTab1Combination =
         createKeyCombination(
-            Win32VK.valueOf(config.getValue("app.keyboard.key.switch_to_tab1", String.class)),
+            Win32VK.valueOf(
+                config.getValue(ConfigurationKeys.APP_KEYBOARD_KEY_SWITCH_TO_TAB1, String.class)),
             matchingModifier);
     switchToTab2Combination =
         createKeyCombination(
-            Win32VK.valueOf(config.getValue("app.keyboard.key.switch_to_tab2", String.class)),
+            Win32VK.valueOf(
+                config.getValue(ConfigurationKeys.APP_KEYBOARD_KEY_SWITCH_TO_TAB2, String.class)),
             matchingModifier);
     switchToTab3Combination =
         createKeyCombination(
-            Win32VK.valueOf(config.getValue("app.keyboard.key.switch_to_tab3", String.class)),
+            Win32VK.valueOf(
+                config.getValue(ConfigurationKeys.APP_KEYBOARD_KEY_SWITCH_TO_TAB3, String.class)),
             matchingModifier);
   }
 
