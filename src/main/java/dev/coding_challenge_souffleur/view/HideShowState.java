@@ -8,14 +8,17 @@ import javafx.stage.Stage;
 public class HideShowState {
 
   private final WindowFromScreenCaptureHider windowFromScreenCaptureHider;
+  private final Stage stage;
   private boolean applicationVisible = true;
 
   @Inject
-  HideShowState(WindowFromScreenCaptureHider windowFromScreenCaptureHider) {
+  HideShowState(
+      final Stage stage, final WindowFromScreenCaptureHider windowFromScreenCaptureHider) {
+    this.stage = stage;
     this.windowFromScreenCaptureHider = windowFromScreenCaptureHider;
   }
 
-  public void toggleVisibility(Stage stage) {
+  public void toggleVisibility() {
     if (applicationVisible) {
       stage.hide();
     } else {

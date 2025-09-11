@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -13,11 +14,11 @@ class HideShowStateTest {
 
   @Mock private WindowFromScreenCaptureHider mockHider;
   @Mock private Stage mockStage;
+  @InjectMocks private HideShowState hideShowState;
 
   @Test
   void shouldHideStageWhenApplicationIsVisible() {
-    var hideShowState = new HideShowState(mockHider);
-    hideShowState.toggleVisibility(mockStage);
+    hideShowState.toggleVisibility();
 
     verify(mockStage).hide();
     verify(mockStage, never()).show();
@@ -26,9 +27,8 @@ class HideShowStateTest {
 
   @Test
   void shouldShowStageAndExcludeWindowsWhenApplicationIsNotVisible() {
-    var hideShowState = new HideShowState(mockHider);
-    hideShowState.toggleVisibility(mockStage);
-    hideShowState.toggleVisibility(mockStage);
+    hideShowState.toggleVisibility();
+    hideShowState.toggleVisibility();
 
     verify(mockStage, times(1)).show();
     verify(mockStage, times(1)).hide();

@@ -6,8 +6,7 @@ import javafx.scene.control.ScrollPane;
 enum KeyCommand {
   EXIT("app.keyboard.key.exit", (deps) -> deps.exitApplication().run()),
 
-  HIDE_SHOW(
-      "app.keyboard.key.hide_show", (deps) -> deps.hideShowState().toggleVisibility(deps.stage())),
+  HIDE_SHOW("app.keyboard.key.hide_show", (deps) -> deps.hideShowState().toggleVisibility()),
 
   TAKE_SCREENSHOT(
       "app.keyboard.key.screenshot",
