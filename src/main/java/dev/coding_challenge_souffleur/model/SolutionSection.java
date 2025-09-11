@@ -19,7 +19,7 @@ public enum SolutionSection {
   static final Pattern SOLUTION_BOUNDARY_PATTERN_INSTANCE =
       Pattern.compile(SOLUTION_TITLE.headerPrefix(), Pattern.DOTALL);
 
-  private static final String SECTION_END = "===SECTION_END===";
+  static final String SECTION_END = "===SECTION_END===";
 
   // Precompiled per-enum constants
   private final String headerPrefix;
