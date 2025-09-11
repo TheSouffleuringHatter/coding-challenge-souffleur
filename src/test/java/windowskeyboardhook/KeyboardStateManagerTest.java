@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.sun.jna.platform.win32.Win32VK;
 import com.sun.jna.platform.win32.WinUser;
-import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +45,7 @@ class KeyboardStateManagerTest {
 
   @Test
   void shouldReturnEmptySetForPressedModifierKeyCodes() {
-    Set<Integer> pressedKeys = keyboardStateManager.getPressedModifierKeyCodes();
+    var pressedKeys = keyboardStateManager.getPressedModifierKeyCodes();
 
     assertNotNull(pressedKeys);
     assertTrue(pressedKeys.isEmpty());
@@ -147,7 +146,7 @@ class KeyboardStateManagerTest {
     assertTrue(keyboardStateManager.isAnyCtrlPressed());
     assertTrue(keyboardStateManager.isAnyModifierPressed());
 
-    Set<Integer> pressedKeys = keyboardStateManager.getPressedModifierKeyCodes();
+    var pressedKeys = keyboardStateManager.getPressedModifierKeyCodes();
     assertEquals(2, pressedKeys.size());
     assertTrue(pressedKeys.contains(WinUser.VK_LSHIFT));
     assertTrue(pressedKeys.contains(WinUser.VK_RCONTROL));
@@ -166,7 +165,7 @@ class KeyboardStateManagerTest {
   void shouldReturnImmutableCopyOfPressedKeys() {
     keyboardStateManager.processKeyEvent(WinUser.VK_LSHIFT, WinUser.WM_KEYDOWN);
 
-    Set<Integer> pressedKeys = keyboardStateManager.getPressedModifierKeyCodes();
+    var pressedKeys = keyboardStateManager.getPressedModifierKeyCodes();
     assertThrows(UnsupportedOperationException.class, () -> pressedKeys.add(WinUser.VK_RSHIFT));
   }
 }

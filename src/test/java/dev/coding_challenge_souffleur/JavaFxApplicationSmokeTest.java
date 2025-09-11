@@ -106,7 +106,7 @@ class JavaFxApplicationSmokeTest {
   private static String getFlowText(final Node flowNode) {
     assertInstanceOf(TextFlow.class, flowNode);
 
-    TextFlow textFlow = (TextFlow) flowNode;
+    var textFlow = (TextFlow) flowNode;
     var sb = new StringBuilder();
     for (var child : textFlow.getChildren()) {
       if (child instanceof Text text) {

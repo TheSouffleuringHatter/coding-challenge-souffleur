@@ -17,7 +17,7 @@ class KeyboardHookFacadeTest {
 
   @Test
   void shouldCreateKeyboardHookFacade() {
-    KeyboardHookFacade facade =
+    var facade =
         new KeyboardHookFacade(mockHookManager, mockMessageLoopService, mockEventProcessor);
 
     assertNotNull(facade);
@@ -28,7 +28,7 @@ class KeyboardHookFacadeTest {
     when(mockHookManager.isHookInstalled()).thenReturn(true);
     when(mockMessageLoopService.isRunning()).thenReturn(true);
 
-    KeyboardHookFacade facade =
+    var facade =
         new KeyboardHookFacade(mockHookManager, mockMessageLoopService, mockEventProcessor);
 
     assertTrue(facade.isRunning());
@@ -38,7 +38,7 @@ class KeyboardHookFacadeTest {
   void shouldReturnNotRunningWhenHookManagerNotInstalled() {
     when(mockHookManager.isHookInstalled()).thenReturn(false);
 
-    KeyboardHookFacade facade =
+    var facade =
         new KeyboardHookFacade(mockHookManager, mockMessageLoopService, mockEventProcessor);
 
     assertFalse(facade.isRunning());
@@ -49,7 +49,7 @@ class KeyboardHookFacadeTest {
     when(mockHookManager.isHookInstalled()).thenReturn(true);
     when(mockMessageLoopService.isRunning()).thenReturn(false);
 
-    KeyboardHookFacade facade =
+    var facade =
         new KeyboardHookFacade(mockHookManager, mockMessageLoopService, mockEventProcessor);
 
     assertFalse(facade.isRunning());
@@ -59,7 +59,7 @@ class KeyboardHookFacadeTest {
   void shouldReturnNotRunningWhenBothServicesInactive() {
     when(mockHookManager.isHookInstalled()).thenReturn(false);
 
-    KeyboardHookFacade facade =
+    var facade =
         new KeyboardHookFacade(mockHookManager, mockMessageLoopService, mockEventProcessor);
 
     assertFalse(facade.isRunning());
@@ -71,7 +71,7 @@ class KeyboardHookFacadeTest {
     when(mockHookManager.uninstallKeyboardHook()).thenReturn(true);
     when(mockMessageLoopService.shutdownExecutor(anyInt())).thenReturn(true);
 
-    KeyboardHookFacade facade =
+    var facade =
         new KeyboardHookFacade(mockHookManager, mockMessageLoopService, mockEventProcessor);
 
     facade.cleanup();

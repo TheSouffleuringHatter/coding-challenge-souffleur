@@ -11,7 +11,7 @@ class FileServiceTest {
 
   @Test
   void shouldLoadExistingResourceFile() throws IOException {
-    String content = fileService.loadResourceFile("/junit-platform.properties");
+    var content = fileService.loadResourceFile("/junit-platform.properties");
 
     assertNotNull(content);
     assertFalse(content.isEmpty());
@@ -19,7 +19,7 @@ class FileServiceTest {
 
   @Test
   void shouldThrowExceptionForNonExistentResource() {
-    IOException exception =
+    var exception =
         assertThrows(
             IOException.class, () -> fileService.loadResourceFile("/nonexistent/file.txt"));
 
@@ -33,7 +33,7 @@ class FileServiceTest {
 
   @Test
   void shouldReturnContentForValidResourcePath() throws IOException {
-    String content = fileService.loadResourceFile("/junit-platform.properties");
+    var content = fileService.loadResourceFile("/junit-platform.properties");
 
     assertNotNull(content);
     assertTrue(content.length() >= 0);

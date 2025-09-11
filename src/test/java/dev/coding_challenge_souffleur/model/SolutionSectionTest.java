@@ -2,7 +2,6 @@ package dev.coding_challenge_souffleur.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.regex.Pattern;
 import org.junit.jupiter.api.Test;
 
 class SolutionSectionTest {
@@ -31,7 +30,7 @@ class SolutionSectionTest {
 
   @Test
   void shouldReturnValidCompletePattern() {
-    Pattern pattern = SolutionSection.SOLUTION_TITLE.completePattern();
+    var pattern = SolutionSection.SOLUTION_TITLE.completePattern();
 
     assertNotNull(pattern);
     assertTrue(
@@ -47,7 +46,7 @@ class SolutionSectionTest {
 
   @Test
   void shouldReturnValidPartialPattern() {
-    Pattern pattern = SolutionSection.SOLUTION_TITLE.partialPattern();
+    var pattern = SolutionSection.SOLUTION_TITLE.partialPattern();
 
     assertNotNull(pattern);
     assertTrue(
@@ -63,7 +62,7 @@ class SolutionSectionTest {
 
   @Test
   void shouldDetectSolutionContentWhenPresent() {
-    String textWithSolution =
+    var textWithSolution =
         "Some text " + SolutionSection.SOLUTION_TITLE.headerPrefix() + " My solution title";
 
     assertTrue(SolutionSection.containsSolutionContent(textWithSolution));
@@ -71,7 +70,7 @@ class SolutionSectionTest {
 
   @Test
   void shouldDetectSolutionContentForMultipleSections() {
-    String textWithSolution =
+    var textWithSolution =
         SolutionSection.SOLUTION_DESCRIPTION.headerPrefix()
             + " Description here "
             + SolutionSection.EDGE_CASES.headerPrefix()
@@ -82,7 +81,7 @@ class SolutionSectionTest {
 
   @Test
   void shouldNotDetectSolutionContentWhenOnlyProblemStatementPresent() {
-    String textWithoutSolution =
+    var textWithoutSolution =
         "Some text " + SolutionSection.PROBLEM_STATEMENT.headerPrefix() + " Problem description";
 
     assertFalse(SolutionSection.containsSolutionContent(textWithoutSolution));
@@ -90,7 +89,7 @@ class SolutionSectionTest {
 
   @Test
   void shouldNotDetectSolutionContentWhenNotPresent() {
-    String textWithoutSolution = "Some random text without any solution sections";
+    var textWithoutSolution = "Some random text without any solution sections";
 
     assertFalse(SolutionSection.containsSolutionContent(textWithoutSolution));
   }
@@ -107,7 +106,7 @@ class SolutionSectionTest {
 
   @Test
   void shouldHaveSolutionBoundaryPattern() {
-    Pattern pattern = SolutionSection.SOLUTION_BOUNDARY_PATTERN_INSTANCE;
+    var pattern = SolutionSection.SOLUTION_BOUNDARY_PATTERN_INSTANCE;
 
     assertNotNull(pattern);
     assertTrue(pattern.matcher(SolutionSection.SOLUTION_TITLE.headerPrefix()).find());
@@ -115,22 +114,22 @@ class SolutionSectionTest {
 
   @Test
   void shouldMatchCompletePatternWithSectionEnd() {
-    String text =
+    var text =
         SolutionSection.SOLUTION_TITLE.headerPrefix()
             + "My awesome solution"
             + SolutionSection.SECTION_END;
-    Pattern pattern = SolutionSection.SOLUTION_TITLE.completePattern();
+    var pattern = SolutionSection.SOLUTION_TITLE.completePattern();
 
     assertTrue(pattern.matcher(text).matches());
   }
 
   @Test
   void shouldCaptureContentFromCompletePattern() {
-    String text =
+    var text =
         SolutionSection.SOLUTION_TITLE.headerPrefix()
             + "My awesome solution"
             + SolutionSection.SECTION_END;
-    Pattern pattern = SolutionSection.SOLUTION_TITLE.completePattern();
+    var pattern = SolutionSection.SOLUTION_TITLE.completePattern();
     var matcher = pattern.matcher(text);
 
     assertTrue(matcher.matches());
@@ -139,16 +138,16 @@ class SolutionSectionTest {
 
   @Test
   void shouldMatchPartialPatternWithoutSectionEnd() {
-    String text = SolutionSection.SOLUTION_TITLE.headerPrefix() + "My awesome solution";
-    Pattern pattern = SolutionSection.SOLUTION_TITLE.partialPattern();
+    var text = SolutionSection.SOLUTION_TITLE.headerPrefix() + "My awesome solution";
+    var pattern = SolutionSection.SOLUTION_TITLE.partialPattern();
 
     assertTrue(pattern.matcher(text).find());
   }
 
   @Test
   void shouldCaptureContentFromPartialPattern() {
-    String text = SolutionSection.SOLUTION_TITLE.headerPrefix() + "My awesome solution";
-    Pattern pattern = SolutionSection.SOLUTION_TITLE.partialPattern();
+    var text = SolutionSection.SOLUTION_TITLE.headerPrefix() + "My awesome solution";
+    var pattern = SolutionSection.SOLUTION_TITLE.partialPattern();
     var matcher = pattern.matcher(text);
 
     assertTrue(matcher.find());

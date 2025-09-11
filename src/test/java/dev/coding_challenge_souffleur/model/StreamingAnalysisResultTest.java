@@ -8,14 +8,14 @@ class StreamingAnalysisResultTest {
 
   @Test
   void shouldBeIncompleteWhenEmpty() {
-    StreamingAnalysisResult result = new StreamingAnalysisResult();
+    var result = new StreamingAnalysisResult();
 
     assertFalse(result.isComplete());
   }
 
   @Test
   void shouldBeCompleteWhenAllRequiredSectionsPresent() {
-    StreamingAnalysisResult result = new StreamingAnalysisResult();
+    var result = new StreamingAnalysisResult();
 
     result.setSection(SolutionSection.PROBLEM_STATEMENT, "Problem");
     result.setSection(SolutionSection.SOLUTION_DESCRIPTION, "Description");
@@ -29,7 +29,7 @@ class StreamingAnalysisResultTest {
 
   @Test
   void shouldBeIncompleteWhenMissingSolutionDescription() {
-    StreamingAnalysisResult result = new StreamingAnalysisResult();
+    var result = new StreamingAnalysisResult();
 
     result.setSection(SolutionSection.PROBLEM_STATEMENT, "Problem");
     result.setSection(SolutionSection.EDGE_CASES, "Edge cases");
@@ -42,7 +42,7 @@ class StreamingAnalysisResultTest {
 
   @Test
   void shouldSetAndGetProblemStatement() {
-    StreamingAnalysisResult result = new StreamingAnalysisResult();
+    var result = new StreamingAnalysisResult();
 
     result.setSection(SolutionSection.PROBLEM_STATEMENT, "Test problem");
 
@@ -51,7 +51,7 @@ class StreamingAnalysisResultTest {
 
   @Test
   void shouldSetAndGetSolutionTitle() {
-    StreamingAnalysisResult result = new StreamingAnalysisResult();
+    var result = new StreamingAnalysisResult();
 
     result.setSection(SolutionSection.SOLUTION_TITLE, "Test title");
 
@@ -60,7 +60,7 @@ class StreamingAnalysisResultTest {
 
   @Test
   void shouldSetAndGetSolutionDescription() {
-    StreamingAnalysisResult result = new StreamingAnalysisResult();
+    var result = new StreamingAnalysisResult();
 
     result.setSection(SolutionSection.SOLUTION_DESCRIPTION, "Test description");
 
@@ -69,7 +69,7 @@ class StreamingAnalysisResultTest {
 
   @Test
   void shouldSetAndGetEdgeCases() {
-    StreamingAnalysisResult result = new StreamingAnalysisResult();
+    var result = new StreamingAnalysisResult();
 
     result.setSection(SolutionSection.EDGE_CASES, "Test edge cases");
 
@@ -78,7 +78,7 @@ class StreamingAnalysisResultTest {
 
   @Test
   void shouldSetAndGetSolutionCode() {
-    StreamingAnalysisResult result = new StreamingAnalysisResult();
+    var result = new StreamingAnalysisResult();
 
     result.setSection(SolutionSection.SOLUTION_CODE, "Test code");
 
@@ -87,7 +87,7 @@ class StreamingAnalysisResultTest {
 
   @Test
   void shouldSetAndGetTimeComplexity() {
-    StreamingAnalysisResult result = new StreamingAnalysisResult();
+    var result = new StreamingAnalysisResult();
 
     result.setSection(SolutionSection.TIME_COMPLEXITY, "O(n)");
 
@@ -96,7 +96,7 @@ class StreamingAnalysisResultTest {
 
   @Test
   void shouldSetAndGetSpaceComplexity() {
-    StreamingAnalysisResult result = new StreamingAnalysisResult();
+    var result = new StreamingAnalysisResult();
 
     result.setSection(SolutionSection.SPACE_COMPLEXITY, "O(1)");
 
@@ -105,7 +105,7 @@ class StreamingAnalysisResultTest {
 
   @Test
   void shouldGetValueForSection() {
-    StreamingAnalysisResult result = new StreamingAnalysisResult();
+    var result = new StreamingAnalysisResult();
 
     result.setSection(SolutionSection.SOLUTION_TITLE, "Test title");
 
@@ -114,7 +114,7 @@ class StreamingAnalysisResultTest {
 
   @Test
   void shouldReturnNullForUnsetSection() {
-    StreamingAnalysisResult result = new StreamingAnalysisResult();
+    var result = new StreamingAnalysisResult();
 
     assertNull(result.getProblemStatement());
     assertNull(result.getSolutionTitle());
@@ -123,9 +123,9 @@ class StreamingAnalysisResultTest {
 
   @Test
   void shouldThrowExceptionWhenSettingNullValue() {
-    StreamingAnalysisResult result = new StreamingAnalysisResult();
+    var result = new StreamingAnalysisResult();
 
-    IllegalArgumentException exception =
+    var exception =
         assertThrows(
             IllegalArgumentException.class,
             () -> result.setSection(SolutionSection.PROBLEM_STATEMENT, null));
@@ -136,7 +136,7 @@ class StreamingAnalysisResultTest {
 
   @Test
   void shouldCompleteWithSolutionTitleOptional() {
-    StreamingAnalysisResult result = new StreamingAnalysisResult();
+    var result = new StreamingAnalysisResult();
 
     result.setSection(SolutionSection.PROBLEM_STATEMENT, "Problem");
     result.setSection(SolutionSection.SOLUTION_DESCRIPTION, "Description");
@@ -151,7 +151,7 @@ class StreamingAnalysisResultTest {
 
   @Test
   void shouldOverwriteExistingSection() {
-    StreamingAnalysisResult result = new StreamingAnalysisResult();
+    var result = new StreamingAnalysisResult();
 
     result.setSection(SolutionSection.PROBLEM_STATEMENT, "First value");
     result.setSection(SolutionSection.PROBLEM_STATEMENT, "Second value");

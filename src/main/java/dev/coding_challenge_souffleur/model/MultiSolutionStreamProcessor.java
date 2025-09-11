@@ -214,7 +214,7 @@ class MultiSolutionStreamProcessor {
       result.addSolution(new StreamingAnalysisResult());
     }
 
-    for (int i = 0; i < solutionBlocks.length; i++) {
+    for (var i = 0; i < solutionBlocks.length; i++) {
       var solutionBlock = solutionBlocks[i];
       var optionalSolution = result.getSolution(i);
       if (optionalSolution.isPresent()) {

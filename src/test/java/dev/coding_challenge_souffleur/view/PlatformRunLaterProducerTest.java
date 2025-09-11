@@ -8,29 +8,29 @@ class PlatformRunLaterProducerTest {
 
   @Test
   void shouldProducePlatformRunLaterInstance() {
-    PlatformRunLaterProducer producer = new PlatformRunLaterProducer();
+    var producer = new PlatformRunLaterProducer();
 
-    PlatformRunLater platformRunLater = producer.platformRunLater();
+    var platformRunLater = producer.platformRunLater();
 
     assertNotNull(platformRunLater);
   }
 
   @Test
   void shouldProduceFunctionalInterface() {
-    PlatformRunLaterProducer producer = new PlatformRunLaterProducer();
+    var producer = new PlatformRunLaterProducer();
 
-    PlatformRunLater platformRunLater = producer.platformRunLater();
+    var platformRunLater = producer.platformRunLater();
 
     assertNotNull(platformRunLater);
-    assertTrue(platformRunLater instanceof PlatformRunLater);
+    assertInstanceOf(PlatformRunLater.class, platformRunLater);
   }
 
   @Test
   void shouldProduceConsistentInstance() {
-    PlatformRunLaterProducer producer = new PlatformRunLaterProducer();
+    var producer = new PlatformRunLaterProducer();
 
-    PlatformRunLater first = producer.platformRunLater();
-    PlatformRunLater second = producer.platformRunLater();
+    var first = producer.platformRunLater();
+    var second = producer.platformRunLater();
 
     assertNotNull(first);
     assertNotNull(second);
