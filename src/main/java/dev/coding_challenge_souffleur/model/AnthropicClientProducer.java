@@ -17,7 +17,8 @@ class AnthropicClientProducer {
   @Produces private AnthropicClient anthropicClient;
 
   @Inject
-  AnthropicClientProducer(@ConfigProperty(name = ConfigurationKeys.ANTHROPIC_API_KEY) final String apiKey) {
+  AnthropicClientProducer(
+      @ConfigProperty(name = ConfigurationKeys.ANTHROPIC_API_KEY) final String apiKey) {
     this.apiKey = apiKey;
   }
 

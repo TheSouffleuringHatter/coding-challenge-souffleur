@@ -37,7 +37,8 @@ public class ScreenshotService {
 
   @Inject
   public ScreenshotService(
-      @ConfigProperty(name = ConfigurationKeys.SAVE_SCREENSHOT_TO_FILE) final boolean saveScreenshotToFile,
+      @ConfigProperty(name = ConfigurationKeys.SAVE_SCREENSHOT_TO_FILE)
+          final boolean saveScreenshotToFile,
       final ImageService imageService) {
     this.saveScreenshotToFile = saveScreenshotToFile;
     this.imageService = imageService;

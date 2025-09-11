@@ -7,6 +7,7 @@ import com.sun.jna.platform.win32.WinDef.LPARAM;
 import com.sun.jna.platform.win32.WinDef.LRESULT;
 import com.sun.jna.platform.win32.WinDef.WPARAM;
 import com.sun.jna.platform.win32.WinUser.KBDLLHOOKSTRUCT;
+import dev.coding_challenge_souffleur.ConfigurationKeys;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Any;
 import jakarta.enterprise.inject.Instance;
@@ -16,7 +17,6 @@ import java.util.List;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import dev.coding_challenge_souffleur.ConfigurationKeys;
 
 /** Responsible for processing keyboard events and notifying listeners. */
 @ApplicationScoped

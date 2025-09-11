@@ -62,18 +62,28 @@ class MainSceneCreator {
       final ScreenshotDisplayService screenshotDisplayService,
       final ContentPaneController contentPaneController,
       final Instance<Stage> stageInstance,
-      @ConfigProperty(name = ConfigurationKeys.APP_EXIT_PLATFORM_ON_CLOSE) final boolean exitPlatformOnClose,
+      @ConfigProperty(name = ConfigurationKeys.APP_EXIT_PLATFORM_ON_CLOSE)
+          final boolean exitPlatformOnClose,
       @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_EXIT) final Win32VK exitKeyCode,
-      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_MODIFIER_KEYS) final List<Win32VK> modifierKeys,
-      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_HIDE_SHOW) final Win32VK hideShowKey,
+      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_MODIFIER_KEYS)
+          final List<Win32VK> modifierKeys,
+      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_HIDE_SHOW)
+          final Win32VK hideShowKey,
       @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_MOVE_UP) final Win32VK moveUpKey,
-      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_MOVE_DOWN) final Win32VK moveDownKey,
-      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_MOVE_LEFT) final Win32VK moveLeftKey,
-      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_MOVE_RIGHT) final Win32VK moveRightKey,
-      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_SCREENSHOT) final Win32VK screenshotKey,
-      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_RUN_ANALYSIS) final Win32VK runAnalysisKey,
-      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_SCROLL_UP) final Win32VK scrollUpKey,
-      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_SCROLL_DOWN) final Win32VK scrollDownKey) {
+      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_MOVE_DOWN)
+          final Win32VK moveDownKey,
+      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_MOVE_LEFT)
+          final Win32VK moveLeftKey,
+      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_MOVE_RIGHT)
+          final Win32VK moveRightKey,
+      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_SCREENSHOT)
+          final Win32VK screenshotKey,
+      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_RUN_ANALYSIS)
+          final Win32VK runAnalysisKey,
+      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_SCROLL_UP)
+          final Win32VK scrollUpKey,
+      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_SCROLL_DOWN)
+          final Win32VK scrollDownKey) {
     this.anthropicService = anthropicService;
     this.screenshotService = screenshotService;
     this.platformRunLater = platformRunLater;

@@ -11,7 +11,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
@@ -32,7 +31,8 @@ class KeyHandlerProcessor implements WindowsKeyListener {
   @Inject
   KeyHandlerProcessor(
       final PlatformRunLater platformRunLater,
-      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_MODIFIER_KEYS) final List<Win32VK> modifierKeys,
+      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_MODIFIER_KEYS)
+          final List<Win32VK> modifierKeys,
       final KeyCommandDependencies keyCommandDependencies,
       final Config config) {
     this.platformRunLater = platformRunLater;

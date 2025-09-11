@@ -9,18 +9,18 @@ class PlatformRunLaterProducerTest {
   @Test
   void shouldProducePlatformRunLaterInstance() {
     PlatformRunLaterProducer producer = new PlatformRunLaterProducer();
-    
+
     PlatformRunLater platformRunLater = producer.platformRunLater();
-    
+
     assertNotNull(platformRunLater);
   }
 
   @Test
   void shouldProduceFunctionalInterface() {
     PlatformRunLaterProducer producer = new PlatformRunLaterProducer();
-    
+
     PlatformRunLater platformRunLater = producer.platformRunLater();
-    
+
     assertNotNull(platformRunLater);
     assertTrue(platformRunLater instanceof PlatformRunLater);
   }
@@ -28,10 +28,10 @@ class PlatformRunLaterProducerTest {
   @Test
   void shouldProduceConsistentInstance() {
     PlatformRunLaterProducer producer = new PlatformRunLaterProducer();
-    
+
     PlatformRunLater first = producer.platformRunLater();
     PlatformRunLater second = producer.platformRunLater();
-    
+
     assertNotNull(first);
     assertNotNull(second);
   }

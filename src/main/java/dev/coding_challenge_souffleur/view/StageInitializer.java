@@ -33,7 +33,8 @@ public class StageInitializer {
   StageInitializer(
       final WindowFromScreenCaptureHider windowFromScreenCaptureHider,
       final Scene mainScene,
-      @ConfigProperty(name = ConfigurationKeys.APP_STAGE_CREATION_ASYNC) final boolean asyncStageCreation) {
+      @ConfigProperty(name = ConfigurationKeys.APP_STAGE_CREATION_ASYNC)
+          final boolean asyncStageCreation) {
     this.mainScene = mainScene;
     this.windowFromScreenCaptureHider = windowFromScreenCaptureHider;
     this.asyncStageCreation = asyncStageCreation;
