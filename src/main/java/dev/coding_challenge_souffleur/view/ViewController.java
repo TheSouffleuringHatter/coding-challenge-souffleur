@@ -1,22 +1,19 @@
 package dev.coding_challenge_souffleur.view;
 
-import com.sun.jna.platform.win32.Win32VK;
 import dev.coding_challenge_souffleur.model.AnthropicService;
 import dev.coding_challenge_souffleur.model.MultiSolutionResult;
 import dev.coding_challenge_souffleur.model.ScreenshotService;
 import dev.coding_challenge_souffleur.view.components.ContentPaneController;
 import dev.coding_challenge_souffleur.view.components.FormattedTextFlow;
+import dev.coding_challenge_souffleur.view.components.HeaderBox;
 import dev.coding_challenge_souffleur.view.components.MultiSolutionTabPane;
-import dev.coding_challenge_souffleur.view.keylistener.MatchingModifier;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,20 +28,14 @@ public class ViewController {
   private ScreenshotDisplayService screenshotDisplayService;
   private ContentPaneController contentPaneController;
   private MultiSolutionTabPane multiSolutionTabPane;
+  private HeaderBox headerBox;
   @FXML private VBox contentPane;
   @FXML private FormattedTextFlow problemStatementFlow;
-  @FXML private Button closeButton;
-  @FXML private Label shortcutModifierText;
+  @FXML private HBox headerBoxPlaceholder;
   @FXML private Label statusLabel;
   @FXML private VBox problemStatementSection;
   @FXML private HBox screenshotPreviewContainer;
   @FXML private ImageView screenshotPreview;
-
-  @FXML
-  public void initialize() {
-    shortcutModifierText.setText(MatchingModifier.MATCHING_MODIFIER.toString());
-    // Close button text will be set after setup() is called
-  }
 
   @FXML
   public void toggleProblemStatement() {
@@ -74,15 +65,14 @@ public class ViewController {
       final ScreenshotDisplayService screenshotDisplayService,
       final ContentPaneController contentPaneController,
       final MultiSolutionTabPane multiSolutionTabPane,
-      @ConfigProperty(name = "app.keyboard.key.exit") final Win32VK exitKeyCode) {
+      final HeaderBox headerBox) {
     this.anthropicService = anthropicService;
     this.screenshotService = screenshotService;
     this.platformRunLater = platformRunLater;
     this.screenshotDisplayService = screenshotDisplayService;
     this.contentPaneController = contentPaneController;
     this.multiSolutionTabPane = multiSolutionTabPane;
-    // Set close button text with exit key
-    closeButton.setText("❌ (" + Character.toString(exitKeyCode.code) + ")");
+    this.headerBox = headerBox;
 
     screenshotDisplayService.initialize(screenshotPreviewContainer, screenshotPreview);
 
@@ -91,6 +81,16 @@ public class ViewController {
     var parent = (VBox) solutionTabPane.getParent();
     var index = parent.getChildren().indexOf(solutionTabPane);
     parent.getChildren().set(index, multiSolutionTabPane);
+
+    // Replace FXML HBox placeholder with our custom HeaderBox
+    headerBox.setId("headerBox"); // Set ID for test compatibility
+    var mainContainer = (VBox) headerBoxPlaceholder.getParent();
+    var headerIndex = mainContainer.getChildren().indexOf(headerBoxPlaceholder);
+    mainContainer.getChildren().set(headerIndex, headerBox);
+  }
+
+  public HeaderBox getHeaderBox() {
+    return headerBox;
   }
 
   public void executeMultiSolutionAnalysis() {

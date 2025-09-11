@@ -1,6 +1,7 @@
 package dev.coding_challenge_souffleur;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.testfx.api.FxAssert.verifyThat;
@@ -51,6 +52,7 @@ class JavaFxApplicationSmokeTest {
    * <p>Background: It is not possible to isolate KeyCombination to usage of right CTRL.
    */
   private static final KeyCombination.Modifier MATCHING_MODIFIER = KeyCombination.SHIFT_DOWN;
+
   private static final String TOGGLE_PROBLEM_STATEMENT_BUTTON_SELECTOR =
       "#toggleProblemStatementButton";
   private static final String PROBLEM_STATEMENT_SECTION_SELECTOR = "#problemStatementSection";
@@ -102,18 +104,17 @@ class JavaFxApplicationSmokeTest {
   }
 
   private static String getFlowText(final Node flowNode) {
-    if (flowNode instanceof TextFlow textFlow) {
-      var sb = new StringBuilder();
-      for (var child : textFlow.getChildren()) {
-        if (child instanceof Text text) {
-          sb.append(text.getText());
-        }
+    assertInstanceOf(TextFlow.class, flowNode);
+
+    TextFlow textFlow = (TextFlow) flowNode;
+    var sb = new StringBuilder();
+    for (var child : textFlow.getChildren()) {
+      if (child instanceof Text text) {
+        sb.append(text.getText());
       }
-      return sb.toString();
     }
 
-    LOGGER.debug("Node {} is not a TextFlow", flowNode);
-    return "";
+    return sb.toString();
   }
 
   private static void assertSelectedTabHasCoreNodes(final VBox contentBox) {

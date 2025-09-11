@@ -4,8 +4,8 @@ import com.sun.jna.platform.win32.Win32VK;
 import dev.coding_challenge_souffleur.model.AnthropicService;
 import dev.coding_challenge_souffleur.model.ScreenshotService;
 import dev.coding_challenge_souffleur.view.components.ContentPaneController;
+import dev.coding_challenge_souffleur.view.components.HeaderBox;
 import dev.coding_challenge_souffleur.view.components.MultiSolutionTabPane;
-import dev.coding_challenge_souffleur.view.components.ShortcutKeysLabel;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Instance;
@@ -13,7 +13,6 @@ import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.io.IOException;
-import java.util.Objects;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -106,6 +105,18 @@ class MainSceneCreator {
     this.mainScene = scene;
     this.viewController = fxmlLoader.getController();
     this.multiSolutionTabPane = new MultiSolutionTabPane();
+    var headerBox =
+        new HeaderBox(
+            exitKeyCode,
+            hideShowKey,
+            moveUpKey,
+            moveDownKey,
+            moveLeftKey,
+            moveRightKey,
+            screenshotKey,
+            runAnalysisKey,
+            scrollUpKey,
+            scrollDownKey);
     this.viewController.setup(
         anthropicService,
         screenshotService,
@@ -113,8 +124,7 @@ class MainSceneCreator {
         screenshotDisplayService,
         contentPaneController,
         multiSolutionTabPane,
-        exitKeyCode);
-    setupShortcutKeysLabel();
+        headerBox);
 
     LOGGER.debug("Main scene created from {}", VIEW_FXML_RESOURCE);
   }
@@ -132,23 +142,5 @@ class MainSceneCreator {
                 Platform.exit();
               }
             });
-  }
-
-  private void setupShortcutKeysLabel() {
-    var shortcutKeysLabel = (ShortcutKeysLabel) mainScene.lookup("ShortcutKeysLabel");
-    Objects.requireNonNull(shortcutKeysLabel, "ShortcutKeysLabel not found in scene");
-
-    var initializedLabel =
-      new ShortcutKeysLabel(
-        hideShowKey,
-        moveUpKey,
-        moveDownKey,
-        moveLeftKey,
-        moveRightKey,
-        screenshotKey,
-        runAnalysisKey,
-        scrollUpKey,
-        scrollDownKey);
-    shortcutKeysLabel.setText(initializedLabel.getText());
   }
 }

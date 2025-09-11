@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Custom component FXML for the header box containing shortcut modifier, shortcut keys, and close button.
+  Root is HBox because the custom class extends HBox.
+  Note: No fx:controller attribute; controller is set programmatically by HeaderBox.
+-->
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<fx:root type="HBox" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+  styleClass="header-box">
+  <Label minWidth="130" styleClass="header-label" text="Shortcut Modifier"
+    fx:id="shortcutModifierText"/>
+  <Label styleClass="header-label" fx:id="shortcutKeysLabel"/>
+  <Region HBox.hgrow="ALWAYS"/>
+  <Button styleClass="close-button" text="❌" fx:id="closeButton"/>
+</fx:root>
