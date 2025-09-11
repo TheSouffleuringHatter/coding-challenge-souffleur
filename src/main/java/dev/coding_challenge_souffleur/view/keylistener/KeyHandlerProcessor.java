@@ -1,19 +1,12 @@
 package dev.coding_challenge_souffleur.view.keylistener;
 
 import com.sun.jna.platform.win32.Win32VK;
-import dev.coding_challenge_souffleur.view.HideShowState;
 import dev.coding_challenge_souffleur.view.PlatformRunLater;
-import dev.coding_challenge_souffleur.view.ScreenshotDisplayService;
-import dev.coding_challenge_souffleur.view.ViewController;
-import dev.coding_challenge_souffleur.view.WindowFromScreenCaptureHider;
-import dev.coding_challenge_souffleur.view.components.MultiSolutionTabPane;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import javafx.stage.Stage;
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
@@ -35,25 +28,11 @@ class KeyHandlerProcessor implements WindowsKeyListener {
   KeyHandlerProcessor(
       final PlatformRunLater platformRunLater,
       @ConfigProperty(name = "app.keyboard.modifier.keys") final List<Win32VK> modifierKeys,
-      @Named("exitApplication") final Runnable exitApplication,
-      final Stage stage,
-      final WindowFromScreenCaptureHider windowFromScreenCaptureHider,
-      final HideShowState hideShowState,
-      final ScreenshotDisplayService screenshotDisplayService,
-      final ViewController viewController,
-      final MultiSolutionTabPane multiSolutionTabPane,
+      final KeyCommandDependencies dependencies,
       final Config config) {
     this.platformRunLater = platformRunLater;
     this.modifierKeys = modifierKeys;
-    this.dependencies =
-        new KeyCommandDependencies(
-            exitApplication,
-            stage,
-            windowFromScreenCaptureHider,
-            hideShowState,
-            screenshotDisplayService,
-            viewController,
-            multiSolutionTabPane);
+    this.dependencies = dependencies;
 
     keyCommands = new EnumMap<>(Win32VK.class);
     for (var command : KeyCommand.values()) {

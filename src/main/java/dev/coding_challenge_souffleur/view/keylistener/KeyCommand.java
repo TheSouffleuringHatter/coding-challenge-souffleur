@@ -17,11 +17,17 @@ enum KeyCommand {
       "app.keyboard.key.move_left",
       (deps) -> deps.stage().setX(deps.stage().getX() - Constants.MOVE_AMOUNT)),
 
-  MOVE_RIGHT("app.keyboard.key.move_right", (deps) -> deps.stage().setX(deps.stage().getX() + Constants.MOVE_AMOUNT)),
+  MOVE_RIGHT(
+      "app.keyboard.key.move_right",
+      (deps) -> deps.stage().setX(deps.stage().getX() + Constants.MOVE_AMOUNT)),
 
-  MOVE_DOWN("app.keyboard.key.move_down", (deps) -> deps.stage().setY(deps.stage().getY() + Constants.MOVE_AMOUNT)),
+  MOVE_DOWN(
+      "app.keyboard.key.move_down",
+      (deps) -> deps.stage().setY(deps.stage().getY() + Constants.MOVE_AMOUNT)),
 
-  MOVE_UP("app.keyboard.key.move_up", (deps) -> deps.stage().setY(deps.stage().getY() - Constants.MOVE_AMOUNT)),
+  MOVE_UP(
+      "app.keyboard.key.move_up",
+      (deps) -> deps.stage().setY(deps.stage().getY() - Constants.MOVE_AMOUNT)),
 
   RUN_ANALYSIS(
       "app.keyboard.key.run_analysis",
@@ -53,14 +59,6 @@ enum KeyCommand {
     this.action = action;
   }
 
-  public String getKeyConfigProperty() {
-    return keyConfigProperty;
-  }
-
-  public void execute(KeyCommandDependencies dependencies) {
-    action.accept(dependencies);
-  }
-
   private static void scroll(KeyCommandDependencies deps, double deltaValue) {
     var tabPane = deps.multiSolutionTabPane();
     if (tabPane != null && tabPane.isVisible()) {
@@ -78,6 +76,14 @@ enum KeyCommand {
     if (tabPane != null && tabPane.isVisible() && tabPane.getTabs().size() > tabIndex) {
       tabPane.getSelectionModel().select(tabIndex);
     }
+  }
+
+  public String getKeyConfigProperty() {
+    return keyConfigProperty;
+  }
+
+  public void execute(KeyCommandDependencies dependencies) {
+    action.accept(dependencies);
   }
 
   private static class Constants {
