@@ -38,20 +38,20 @@ public class HeaderBox extends HBox {
         modifierKeys.stream()
             .map(Win32VK::toString)
             .collect(java.util.stream.Collectors.joining(" | ")));
-    closeButton.setText("❌ (" + Character.toString(exitKeyCode.code) + ")");
+    closeButton.setText("❌ (" + exitKeyCode + ")");
 
     var shortcutKeysText =
         String.format(
-            "🚫 %s | ↑ %s ↓ %s ← %s → %s | 📸 %s  🔍 %s | ⬆️%s ⬇️ %s",
+            "🚫%s | ↑%s ↓%s ←%s →%s | 📸%s 🔍%s | ⬆️%s ⬇️%s",
             Character.toString(hideShowKey.code),
-            moveUpKey,
-            moveDownKey,
-            moveLeftKey,
-            moveRightKey,
+            Character.toString(moveUpKey.code),
+            Character.toString(moveDownKey.code),
+            Character.toString(moveLeftKey.code),
+            Character.toString(moveRightKey.code),
             Character.toString(screenshotKey.code),
             Character.toString(runAnalysisKey.code),
-            scrollUpKey,
-            scrollDownKey);
+            Character.toString(scrollUpKey.code),
+            Character.toString(scrollDownKey.code));
     shortcutKeysLabel.setText(shortcutKeysText);
   }
 

@@ -93,11 +93,12 @@ class JavaFxApplicationSmokeTest {
       case VK_R -> KeyCode.R;
       case VK_Z -> KeyCode.Z;
       case VK_Q -> KeyCode.Q;
-      case VK_5 -> KeyCode.DIGIT5;
       case VK_V -> KeyCode.V;
+      case VK_ESCAPE -> KeyCode.ESCAPE;
       case VK_1 -> KeyCode.DIGIT1;
       case VK_2 -> KeyCode.DIGIT2;
       case VK_3 -> KeyCode.DIGIT3;
+      case VK_5 -> KeyCode.DIGIT5;
       default -> throw new IllegalArgumentException("Unsupported Win32VK: " + win32VK);
     };
   }
