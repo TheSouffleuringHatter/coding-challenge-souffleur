@@ -20,7 +20,6 @@ jobs:
           - name: "javafx"
             tests: "dev.coding_challenge_souffleur.JavaFxApplicationSmokeTest"
           - name: "other"
-            tests: "*"
             exclude: "dev/coding_challenge_souffleur/model/AnthropicServiceTest.class,dev/coding_challenge_souffleur/JavaFxApplicationSmokeTest.class"
 
     steps:
