@@ -22,7 +22,19 @@ jobs:
             exclude: "dev/coding_challenge_souffleur/model/AnthropicServiceTest.class,dev/coding_challenge_souffleur/JavaFxApplicationSmokeTest.class"
 
     steps:
-      - uses: ./.github/actions/setup-environment
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: ${{ inputs.fetch-depth }}
+        shell: bash
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'microsoft'
+        shell: bash
+
+      - uses: gradle/actions/setup-gradle@v4
+        shell: bash
 
       - name: Run specific tests
         if: matrix.exclude == ''
@@ -49,9 +61,19 @@ jobs:
     runs-on: windows-latest
     if: always()
     steps:
-      - uses: ./.github/actions/setup-environment
+      - uses: actions/checkout@v5
         with:
-          fetch-depth: 0
+          fetch-depth: ${{ inputs.fetch-depth }}
+        shell: bash
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'microsoft'
+        shell: bash
+
+      - uses: gradle/actions/setup-gradle@v4
+        shell: bash
 
       - uses: actions/cache@v4
         with:
