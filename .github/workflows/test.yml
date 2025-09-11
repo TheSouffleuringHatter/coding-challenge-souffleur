@@ -12,19 +12,10 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v5
-
-      - uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'microsoft'
-
-      - uses: gradle/actions/setup-gradle@v4
-        with:
-          cache-read-only: ${{ github.event_name == 'pull_request' }}
+      - uses: ./.github/actions/setup-environment
 
       - name: Compile project
-        run: ./gradlew compileJava compileTestJava --continue --info
+        run: ./gradlew compileTestJava --continue --info
 
       - uses: actions/upload-artifact@v4
         with:
@@ -48,16 +39,7 @@ jobs:
             exclude: "dev/coding_challenge_souffleur/model/AnthropicServiceTest.class,dev/coding_challenge_souffleur/JavaFxApplicationSmokeTest.class"
 
     steps:
-      - uses: actions/checkout@v5
-
-      - uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'microsoft'
-
-      - uses: gradle/actions/setup-gradle@v4
-        with:
-          cache-read-only: ${{ github.event_name == 'pull_request' }}
+      - uses: ./.github/actions/setup-environment
 
       - uses: actions/download-artifact@v4
         with:
@@ -89,16 +71,9 @@ jobs:
     runs-on: windows-latest
     if: always()
     steps:
-      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup-environment
         with:
           fetch-depth: 0
-
-      - uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'microsoft'
-
-      - uses: gradle/actions/setup-gradle@v4
 
       - uses: actions/cache@v4
         with:
