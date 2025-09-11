@@ -85,8 +85,8 @@ jobs:
       - name: Merge results
         run: |
           mkdir -p build/test-results/test build/jacoco
-          cp artifacts/*.xml build/test-results/test/
-          cp artifacts/test.exec build/jacoco/
+          find artifacts -name "*.xml" -exec cp {} build/test-results/test/ \;
+          find artifacts -name "test.exec" -exec cp {} build/jacoco/ \;
         shell: bash
 
       - name: Run Sonar
