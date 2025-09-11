@@ -11,34 +11,85 @@ on:
 jobs:
   test:
     runs-on: windows-latest
+    strategy:
+      matrix:
+        test-group:
+          - name: "anthropic"
+            tests: "dev.coding_challenge_souffleur.model.AnthropicServiceTest"
+          - name: "javafx"
+            tests: "dev.coding_challenge_souffleur.JavaFxApplicationSmokeTest"
+          - name: "other"
+            tests: "* --exclude-tests dev.coding_challenge_souffleur.model.AnthropicServiceTest --exclude-tests dev.coding_challenge_souffleur.JavaFxApplicationSmokeTest"
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
+
+      - uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'microsoft'
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+
+      - uses: gradle/actions/setup-gradle@v4
         with:
           cache-read-only: ${{ github.event_name == 'pull_request' }}
-      - name: Cache SonarQube packages
-        uses: actions/cache@v4
+
+      - name: Run tests
+        run: ./gradlew test --tests "${{ matrix.test-group.tests }}" jacocoTestReport --continue --info
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: results-${{ matrix.test-group.name }}
+          path: |
+            build/test-results/test/*.xml
+            build/jacoco/test.exec
+
+  sonar:
+    needs: test
+    runs-on: windows-latest
+    if: always()
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'microsoft'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - uses: actions/cache@v4
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
-      - name: Run tests
-        run: ./gradlew test jacocoTestReport sonar --continue --info
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: results-*
+          path: artifacts
+          merge-multiple: true
+
+      - name: Merge results
+        run: |
+          mkdir -p build/test-results/test build/jacoco
+          cp artifacts/*.xml build/test-results/test/ 2>/dev/null || true
+          cp artifacts/test.exec build/jacoco/ 2>/dev/null || true
+        shell: bash
+
+      - name: Run Sonar
+        run: ./gradlew sonar --continue --info
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      - name: Publish Test Results
+
+      - uses: dorny/test-reporter@v2
         if: always()
-        uses: dorny/test-reporter@v2
         with:
           name: 'Test Results'
           path: 'build/test-results/test/*.xml'
