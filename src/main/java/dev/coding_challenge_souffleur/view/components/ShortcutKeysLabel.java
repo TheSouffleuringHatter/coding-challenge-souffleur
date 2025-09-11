@@ -1,4 +1,4 @@
-package dev.coding_challenge_souffleur.view.keylistener;
+package dev.coding_challenge_souffleur.view.components;
 
 import com.sun.jna.platform.win32.Win32VK;
 import javafx.scene.control.Label;

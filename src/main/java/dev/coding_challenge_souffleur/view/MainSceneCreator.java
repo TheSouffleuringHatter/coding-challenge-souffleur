@@ -5,7 +5,7 @@ import dev.coding_challenge_souffleur.model.AnthropicService;
 import dev.coding_challenge_souffleur.model.ScreenshotService;
 import dev.coding_challenge_souffleur.view.components.ContentPaneController;
 import dev.coding_challenge_souffleur.view.components.MultiSolutionTabPane;
-import dev.coding_challenge_souffleur.view.keylistener.ShortcutKeysLabel;
+import dev.coding_challenge_souffleur.view.components.ShortcutKeysLabel;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Instance;
