@@ -59,7 +59,7 @@ enum KeyCommand {
     this.action = action;
   }
 
-  private static void scroll(KeyCommandDependencies deps, double deltaValue) {
+  private static void scroll(final KeyCommandDependencies deps, final double deltaValue) {
     var tabPane = deps.multiSolutionTabPane();
     if (tabPane != null && tabPane.isVisible()) {
       var selectedTab = tabPane.getSelectionModel().getSelectedItem();
@@ -71,18 +71,18 @@ enum KeyCommand {
     }
   }
 
-  private static void switchToTab(KeyCommandDependencies deps, int tabIndex) {
+  private static void switchToTab(final KeyCommandDependencies deps, final int tabIndex) {
     var tabPane = deps.multiSolutionTabPane();
     if (tabPane != null && tabPane.isVisible() && tabPane.getTabs().size() > tabIndex) {
       tabPane.getSelectionModel().select(tabIndex);
     }
   }
 
-  public String getKeyConfigProperty() {
+  String getKeyConfigProperty() {
     return keyConfigProperty;
   }
 
-  public void execute(KeyCommandDependencies dependencies) {
+  void execute(final KeyCommandDependencies dependencies) {
     action.accept(dependencies);
   }
 

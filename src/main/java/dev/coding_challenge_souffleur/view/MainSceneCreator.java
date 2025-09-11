@@ -63,7 +63,7 @@ class MainSceneCreator {
       final Instance<Stage> stageInstance,
       @ConfigProperty(name = "app.exit.platform.on.close") final boolean exitPlatformOnClose,
       @ConfigProperty(name = "app.keyboard.key.exit") final Win32VK exitKeyCode,
-    @ConfigProperty(name = "app.keyboard.modifier.keys") final List<Win32VK> modifierKeys,
+      @ConfigProperty(name = "app.keyboard.modifier.keys") final List<Win32VK> modifierKeys,
       @ConfigProperty(name = "app.keyboard.key.hide_show") final Win32VK hideShowKey,
       @ConfigProperty(name = "app.keyboard.key.move_up") final Win32VK moveUpKey,
       @ConfigProperty(name = "app.keyboard.key.move_down") final Win32VK moveDownKey,

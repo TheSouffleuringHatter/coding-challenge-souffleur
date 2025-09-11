@@ -35,9 +35,9 @@ public class HeaderBox extends HBox {
     loadFxml();
 
     shortcutModifierText.setText(
-      modifierKeys.stream()
-        .map(Win32VK::toString)
-        .collect(java.util.stream.Collectors.joining(" | ")));
+        modifierKeys.stream()
+            .map(Win32VK::toString)
+            .collect(java.util.stream.Collectors.joining(" | ")));
     closeButton.setText("❌ (" + Character.toString(exitKeyCode.code) + ")");
 
     var shortcutKeysText =

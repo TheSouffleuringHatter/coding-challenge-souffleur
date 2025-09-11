@@ -35,27 +35,27 @@ class KeyCommandDependencies {
     this.multiSolutionTabPane = multiSolutionTabPane;
   }
 
-  public Runnable exitApplication() {
+  Runnable exitApplication() {
     return exitApplication;
   }
 
-  public Stage stage() {
+  Stage stage() {
     return stage;
   }
 
-  public HideShowState hideShowState() {
+  HideShowState hideShowState() {
     return hideShowState;
   }
 
-  public ScreenshotDisplayService screenshotDisplayService() {
+  ScreenshotDisplayService screenshotDisplayService() {
     return screenshotDisplayService;
   }
 
-  public ViewController viewController() {
+  ViewController viewController() {
     return viewController;
   }
 
-  public MultiSolutionTabPane multiSolutionTabPane() {
+  MultiSolutionTabPane multiSolutionTabPane() {
     return multiSolutionTabPane;
   }
 }
