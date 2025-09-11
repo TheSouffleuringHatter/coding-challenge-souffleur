@@ -13,6 +13,7 @@ import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.io.IOException;
+import java.util.List;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -37,6 +38,7 @@ class MainSceneCreator {
   private final Instance<Stage> stageInstance;
   private final boolean exitPlatformOnClose;
   private final Win32VK exitKeyCode;
+  private final List<Win32VK> modifierKeys;
   private final Win32VK hideShowKey;
   private final Win32VK moveUpKey;
   private final Win32VK moveDownKey;
@@ -61,6 +63,7 @@ class MainSceneCreator {
       final Instance<Stage> stageInstance,
       @ConfigProperty(name = "app.exit.platform.on.close") final boolean exitPlatformOnClose,
       @ConfigProperty(name = "app.keyboard.key.exit") final Win32VK exitKeyCode,
+    @ConfigProperty(name = "app.keyboard.modifier.keys") final List<Win32VK> modifierKeys,
       @ConfigProperty(name = "app.keyboard.key.hide_show") final Win32VK hideShowKey,
       @ConfigProperty(name = "app.keyboard.key.move_up") final Win32VK moveUpKey,
       @ConfigProperty(name = "app.keyboard.key.move_down") final Win32VK moveDownKey,
@@ -78,6 +81,7 @@ class MainSceneCreator {
     this.stageInstance = stageInstance;
     this.exitPlatformOnClose = exitPlatformOnClose;
     this.exitKeyCode = exitKeyCode;
+    this.modifierKeys = modifierKeys;
     this.hideShowKey = hideShowKey;
     this.moveUpKey = moveUpKey;
     this.moveDownKey = moveDownKey;
@@ -108,6 +112,7 @@ class MainSceneCreator {
     var headerBox =
         new HeaderBox(
             exitKeyCode,
+            modifierKeys,
             hideShowKey,
             moveUpKey,
             moveDownKey,

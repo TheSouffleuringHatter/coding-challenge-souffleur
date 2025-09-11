@@ -1,8 +1,8 @@
 package dev.coding_challenge_souffleur.view.components;
 
 import com.sun.jna.platform.win32.Win32VK;
-import dev.coding_challenge_souffleur.view.keylistener.MatchingModifier;
 import java.io.IOException;
+import java.util.List;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -21,21 +21,26 @@ public class HeaderBox extends HBox {
   @FXML private Button closeButton;
 
   public HeaderBox(
-      Win32VK exitKeyCode,
-      Win32VK hideShowKey,
-      Win32VK moveUpKey,
-      Win32VK moveDownKey,
-      Win32VK moveLeftKey,
-      Win32VK moveRightKey,
-      Win32VK screenshotKey,
-      Win32VK runAnalysisKey,
-      Win32VK scrollUpKey,
-      Win32VK scrollDownKey) {
+      final Win32VK exitKeyCode,
+      final List<Win32VK> modifierKeys,
+      final Win32VK hideShowKey,
+      final Win32VK moveUpKey,
+      final Win32VK moveDownKey,
+      final Win32VK moveLeftKey,
+      final Win32VK moveRightKey,
+      final Win32VK screenshotKey,
+      final Win32VK runAnalysisKey,
+      final Win32VK scrollUpKey,
+      final Win32VK scrollDownKey) {
     loadFxml();
 
-    shortcutModifierText.setText(MatchingModifier.MATCHING_MODIFIER.toString());
+    shortcutModifierText.setText(
+      modifierKeys.stream()
+        .map(Win32VK::toString)
+        .collect(java.util.stream.Collectors.joining(" | ")));
     closeButton.setText("❌ (" + Character.toString(exitKeyCode.code) + ")");
-    var keysText =
+
+    var shortcutKeysText =
         String.format(
             "🚫 %s | ↑ %s ↓ %s ← %s → %s | 📸 %s  🔍 %s | ⬆️%s ⬇️ %s",
             Character.toString(hideShowKey.code),
@@ -47,7 +52,7 @@ public class HeaderBox extends HBox {
             Character.toString(runAnalysisKey.code),
             scrollUpKey,
             scrollDownKey);
-    shortcutKeysLabel.setText(keysText);
+    shortcutKeysLabel.setText(shortcutKeysText);
   }
 
   private void loadFxml() {
