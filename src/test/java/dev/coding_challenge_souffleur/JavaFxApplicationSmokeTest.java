@@ -9,6 +9,7 @@ import static org.testfx.matcher.base.NodeMatchers.isInvisible;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 
 import com.sun.jna.platform.win32.Win32VK;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javafx.scene.Node;
@@ -18,6 +19,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyCombination.Modifier;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -45,13 +47,6 @@ class JavaFxApplicationSmokeTest {
   private static final Logger LOGGER = LoggerFactory.getLogger(JavaFxApplicationSmokeTest.class);
 
   private static final int MAX_SCROLL_ATTEMPTS = 50;
-
-  /**
-   * In case of testing use SHIFT as modifier; in tests, any SHIFT acts as the modifier key.
-   *
-   * <p>Background: It is not possible to isolate KeyCombination to usage of right CTRL.
-   */
-  private static final KeyCombination.Modifier MATCHING_MODIFIER = KeyCombination.SHIFT_DOWN;
 
   private static final String TOGGLE_PROBLEM_STATEMENT_BUTTON_SELECTOR =
       "#toggleProblemStatementButton";
@@ -81,11 +76,15 @@ class JavaFxApplicationSmokeTest {
   private KeyCodeCombination switchToTab3Combination;
 
   private JavaFxApplication javaFxApplication;
-  private WeldContainer aiOverlayApplicationWeldContainer;
+  private WeldContainer weldContainer;
 
-  private static KeyCodeCombination createKeyCombination(Win32VK win32VK) {
-    var keyCode = convertWin32VKToKeyCode(win32VK);
-    return new KeyCodeCombination(keyCode, MATCHING_MODIFIER);
+  private static Modifier convertWin32VKsToModifier(List<Win32VK> win32VKs) {
+    if (win32VKs.size() == 2
+        && (win32VKs.contains(Win32VK.VK_LSHIFT) || win32VKs.contains(Win32VK.VK_RSHIFT))) {
+      return KeyCombination.SHIFT_DOWN;
+    }
+
+    throw new IllegalArgumentException("Unsupported Win32VKs: " + win32VKs);
   }
 
   private static KeyCode convertWin32VKToKeyCode(Win32VK win32VK) {
@@ -125,37 +124,55 @@ class JavaFxApplicationSmokeTest {
     assertFalse(contentBox.lookupAll(SPACE_COMPLEXITY_FLOW_SELECTOR).isEmpty());
   }
 
+  private static KeyCodeCombination createKeyCombination(
+      Win32VK win32VK, Modifier matchingModifier) {
+    var keyCode = convertWin32VKToKeyCode(win32VK);
+    return new KeyCodeCombination(keyCode, matchingModifier);
+  }
+
   private void initializeKeyboardCombinations() {
     var config = ConfigProvider.getConfig();
 
+    var modifierKeys = config.getValues("app.keyboard.modifier.keys", Win32VK.class);
+    var matchingModifier = convertWin32VKsToModifier(modifierKeys);
+
     hideShowKeyCombination =
         createKeyCombination(
-            Win32VK.valueOf(config.getValue("app.keyboard.key.hide_show", String.class)));
+            Win32VK.valueOf(config.getValue("app.keyboard.key.hide_show", String.class)),
+            matchingModifier);
     screenshotKeyCombination =
         createKeyCombination(
-            Win32VK.valueOf(config.getValue("app.keyboard.key.screenshot", String.class)));
+            Win32VK.valueOf(config.getValue("app.keyboard.key.screenshot", String.class)),
+            matchingModifier);
     runMockAnalysisKeyCombination =
         createKeyCombination(
-            Win32VK.valueOf(config.getValue("app.keyboard.key.run_mock_analysis", String.class)));
+            Win32VK.valueOf(config.getValue("app.keyboard.key.run_mock_analysis", String.class)),
+            matchingModifier);
     exitKeyCombination =
         createKeyCombination(
-            Win32VK.valueOf(config.getValue("app.keyboard.key.exit", String.class)));
+            Win32VK.valueOf(config.getValue("app.keyboard.key.exit", String.class)),
+            matchingModifier);
     scrollDownKeyCombination =
         createKeyCombination(
-            Win32VK.valueOf(config.getValue("app.keyboard.key.scroll_down", String.class)));
+            Win32VK.valueOf(config.getValue("app.keyboard.key.scroll_down", String.class)),
+            matchingModifier);
     toggleProblemStatementKeyCombination =
         createKeyCombination(
             Win32VK.valueOf(
-                config.getValue("app.keyboard.key.toggle_problem_statement", String.class)));
+                config.getValue("app.keyboard.key.toggle_problem_statement", String.class)),
+            matchingModifier);
     switchToTab1Combination =
         createKeyCombination(
-            Win32VK.valueOf(config.getValue("app.keyboard.key.switch_to_tab1", String.class)));
+            Win32VK.valueOf(config.getValue("app.keyboard.key.switch_to_tab1", String.class)),
+            matchingModifier);
     switchToTab2Combination =
         createKeyCombination(
-            Win32VK.valueOf(config.getValue("app.keyboard.key.switch_to_tab2", String.class)));
+            Win32VK.valueOf(config.getValue("app.keyboard.key.switch_to_tab2", String.class)),
+            matchingModifier);
     switchToTab3Combination =
         createKeyCombination(
-            Win32VK.valueOf(config.getValue("app.keyboard.key.switch_to_tab3", String.class)));
+            Win32VK.valueOf(config.getValue("app.keyboard.key.switch_to_tab3", String.class)),
+            matchingModifier);
   }
 
   private void scrollDownUntilVisible(final FxRobot robot, String nodeQuery) {
@@ -197,12 +214,11 @@ class JavaFxApplicationSmokeTest {
   @SuppressWarnings("unused")
   void start(final Stage stage) {
     javaFxApplication.start(stage);
-    aiOverlayApplicationWeldContainer = this.javaFxApplication.getWeldContainer();
+    weldContainer = this.javaFxApplication.getWeldContainer();
 
-    assertTrue(aiOverlayApplicationWeldContainer.isRunning());
+    assertTrue(weldContainer.isRunning());
 
-    var keyboardHookFacade =
-        aiOverlayApplicationWeldContainer.select(KeyboardHookFacade.class).get();
+    var keyboardHookFacade = weldContainer.select(KeyboardHookFacade.class).get();
     assertTrue(keyboardHookFacade.isRunning());
 
     LOGGER.debug("Application started successfully in test mode");
@@ -216,7 +232,7 @@ class JavaFxApplicationSmokeTest {
 
     javaFxApplication.stop();
 
-    assertFalse(aiOverlayApplicationWeldContainer.isRunning());
+    assertFalse(weldContainer.isRunning());
     assertTrue(Window.getWindows().isEmpty());
 
     LOGGER.debug("Application stopped successfully, {} windows were closed", windowsBeforeStop);
