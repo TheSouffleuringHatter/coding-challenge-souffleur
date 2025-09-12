@@ -60,15 +60,27 @@ class AnthropicServiceTest {
 
   @Test
   void testAnalyseMultiSolution_WithImageBytes_LiveSmoke_whenApiKeyPresent() {
-    // Run twice because of internal async usage
+    // Single real API call to verify actual API integration
+    var future = anthropicService.analyseMultiSolution(testImage, null);
+    var result = future.join();
 
-    var future1 = anthropicService.analyseMultiSolution(testImage, null);
+    assertTrue(result.hasAnySolutions());
+    assertTrue(result.getSharedProblemStatement().isPresent());
+    assertTrue(result.isComplete());
+  }
+
+  @Test
+  void testAnalyseMultiSolution_ConsecutiveStreaming_UsingMock() {
+    // Test consecutive streaming capability using mock to avoid API costs
+    // This tests the architecture's ability to handle multiple sequential calls
+
+    var future1 = anthropicService.analyseMultiSolutionMock(null);
     var result1 = future1.join();
     assertTrue(result1.hasAnySolutions());
     assertTrue(result1.getSharedProblemStatement().isPresent());
     assertTrue(result1.isComplete());
 
-    var future2 = anthropicService.analyseMultiSolution(testImage, null);
+    var future2 = anthropicService.analyseMultiSolutionMock(null);
     var result2 = future2.join();
     assertTrue(result2.hasAnySolutions());
     assertTrue(result2.getSharedProblemStatement().isPresent());
