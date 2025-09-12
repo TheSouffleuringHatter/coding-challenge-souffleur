@@ -30,9 +30,12 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
       - name: Run tests
-        run: ./gradlew test jacocoTestReport sonar --continue --info
+        run: ./gradlew test jacocoTestReport sonar --continue
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      - name: Sonar
+        run: ./gradlew sonar
+        env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: Publish Test Results
         if: always()
