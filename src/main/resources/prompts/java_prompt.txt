@@ -1,11 +1,13 @@
 # Java-Specific Requirements
 
-Solve using modern Java 21 with these features where appropriate:
-- Local variable type inference (var); for Java native types and within loops, too
+Use modern Java 21 features appropriately:
+- Local type inference (var) - including native types and loops
 - Stream API and functional approaches
 - Optional for potential null values
 - Pattern matching for instanceof
 - Text blocks for multi-line strings
 - Switch expressions over switch statements
+- Use appropriate data structures (HashMap vs TreeMap, ArrayList vs LinkedList)
 - Records for data carriers
-- If LinkedList is used as a specific interface such as Stack, use the methods appropriate for the respective interface (for example, push/pop/peek for Stack).
+- If LinkedList is used as specific interface like Stack, use appropriate methods (push/pop/peek for Stack)
+- Self-explanatory variable names (row vs i, channel vs ch); common abbreviations OK
