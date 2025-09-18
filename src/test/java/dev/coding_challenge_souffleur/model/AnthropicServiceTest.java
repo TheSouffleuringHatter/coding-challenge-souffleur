@@ -1,6 +1,7 @@
 package dev.coding_challenge_souffleur.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.smallrye.config.inject.ConfigExtension;
@@ -20,6 +21,7 @@ class AnthropicServiceTest {
   private static byte[] testImage;
 
   @Inject private AnthropicService anthropicService;
+  @Inject private LanguageConfigurationService languageConfigurationService;
 
   @BeforeAll
   static void setupTestImage() throws IOException {
@@ -85,5 +87,52 @@ class AnthropicServiceTest {
     assertTrue(result2.hasAnySolutions());
     assertTrue(result2.getSharedProblemStatement().isPresent());
     assertTrue(result2.isComplete());
+  }
+
+  @Test
+  void testCurrentLanguageConfiguration() {
+    // Test that the service correctly reports the current language
+    assertEquals(ProgrammingLanguage.JAVA, anthropicService.getCurrentLanguage());
+    assertEquals(ProgrammingLanguage.JAVA, languageConfigurationService.getCurrentLanguage());
+  }
+
+  @Test
+  void testBuildSystemMessageForDifferentLanguages() {
+    // Test that system messages are built correctly for different languages
+    var javaMessage = anthropicService.buildSystemMessage(ProgrammingLanguage.JAVA);
+    assertNotNull(javaMessage);
+    assertTrue(javaMessage.contains("Java 21"));
+
+    var pythonMessage = anthropicService.buildSystemMessage(ProgrammingLanguage.PYTHON);
+    assertNotNull(pythonMessage);
+    assertTrue(pythonMessage.contains("Python 3.9+"));
+
+    var csharpMessage = anthropicService.buildSystemMessage(ProgrammingLanguage.CSHARP);
+    assertNotNull(csharpMessage);
+    assertTrue(csharpMessage.contains("C# 10+"));
+
+    var jsMessage = anthropicService.buildSystemMessage(ProgrammingLanguage.JAVASCRIPT);
+    assertNotNull(jsMessage);
+    assertTrue(jsMessage.contains("ES2020+"));
+
+    var goMessage = anthropicService.buildSystemMessage(ProgrammingLanguage.GOLANG);
+    assertNotNull(goMessage);
+    assertTrue(goMessage.contains("Go 1.18+"));
+  }
+
+  @Test
+  void testLanguageChange() {
+    // Test that language changes are properly reflected
+    assertEquals(ProgrammingLanguage.JAVA, anthropicService.getCurrentLanguage());
+
+    languageConfigurationService.changeLanguage(ProgrammingLanguage.PYTHON);
+    assertEquals(ProgrammingLanguage.PYTHON, anthropicService.getCurrentLanguage());
+
+    languageConfigurationService.changeLanguage(ProgrammingLanguage.CSHARP);
+    assertEquals(ProgrammingLanguage.CSHARP, anthropicService.getCurrentLanguage());
+
+    // Reset back to original
+    languageConfigurationService.resetToConfiguredLanguage();
+    assertEquals(ProgrammingLanguage.JAVA, anthropicService.getCurrentLanguage());
   }
 }

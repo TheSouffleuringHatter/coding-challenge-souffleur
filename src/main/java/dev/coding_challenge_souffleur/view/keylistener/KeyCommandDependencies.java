@@ -1,5 +1,6 @@
 package dev.coding_challenge_souffleur.view.keylistener;
 
+import dev.coding_challenge_souffleur.model.LanguageConfigurationService;
 import dev.coding_challenge_souffleur.view.HideShowState;
 import dev.coding_challenge_souffleur.view.ScreenshotDisplayService;
 import dev.coding_challenge_souffleur.view.ViewController;
@@ -18,6 +19,7 @@ class KeyCommandDependencies {
   private final ScreenshotDisplayService screenshotDisplayService;
   private final ViewController viewController;
   private final MultiSolutionTabPane multiSolutionTabPane;
+  private final LanguageConfigurationService languageConfigurationService;
 
   @Inject
   KeyCommandDependencies(
@@ -26,13 +28,15 @@ class KeyCommandDependencies {
       final HideShowState hideShowState,
       final ScreenshotDisplayService screenshotDisplayService,
       final ViewController viewController,
-      final MultiSolutionTabPane multiSolutionTabPane) {
+      final MultiSolutionTabPane multiSolutionTabPane,
+      final LanguageConfigurationService languageConfigurationService) {
     this.exitApplication = exitApplication;
     this.stage = stage;
     this.hideShowState = hideShowState;
     this.screenshotDisplayService = screenshotDisplayService;
     this.viewController = viewController;
     this.multiSolutionTabPane = multiSolutionTabPane;
+    this.languageConfigurationService = languageConfigurationService;
   }
 
   Runnable exitApplication() {
@@ -57,5 +61,9 @@ class KeyCommandDependencies {
 
   MultiSolutionTabPane multiSolutionTabPane() {
     return multiSolutionTabPane;
+  }
+
+  LanguageConfigurationService languageConfigurationService() {
+    return languageConfigurationService;
   }
 }

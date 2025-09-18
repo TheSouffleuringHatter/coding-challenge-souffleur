@@ -3,6 +3,7 @@ package dev.coding_challenge_souffleur.view;
 import com.sun.jna.platform.win32.Win32VK;
 import dev.coding_challenge_souffleur.ConfigurationKeys;
 import dev.coding_challenge_souffleur.model.AnthropicService;
+import dev.coding_challenge_souffleur.model.LanguageConfigurationService;
 import dev.coding_challenge_souffleur.model.ScreenshotService;
 import dev.coding_challenge_souffleur.view.components.ContentPaneController;
 import dev.coding_challenge_souffleur.view.components.HeaderBox;
@@ -36,6 +37,7 @@ class MainSceneCreator {
   private final PlatformRunLater platformRunLater;
   private final ScreenshotDisplayService screenshotDisplayService;
   private final ContentPaneController contentPaneController;
+  private final LanguageConfigurationService languageConfigurationService;
   private final Instance<Stage> stageInstance;
   private final boolean exitPlatformOnClose;
   private final Win32VK exitKeyCode;
@@ -49,6 +51,8 @@ class MainSceneCreator {
   private final Win32VK runAnalysisKey;
   private final Win32VK scrollUpKey;
   private final Win32VK scrollDownKey;
+  private final Win32VK languagePreviousKey;
+  private final Win32VK languageNextKey;
 
   @Produces private ViewController viewController;
   @Produces private Scene mainScene;
@@ -61,6 +65,7 @@ class MainSceneCreator {
       final PlatformRunLater platformRunLater,
       final ScreenshotDisplayService screenshotDisplayService,
       final ContentPaneController contentPaneController,
+      final LanguageConfigurationService languageConfigurationService,
       final Instance<Stage> stageInstance,
       @ConfigProperty(name = ConfigurationKeys.APP_EXIT_PLATFORM_ON_CLOSE)
           final boolean exitPlatformOnClose,
@@ -83,12 +88,17 @@ class MainSceneCreator {
       @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_SCROLL_UP)
           final Win32VK scrollUpKey,
       @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_SCROLL_DOWN)
-          final Win32VK scrollDownKey) {
+          final Win32VK scrollDownKey,
+      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_LANGUAGE_PREVIOUS)
+          final Win32VK languagePreviousKey,
+      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_LANGUAGE_NEXT)
+          final Win32VK languageNextKey) {
     this.anthropicService = anthropicService;
     this.screenshotService = screenshotService;
     this.platformRunLater = platformRunLater;
     this.screenshotDisplayService = screenshotDisplayService;
     this.contentPaneController = contentPaneController;
+    this.languageConfigurationService = languageConfigurationService;
     this.stageInstance = stageInstance;
     this.exitPlatformOnClose = exitPlatformOnClose;
     this.exitKeyCode = exitKeyCode;
@@ -102,6 +112,8 @@ class MainSceneCreator {
     this.runAnalysisKey = runAnalysisKey;
     this.scrollUpKey = scrollUpKey;
     this.scrollDownKey = scrollDownKey;
+    this.languagePreviousKey = languagePreviousKey;
+    this.languageNextKey = languageNextKey;
   }
 
   @PostConstruct
@@ -132,7 +144,10 @@ class MainSceneCreator {
             screenshotKey,
             runAnalysisKey,
             scrollUpKey,
-            scrollDownKey);
+            scrollDownKey,
+            languagePreviousKey,
+            languageNextKey,
+            languageConfigurationService);
     this.viewController.setup(
         anthropicService,
         screenshotService,

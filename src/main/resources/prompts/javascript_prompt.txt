@@ -1,0 +1,21 @@
+# JavaScript-Specific Requirements
+
+Use modern ES2020+ features appropriately:
+- const/let instead of var for variable declarations
+- Arrow functions for concise function expressions
+- Template literals (backticks) for string interpolation
+- Destructuring assignment for objects and arrays
+- Spread operator (...) for array/object operations
+- async/await for asynchronous operations over Promises.then()
+- Array methods: map(), filter(), reduce(), find(), some(), every()
+- Set and Map for appropriate data structures
+- Optional chaining (?.) and nullish coalescing (??)
+- Rest parameters (...args) for variable arguments
+- Default parameters for function arguments
+- Object shorthand property notation
+- Use appropriate data structures (Map vs Object, Set vs Array for uniqueness)
+- Self-explanatory variable names (row vs i, channel vs ch); common abbreviations OK
+- Use camelCase for variables and functions
+- Prefer functional programming approaches where appropriate
+- Use strict equality (===) over loose equality (==)
+- Handle potential null/undefined values appropriately

@@ -38,8 +38,11 @@ public class AnthropicService {
   private final MultiSolutionStreamProcessor multiSolutionProcessor;
   private final FileService fileService;
   private final Model claudeModel;
+  private final LanguageConfigurationService languageConfigurationService;
 
-  private String systemMessage;
+  private String baseSystemMessage;
+  private String textResponsePrompt;
+  private String assistantMessage;
   private String userMessage;
   private String multiSolutionMockText;
 
@@ -49,12 +52,14 @@ public class AnthropicService {
       final ImageService imageService,
       final MultiSolutionStreamProcessor multiSolutionStreamProcessor,
       final FileService fileService,
-      @ConfigProperty(name = ConfigurationKeys.ANTHROPIC_MODEL) final Model claudeModel) {
+      @ConfigProperty(name = ConfigurationKeys.ANTHROPIC_MODEL) final Model claudeModel,
+      final LanguageConfigurationService languageConfigurationService) {
     this.anthropicClient = anthropicClient;
     this.imageService = imageService;
     this.multiSolutionProcessor = multiSolutionStreamProcessor;
     this.fileService = fileService;
     this.claudeModel = claudeModel;
+    this.languageConfigurationService = languageConfigurationService;
   }
 
   private static <T> CompletableFuture<T> retryAsync(final Supplier<T> task, final int attempt) {
@@ -92,16 +97,44 @@ public class AnthropicService {
   @PostConstruct
   void loadPrompts() {
     try {
-      this.systemMessage =
-          fileService.loadResourceFile("/prompts/system_prompt.txt")
-              + fileService.loadResourceFile("/prompts/text_response_prompt.txt")
-              + fileService.loadResourceFile("/prompts/java_prompt.txt")
-              + fileService.loadResourceFile("/prompts/assistant_message.txt");
+      this.baseSystemMessage = fileService.loadResourceFile("/prompts/system_prompt.txt");
+      this.textResponsePrompt = fileService.loadResourceFile("/prompts/text_response_prompt.txt");
+      this.assistantMessage = fileService.loadResourceFile("/prompts/assistant_message.txt");
       this.userMessage = fileService.loadResourceFile("/prompts/user_message.txt");
       this.multiSolutionMockText = fileService.loadResourceFile("/prompts/multi_solution_mock.txt");
     } catch (final IOException e) {
       throw new RuntimeException("Failed to load prompt files", e);
     }
+  }
+
+  /**
+   * Builds the complete system message by combining base prompts with language-specific prompt.
+   *
+   * @param language the programming language for which to build the system message
+   * @return the complete system message
+   */
+  public String buildSystemMessage(final ProgrammingLanguage language) {
+    try {
+      var languagePrompt = fileService.loadResourceFile(language.getPromptResourcePath());
+      return baseSystemMessage + textResponsePrompt + languagePrompt + assistantMessage;
+    } catch (final IOException e) {
+      LOGGER.warn("Failed to load language-specific prompt for {}, falling back to Java", language);
+      try {
+        var javaPrompt = fileService.loadResourceFile(ProgrammingLanguage.JAVA.getPromptResourcePath());
+        return baseSystemMessage + textResponsePrompt + javaPrompt + assistantMessage;
+      } catch (final IOException fallbackException) {
+        throw new RuntimeException("Failed to load fallback Java prompt", fallbackException);
+      }
+    }
+  }
+
+  /**
+   * Gets the currently configured programming language.
+   *
+   * @return the configured programming language
+   */
+  public ProgrammingLanguage getCurrentLanguage() {
+    return languageConfigurationService.getCurrentLanguage();
   }
 
   public CompletableFuture<MultiSolutionResult> analyseMultiSolution(
@@ -194,6 +227,8 @@ public class AnthropicService {
   }
 
   private MessageCreateParams createMessageParams(final byte[] imageBytes) {
+    var currentLanguage = languageConfigurationService.getCurrentLanguage();
+    var systemMessage = buildSystemMessage(currentLanguage);
     return MessageCreateParams.builder()
         .maxTokens(10000)
         .system(systemMessage)
