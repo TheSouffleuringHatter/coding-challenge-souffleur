@@ -1,7 +1,9 @@
 package dev.coding_challenge_souffleur;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.testfx.api.FxAssert.verifyThat;
@@ -312,22 +314,22 @@ class JavaFxApplicationSmokeTest {
     robot.sleep(500);
     var nextLanguage = (ProgrammingLanguage) languageSelector.getValue();
     LOGGER.debug("Language after next key: {}", nextLanguage);
-    assertFalse(nextLanguage.equals(initialLanguage));
+    assertNotEquals(nextLanguage, initialLanguage);
 
     // Test previous language cycling
     robot.push(languagePreviousKeyCombination);
     robot.sleep(500);
     var backToInitial = (ProgrammingLanguage) languageSelector.getValue();
-    assertTrue(backToInitial.equals(initialLanguage));
+    assertEquals(backToInitial, initialLanguage);
 
     // Test that cycling through all languages works
     var allLanguages = ProgrammingLanguage.values();
-    for (int i = 0; i < allLanguages.length; i++) {
+    for (var i = 0; i < allLanguages.length; i++) {
       robot.push(languageNextKeyCombination);
       robot.sleep(50);
     }
     var backToStart = (ProgrammingLanguage) languageSelector.getValue();
-    assertTrue(backToStart.equals(initialLanguage));
+    assertEquals(backToStart, initialLanguage);
   }
 
   private void assertContentPane(final FxRobot robot) throws TimeoutException {

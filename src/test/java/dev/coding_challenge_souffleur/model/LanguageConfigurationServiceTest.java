@@ -165,12 +165,12 @@ class LanguageConfigurationServiceTest {
 
   @Test
   void testConsecutiveCyclingOperations() {
-    for (int i = 0; i < 10; i++) {
+    for (var i = 0; i < 10; i++) {
       service.cycleToNextLanguage();
     }
     assertEquals(ProgrammingLanguage.JAVA, service.getCurrentLanguage());
 
-    for (int i = 0; i < 15; i++) {
+    for (var i = 0; i < 15; i++) {
       service.cycleToPreviousLanguage();
     }
     assertEquals(ProgrammingLanguage.JAVA, service.getCurrentLanguage());
@@ -193,7 +193,7 @@ class LanguageConfigurationServiceTest {
     var allLanguages = ProgrammingLanguage.values();
     var encounteredLanguages = new java.util.HashSet<ProgrammingLanguage>();
 
-    for (int i = 0; i < allLanguages.length; i++) {
+    for (var i = 0; i < allLanguages.length; i++) {
       encounteredLanguages.add(service.getCurrentLanguage());
       service.cycleToNextLanguage();
     }

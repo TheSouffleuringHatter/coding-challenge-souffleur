@@ -100,7 +100,7 @@ class ProgrammingLanguageTest {
     var promptPaths = new java.util.HashSet<String>();
 
     for (var language : languages) {
-      String path = language.getPromptResourcePath();
+      var path = language.getPromptResourcePath();
       assertNotNull(path);
       assertTrue(promptPaths.add(path));
     }
@@ -114,7 +114,7 @@ class ProgrammingLanguageTest {
     var displayNames = new java.util.HashSet<String>();
 
     for (var language : languages) {
-      String displayName = language.getDisplayName();
+      var displayName = language.getDisplayName();
       assertNotNull(displayName);
       assertTrue(displayNames.add(displayName));
     }

@@ -29,7 +29,7 @@ class LanguageHotkeyFunctionalTest {
 
     // Test full cycle
     var allLanguages = ProgrammingLanguage.values();
-    for (int i = 0; i < allLanguages.length; i++) {
+    for (var i = 0; i < allLanguages.length; i++) {
       service.cycleToNextLanguage();
     }
     assertEquals(ProgrammingLanguage.JAVA, service.getCurrentLanguage());
