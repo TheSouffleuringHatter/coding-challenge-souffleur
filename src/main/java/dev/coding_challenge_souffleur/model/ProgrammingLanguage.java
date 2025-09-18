@@ -1,8 +1,8 @@
 package dev.coding_challenge_souffleur.model;
 
 /**
- * Enumeration of supported programming languages for code analysis and solution generation.
- * Each language has an associated display name and prompt file name for AI model configuration.
+ * Enumeration of supported programming languages for code analysis and solution generation. Each
+ * language has an associated display name and prompt file name for AI model configuration.
  */
 public enum ProgrammingLanguage {
   JAVA("Java", "java_prompt.txt"),
@@ -17,6 +17,27 @@ public enum ProgrammingLanguage {
   ProgrammingLanguage(final String displayName, final String promptFileName) {
     this.displayName = displayName;
     this.promptFileName = promptFileName;
+  }
+
+  /**
+   * Finds a ProgrammingLanguage by its name (case-insensitive).
+   *
+   * @param name the name to search for
+   * @return the matching ProgrammingLanguage, or JAVA as default if not found
+   */
+  public static ProgrammingLanguage fromString(final String name) {
+    if (name == null || name.trim().isEmpty()) {
+      return JAVA;
+    }
+
+    for (final var language : ProgrammingLanguage.values()) {
+      if (language.name().equalsIgnoreCase(name.trim())
+          || language.getDisplayName().equalsIgnoreCase(name.trim())) {
+        return language;
+      }
+    }
+
+    return JAVA; // Default fallback
   }
 
   /**
@@ -44,27 +65,6 @@ public enum ProgrammingLanguage {
    */
   public String getPromptResourcePath() {
     return "/prompts/" + promptFileName;
-  }
-
-  /**
-   * Finds a ProgrammingLanguage by its name (case-insensitive).
-   *
-   * @param name the name to search for
-   * @return the matching ProgrammingLanguage, or JAVA as default if not found
-   */
-  public static ProgrammingLanguage fromString(final String name) {
-    if (name == null || name.trim().isEmpty()) {
-      return JAVA;
-    }
-
-    for (final var language : ProgrammingLanguage.values()) {
-      if (language.name().equalsIgnoreCase(name.trim())
-          || language.getDisplayName().equalsIgnoreCase(name.trim())) {
-        return language;
-      }
-    }
-
-    return JAVA; // Default fallback
   }
 
   @Override

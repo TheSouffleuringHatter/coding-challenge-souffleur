@@ -199,14 +199,14 @@ class JavaFxApplicationSmokeTest {
     languagePreviousKeyCombination =
         createKeyCombination(
             Win32VK.valueOf(
-                config.getValue(ConfigurationKeys.APP_KEYBOARD_KEY_LANGUAGE_PREVIOUS, String.class)),
+                config.getValue(
+                    ConfigurationKeys.APP_KEYBOARD_KEY_LANGUAGE_PREVIOUS, String.class)),
             matchingModifier);
-    var languageNextKeyString = config.getValue(ConfigurationKeys.APP_KEYBOARD_KEY_LANGUAGE_NEXT, String.class);
+    var languageNextKeyString =
+        config.getValue(ConfigurationKeys.APP_KEYBOARD_KEY_LANGUAGE_NEXT, String.class);
     LOGGER.debug("Language Next Key Config: {}", languageNextKeyString);
     languageNextKeyCombination =
-        createKeyCombination(
-            Win32VK.valueOf(languageNextKeyString),
-            matchingModifier);
+        createKeyCombination(Win32VK.valueOf(languageNextKeyString), matchingModifier);
   }
 
   private void scrollDownUntilVisible(final FxRobot robot, String nodeQuery) {

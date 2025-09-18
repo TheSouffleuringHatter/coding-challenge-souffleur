@@ -71,58 +71,77 @@ public class HeaderBox extends HBox {
     languageConfigurationService.addLanguageChangeListener(this::onLanguageChanged);
   }
 
-  private void setupLanguageSelector(final LanguageConfigurationService languageConfigurationService) {
+  private void setupLanguageSelector(
+      final LanguageConfigurationService languageConfigurationService) {
     languageSelector.setItems(FXCollections.observableArrayList(ProgrammingLanguage.values()));
     languageSelector.setValue(languageConfigurationService.getCurrentLanguage());
 
-    languageSelector.setCellFactory(listView -> new ListCell<>() {
-      @Override
-      protected void updateItem(final ProgrammingLanguage language, final boolean empty) {
-        super.updateItem(language, empty);
-        setText(empty || language == null ? null : language.getDisplayName());
-      }
-    });
+    languageSelector.setCellFactory(
+        listView ->
+            new ListCell<>() {
+              @Override
+              protected void updateItem(final ProgrammingLanguage language, final boolean empty) {
+                super.updateItem(language, empty);
+                setText(empty || language == null ? null : language.getDisplayName());
+              }
+            });
 
-    languageSelector.setButtonCell(new ListCell<>() {
-      @Override
-      protected void updateItem(final ProgrammingLanguage language, final boolean empty) {
-        super.updateItem(language, empty);
-        setText(empty || language == null ? null : language.getDisplayName());
-      }
-    });
+    languageSelector.setButtonCell(
+        new ListCell<>() {
+          @Override
+          protected void updateItem(final ProgrammingLanguage language, final boolean empty) {
+            super.updateItem(language, empty);
+            setText(empty || language == null ? null : language.getDisplayName());
+          }
+        });
 
-    languageSelector.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-      if (newValue != null && newValue != oldValue) {
-        languageConfigurationService.changeLanguage(newValue);
-      }
-    });
+    languageSelector
+        .getSelectionModel()
+        .selectedItemProperty()
+        .addListener(
+            (observable, oldValue, newValue) -> {
+              if (newValue != null && newValue != oldValue) {
+                languageConfigurationService.changeLanguage(newValue);
+              }
+            });
 
     languageSelector.setTooltip(new javafx.scene.control.Tooltip("Select programming language"));
 
     // Update selector when language changes via keyboard
-    languageSelector.sceneProperty().addListener((obs, oldScene, newScene) -> {
-      if (newScene != null && newScene.getWindow() != null) {
-        newScene.getWindow().focusedProperty().addListener((focusObs, wasFocused, isFocused) -> {
-          if (isFocused) {
-            updateLanguageSelector(languageConfigurationService);
-          }
-        });
-      }
-    });
+    languageSelector
+        .sceneProperty()
+        .addListener(
+            (obs, oldScene, newScene) -> {
+              if (newScene != null && newScene.getWindow() != null) {
+                newScene
+                    .getWindow()
+                    .focusedProperty()
+                    .addListener(
+                        (focusObs, wasFocused, isFocused) -> {
+                          if (isFocused) {
+                            updateLanguageSelector(languageConfigurationService);
+                          }
+                        });
+              }
+            });
 
     // Add multiple triggers to ensure UI updates when language changes
     languageSelector.setOnMouseEntered(e -> updateLanguageSelector(languageConfigurationService));
     languageSelector.setOnMouseMoved(e -> updateLanguageSelector(languageConfigurationService));
 
     // Also add a window focus listener that checks more frequently
-    languageSelector.focusedProperty().addListener((obs, wasFocused, isFocused) -> {
-      if (isFocused) {
-        updateLanguageSelector(languageConfigurationService);
-      }
-    });
+    languageSelector
+        .focusedProperty()
+        .addListener(
+            (obs, wasFocused, isFocused) -> {
+              if (isFocused) {
+                updateLanguageSelector(languageConfigurationService);
+              }
+            });
   }
 
-  private void updateLanguageSelector(final LanguageConfigurationService languageConfigurationService) {
+  private void updateLanguageSelector(
+      final LanguageConfigurationService languageConfigurationService) {
     var currentLanguage = languageConfigurationService.getCurrentLanguage();
     if (languageSelector.getValue() != currentLanguage) {
       languageSelector.setValue(currentLanguage);
@@ -131,11 +150,12 @@ public class HeaderBox extends HBox {
 
   private void onLanguageChanged(final ProgrammingLanguage newLanguage) {
     // Ensure UI updates happen on JavaFX Application Thread
-    javafx.application.Platform.runLater(() -> {
-      if (languageSelector.getValue() != newLanguage) {
-        languageSelector.setValue(newLanguage);
-      }
-    });
+    javafx.application.Platform.runLater(
+        () -> {
+          if (languageSelector.getValue() != newLanguage) {
+            languageSelector.setValue(newLanguage);
+          }
+        });
   }
 
   private void loadFxml() {

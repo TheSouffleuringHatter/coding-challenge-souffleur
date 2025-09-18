@@ -50,7 +50,8 @@ class ProgrammingLanguageTest {
     assertEquals("/prompts/java_prompt.txt", ProgrammingLanguage.JAVA.getPromptResourcePath());
     assertEquals("/prompts/python_prompt.txt", ProgrammingLanguage.PYTHON.getPromptResourcePath());
     assertEquals("/prompts/csharp_prompt.txt", ProgrammingLanguage.CSHARP.getPromptResourcePath());
-    assertEquals("/prompts/javascript_prompt.txt", ProgrammingLanguage.JAVASCRIPT.getPromptResourcePath());
+    assertEquals(
+        "/prompts/javascript_prompt.txt", ProgrammingLanguage.JAVASCRIPT.getPromptResourcePath());
     assertEquals("/prompts/golang_prompt.txt", ProgrammingLanguage.GOLANG.getPromptResourcePath());
   }
 

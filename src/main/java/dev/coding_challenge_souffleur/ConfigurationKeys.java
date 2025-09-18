@@ -33,7 +33,8 @@ public final class ConfigurationKeys {
   public static final String APP_KEYBOARD_KEY_SWITCH_TO_TAB3 = "app.keyboard.key.switch_to_tab3";
   public static final String APP_KEYBOARD_KEY_TOGGLE_PROBLEM_STATEMENT =
       "app.keyboard.key.toggle_problem_statement";
-  public static final String APP_KEYBOARD_KEY_LANGUAGE_PREVIOUS = "app.keyboard.key.language_previous";
+  public static final String APP_KEYBOARD_KEY_LANGUAGE_PREVIOUS =
+      "app.keyboard.key.language_previous";
   public static final String APP_KEYBOARD_KEY_LANGUAGE_NEXT = "app.keyboard.key.language_next";
 
   // Screenshot Configuration

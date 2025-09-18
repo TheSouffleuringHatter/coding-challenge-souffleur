@@ -120,7 +120,8 @@ public class AnthropicService {
     } catch (final IOException e) {
       LOGGER.warn("Failed to load language-specific prompt for {}, falling back to Java", language);
       try {
-        var javaPrompt = fileService.loadResourceFile(ProgrammingLanguage.JAVA.getPromptResourcePath());
+        var javaPrompt =
+            fileService.loadResourceFile(ProgrammingLanguage.JAVA.getPromptResourcePath());
         return baseSystemMessage + textResponsePrompt + javaPrompt + assistantMessage;
       } catch (final IOException fallbackException) {
         throw new RuntimeException("Failed to load fallback Java prompt", fallbackException);

@@ -9,8 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Custom JavaFX component for selecting programming languages.
- * Provides a ComboBox with all supported programming languages.
+ * Custom JavaFX component for selecting programming languages. Provides a ComboBox with all
+ * supported programming languages.
  */
 public class LanguageSelector extends ComboBox<ProgrammingLanguage> {
 
@@ -43,43 +43,50 @@ public class LanguageSelector extends ComboBox<ProgrammingLanguage> {
     this.setValue(ProgrammingLanguage.JAVA);
 
     // Custom cell factory to display language names properly
-    this.setCellFactory(listView -> new ListCell<>() {
-      @Override
-      protected void updateItem(final ProgrammingLanguage language, final boolean empty) {
-        super.updateItem(language, empty);
-        if (empty || language == null) {
-          setText(null);
-        } else {
-          setText(language.getDisplayName());
-        }
-      }
-    });
+    this.setCellFactory(
+        listView ->
+            new ListCell<>() {
+              @Override
+              protected void updateItem(final ProgrammingLanguage language, final boolean empty) {
+                super.updateItem(language, empty);
+                if (empty || language == null) {
+                  setText(null);
+                } else {
+                  setText(language.getDisplayName());
+                }
+              }
+            });
 
     // Custom button cell to display selected language properly
-    this.setButtonCell(new ListCell<>() {
-      @Override
-      protected void updateItem(final ProgrammingLanguage language, final boolean empty) {
-        super.updateItem(language, empty);
-        if (empty || language == null) {
-          setText(null);
-        } else {
-          setText(language.getDisplayName());
-        }
-      }
-    });
+    this.setButtonCell(
+        new ListCell<>() {
+          @Override
+          protected void updateItem(final ProgrammingLanguage language, final boolean empty) {
+            super.updateItem(language, empty);
+            if (empty || language == null) {
+              setText(null);
+            } else {
+              setText(language.getDisplayName());
+            }
+          }
+        });
 
     // Handle selection changes
-    this.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-      if (newValue != null && newValue != oldValue) {
-        LOGGER.debug("Language selection changed from {} to {}", oldValue, newValue);
-        if (onLanguageChanged != null) {
-          onLanguageChanged.accept(newValue);
-        }
-      }
-    });
+    this.getSelectionModel()
+        .selectedItemProperty()
+        .addListener(
+            (observable, oldValue, newValue) -> {
+              if (newValue != null && newValue != oldValue) {
+                LOGGER.debug("Language selection changed from {} to {}", oldValue, newValue);
+                if (onLanguageChanged != null) {
+                  onLanguageChanged.accept(newValue);
+                }
+              }
+            });
 
     // Set tooltip
-    this.setTooltip(new javafx.scene.control.Tooltip("Select programming language for code analysis"));
+    this.setTooltip(
+        new javafx.scene.control.Tooltip("Select programming language for code analysis"));
   }
 
   /**

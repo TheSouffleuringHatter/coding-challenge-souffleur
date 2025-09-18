@@ -3,17 +3,17 @@ package dev.coding_challenge_souffleur.model;
 import dev.coding_challenge_souffleur.ConfigurationKeys;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
 public class LanguageConfigurationService {
 
   private final ProgrammingLanguage configuredLanguage;
-  private ProgrammingLanguage currentLanguage;
   private final List<Consumer<ProgrammingLanguage>> languageChangeListeners = new ArrayList<>();
+  private ProgrammingLanguage currentLanguage;
 
   @Inject
   public LanguageConfigurationService(
