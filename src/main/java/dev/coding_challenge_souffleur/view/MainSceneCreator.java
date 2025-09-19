@@ -89,9 +89,9 @@ class MainSceneCreator {
           final Win32VK scrollUpKey,
       @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_SCROLL_DOWN)
           final Win32VK scrollDownKey,
-      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_LANGUAGE_PREVIOUS)
+      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_CODING_LANGUAGE_PREVIOUS)
           final Win32VK languagePreviousKey,
-      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_LANGUAGE_NEXT)
+      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_CODING_LANGUAGE_NEXT)
           final Win32VK languageNextKey) {
     this.anthropicService = anthropicService;
     this.screenshotService = screenshotService;

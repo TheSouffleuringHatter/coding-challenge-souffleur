@@ -17,7 +17,7 @@ public class LanguageConfigurationService {
 
   @Inject
   public LanguageConfigurationService(
-      @ConfigProperty(name = ConfigurationKeys.APP_CODING_LANGUAGE) final String languageConfig) {
+      @ConfigProperty(name = ConfigurationKeys.APP_DEFAULT_CODING_LANGUAGE) final String languageConfig) {
     this.configuredLanguage = ProgrammingLanguage.fromString(languageConfig);
     this.currentLanguage = this.configuredLanguage;
   }

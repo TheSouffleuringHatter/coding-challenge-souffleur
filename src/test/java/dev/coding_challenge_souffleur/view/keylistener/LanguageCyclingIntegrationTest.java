@@ -12,10 +12,10 @@ class LanguageCyclingIntegrationTest {
   @Test
   void testLanguageKeyCommandsExist() {
     assertEquals(
-        ConfigurationKeys.APP_KEYBOARD_KEY_LANGUAGE_NEXT,
+        ConfigurationKeys.APP_KEYBOARD_KEY_CODING_LANGUAGE_NEXT,
         KeyCommand.LANGUAGE_NEXT.getKeyConfigProperty());
     assertEquals(
-        ConfigurationKeys.APP_KEYBOARD_KEY_LANGUAGE_PREVIOUS,
+        ConfigurationKeys.APP_KEYBOARD_KEY_CODING_LANGUAGE_PREVIOUS,
         KeyCommand.LANGUAGE_PREVIOUS.getKeyConfigProperty());
   }
 

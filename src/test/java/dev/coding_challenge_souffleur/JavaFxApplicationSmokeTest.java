@@ -202,10 +202,10 @@ class JavaFxApplicationSmokeTest {
         createKeyCombination(
             Win32VK.valueOf(
                 config.getValue(
-                    ConfigurationKeys.APP_KEYBOARD_KEY_LANGUAGE_PREVIOUS, String.class)),
+                    ConfigurationKeys.APP_KEYBOARD_KEY_CODING_LANGUAGE_PREVIOUS, String.class)),
             matchingModifier);
     var languageNextKeyString =
-        config.getValue(ConfigurationKeys.APP_KEYBOARD_KEY_LANGUAGE_NEXT, String.class);
+        config.getValue(ConfigurationKeys.APP_KEYBOARD_KEY_CODING_LANGUAGE_NEXT, String.class);
     LOGGER.debug("Language Next Key Config: {}", languageNextKeyString);
     languageNextKeyCombination =
         createKeyCombination(Win32VK.valueOf(languageNextKeyString), matchingModifier);

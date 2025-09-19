@@ -33,15 +33,15 @@ public final class ConfigurationKeys {
   public static final String APP_KEYBOARD_KEY_SWITCH_TO_TAB3 = "app.keyboard.key.switch_to_tab3";
   public static final String APP_KEYBOARD_KEY_TOGGLE_PROBLEM_STATEMENT =
       "app.keyboard.key.toggle_problem_statement";
-  public static final String APP_KEYBOARD_KEY_LANGUAGE_PREVIOUS =
-      "app.keyboard.key.language_previous";
-  public static final String APP_KEYBOARD_KEY_LANGUAGE_NEXT = "app.keyboard.key.language_next";
+  public static final String APP_KEYBOARD_KEY_CODING_LANGUAGE_PREVIOUS =
+    "app.keyboard.key.coding_language_previous";
+  public static final String APP_KEYBOARD_KEY_CODING_LANGUAGE_NEXT = "app.keyboard.key.coding_language_next";
 
   // Screenshot Configuration
   public static final String SAVE_SCREENSHOT_TO_FILE = "save.screenshot.to.file";
 
-  // Language Configuration
-  public static final String APP_CODING_LANGUAGE = "app.coding.language";
+  // Coding Language Configuration
+  public static final String APP_DEFAULT_CODING_LANGUAGE = "app.default.coding_language";
 
   private ConfigurationKeys() {
     // Utility class
