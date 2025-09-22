@@ -12,7 +12,7 @@ class LanguageConfigurationServiceTest {
 
   @BeforeEach
   void setUp() {
-    service = new LanguageConfigurationService("JAVA");
+    service = new LanguageConfigurationService(ProgrammingLanguage.JAVA);
   }
 
   @Test
@@ -23,16 +23,9 @@ class LanguageConfigurationServiceTest {
 
   @Test
   void testInitialConfigurationWithDifferentLanguage() {
-    var pythonService = new LanguageConfigurationService("PYTHON");
+    var pythonService = new LanguageConfigurationService(ProgrammingLanguage.PYTHON);
     assertEquals(ProgrammingLanguage.PYTHON, pythonService.getCurrentLanguage());
     assertEquals(ProgrammingLanguage.PYTHON, pythonService.getConfiguredLanguage());
-  }
-
-  @Test
-  void testInitialConfigurationWithInvalidLanguage() {
-    var invalidService = new LanguageConfigurationService("INVALID");
-    assertEquals(ProgrammingLanguage.JAVA, invalidService.getCurrentLanguage());
-    assertEquals(ProgrammingLanguage.JAVA, invalidService.getConfiguredLanguage());
   }
 
   @Test

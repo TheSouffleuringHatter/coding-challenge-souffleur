@@ -90,13 +90,6 @@ class AnthropicServiceTest {
   }
 
   @Test
-  void testCurrentLanguageConfiguration() {
-    // Test that the service correctly reports the current language
-    assertEquals(ProgrammingLanguage.JAVA, anthropicService.getCurrentLanguage());
-    assertEquals(ProgrammingLanguage.JAVA, languageConfigurationService.getCurrentLanguage());
-  }
-
-  @Test
   void testBuildSystemMessageForDifferentLanguages() {
     // Test that system messages are built correctly for different languages
     var javaMessage = anthropicService.buildSystemMessage(ProgrammingLanguage.JAVA);
@@ -118,21 +111,5 @@ class AnthropicServiceTest {
     var goMessage = anthropicService.buildSystemMessage(ProgrammingLanguage.GOLANG);
     assertNotNull(goMessage);
     assertTrue(goMessage.contains("Go 1.18+"));
-  }
-
-  @Test
-  void testLanguageChange() {
-    // Test that language changes are properly reflected
-    assertEquals(ProgrammingLanguage.JAVA, anthropicService.getCurrentLanguage());
-
-    languageConfigurationService.changeLanguage(ProgrammingLanguage.PYTHON);
-    assertEquals(ProgrammingLanguage.PYTHON, anthropicService.getCurrentLanguage());
-
-    languageConfigurationService.changeLanguage(ProgrammingLanguage.CSHARP);
-    assertEquals(ProgrammingLanguage.CSHARP, anthropicService.getCurrentLanguage());
-
-    // Reset back to original
-    languageConfigurationService.resetToConfiguredLanguage();
-    assertEquals(ProgrammingLanguage.JAVA, anthropicService.getCurrentLanguage());
   }
 }

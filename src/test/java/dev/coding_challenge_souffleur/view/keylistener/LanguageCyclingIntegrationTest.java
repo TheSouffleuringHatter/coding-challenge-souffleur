@@ -21,7 +21,7 @@ class LanguageCyclingIntegrationTest {
 
   @Test
   void testLanguageConfigurationServiceCycling() {
-    var service = new LanguageConfigurationService("JAVA");
+    var service = new LanguageConfigurationService(ProgrammingLanguage.JAVA);
     assertEquals(ProgrammingLanguage.JAVA, service.getCurrentLanguage());
 
     service.cycleToNextLanguage();

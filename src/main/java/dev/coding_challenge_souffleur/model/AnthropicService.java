@@ -107,37 +107,6 @@ public class AnthropicService {
     }
   }
 
-  /**
-   * Builds the complete system message by combining base prompts with language-specific prompt.
-   *
-   * @param language the programming language for which to build the system message
-   * @return the complete system message
-   */
-  public String buildSystemMessage(final ProgrammingLanguage language) {
-    try {
-      var languagePrompt = fileService.loadResourceFile(language.getPromptResourcePath());
-      return baseSystemMessage + textResponsePrompt + languagePrompt + assistantMessage;
-    } catch (final IOException e) {
-      LOGGER.warn("Failed to load language-specific prompt for {}, falling back to Java", language);
-      try {
-        var javaPrompt =
-            fileService.loadResourceFile(ProgrammingLanguage.JAVA.getPromptResourcePath());
-        return baseSystemMessage + textResponsePrompt + javaPrompt + assistantMessage;
-      } catch (final IOException fallbackException) {
-        throw new RuntimeException("Failed to load fallback Java prompt", fallbackException);
-      }
-    }
-  }
-
-  /**
-   * Gets the currently configured programming language.
-   *
-   * @return the configured programming language
-   */
-  public ProgrammingLanguage getCurrentLanguage() {
-    return languageConfigurationService.getCurrentLanguage();
-  }
-
   public CompletableFuture<MultiSolutionResult> analyseMultiSolution(
       final Image image, final Consumer<MultiSolutionResult> updateCallback) {
     try {
@@ -189,6 +158,28 @@ public class AnthropicService {
     return retryAsync(
         () -> processMultiSolutionRequest(imageBytes, new MultiSolutionResult(), updateCallback),
         1);
+  }
+
+  /**
+   * Builds the complete system message by combining base prompts with language-specific prompt.
+   *
+   * @param language the programming language for which to build the system message
+   * @return the complete system message
+   */
+  String buildSystemMessage(final ProgrammingLanguage language) {
+    try {
+      var languagePrompt = fileService.loadResourceFile(language.getPromptResourcePath());
+      return baseSystemMessage + textResponsePrompt + languagePrompt + assistantMessage;
+    } catch (final IOException e) {
+      LOGGER.warn("Failed to load language-specific prompt for {}, falling back to Java", language);
+      try {
+        var javaPrompt =
+          fileService.loadResourceFile(ProgrammingLanguage.JAVA.getPromptResourcePath());
+        return baseSystemMessage + textResponsePrompt + javaPrompt + assistantMessage;
+      } catch (final IOException fallbackException) {
+        throw new RuntimeException("Failed to load fallback Java prompt", fallbackException);
+      }
+    }
   }
 
   private MultiSolutionResult processMultiSolutionRequest(

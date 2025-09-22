@@ -14,7 +14,7 @@ class LanguageHotkeyFunctionalTest {
 
   @Test
   void testLanguageCyclingFunctionality() {
-    var service = new LanguageConfigurationService("JAVA");
+    var service = new LanguageConfigurationService(ProgrammingLanguage.JAVA);
 
     // Verify initial state
     assertEquals(ProgrammingLanguage.JAVA, service.getCurrentLanguage());
