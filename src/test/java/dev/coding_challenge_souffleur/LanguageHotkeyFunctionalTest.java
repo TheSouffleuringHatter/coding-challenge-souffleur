@@ -2,7 +2,7 @@ package dev.coding_challenge_souffleur;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import dev.coding_challenge_souffleur.model.LanguageConfigurationService;
+import dev.coding_challenge_souffleur.model.CodingLanguageConfigurationService;
 import dev.coding_challenge_souffleur.model.ProgrammingLanguage;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +14,7 @@ class LanguageHotkeyFunctionalTest {
 
   @Test
   void testLanguageCyclingFunctionality() {
-    var service = new LanguageConfigurationService(ProgrammingLanguage.JAVA);
+    var service = new CodingLanguageConfigurationService(ProgrammingLanguage.JAVA);
 
     // Verify initial state
     assertEquals(ProgrammingLanguage.JAVA, service.getCurrentLanguage());

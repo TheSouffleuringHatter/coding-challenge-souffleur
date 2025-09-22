@@ -6,13 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class LanguageConfigurationServiceTest {
+class CodingLanguageConfigurationServiceTest {
 
-  private LanguageConfigurationService service;
+  private CodingLanguageConfigurationService service;
 
   @BeforeEach
   void setUp() {
-    service = new LanguageConfigurationService(ProgrammingLanguage.JAVA);
+    service = new CodingLanguageConfigurationService(ProgrammingLanguage.JAVA);
   }
 
   @Test
@@ -23,7 +23,7 @@ class LanguageConfigurationServiceTest {
 
   @Test
   void testInitialConfigurationWithDifferentLanguage() {
-    var pythonService = new LanguageConfigurationService(ProgrammingLanguage.PYTHON);
+    var pythonService = new CodingLanguageConfigurationService(ProgrammingLanguage.PYTHON);
     assertEquals(ProgrammingLanguage.PYTHON, pythonService.getCurrentLanguage());
     assertEquals(ProgrammingLanguage.PYTHON, pythonService.getConfiguredLanguage());
   }

@@ -1,7 +1,7 @@
 package dev.coding_challenge_souffleur.view.components;
 
 import com.sun.jna.platform.win32.Win32VK;
-import dev.coding_challenge_souffleur.model.LanguageConfigurationService;
+import dev.coding_challenge_souffleur.model.CodingLanguageConfigurationService;
 import dev.coding_challenge_souffleur.model.ProgrammingLanguage;
 import java.io.IOException;
 import java.util.List;
@@ -40,7 +40,7 @@ public class HeaderBox extends HBox {
       final Win32VK scrollDownKey,
       final Win32VK languagePreviousKey,
       final Win32VK languageNextKey,
-      final LanguageConfigurationService languageConfigurationService) {
+      final CodingLanguageConfigurationService codingLanguageConfigurationService) {
     loadFxml();
 
     shortcutModifierText.setText(
@@ -65,16 +65,16 @@ public class HeaderBox extends HBox {
             Character.toString(languageNextKey.code));
     shortcutKeysLabel.setText(shortcutKeysText);
 
-    setupLanguageSelector(languageConfigurationService);
+    setupLanguageSelector(codingLanguageConfigurationService);
 
     // Register as listener for language changes via hotkeys
-    languageConfigurationService.addLanguageChangeListener(this::onLanguageChanged);
+    codingLanguageConfigurationService.addLanguageChangeListener(this::onLanguageChanged);
   }
 
   private void setupLanguageSelector(
-      final LanguageConfigurationService languageConfigurationService) {
+      final CodingLanguageConfigurationService codingLanguageConfigurationService) {
     languageSelector.setItems(FXCollections.observableArrayList(ProgrammingLanguage.values()));
-    languageSelector.setValue(languageConfigurationService.getCurrentLanguage());
+    languageSelector.setValue(codingLanguageConfigurationService.getCurrentLanguage());
 
     languageSelector.setCellFactory(
         listView ->
@@ -101,7 +101,7 @@ public class HeaderBox extends HBox {
         .addListener(
             (observable, oldValue, newValue) -> {
               if (newValue != null && newValue != oldValue) {
-                languageConfigurationService.changeLanguage(newValue);
+                codingLanguageConfigurationService.changeLanguage(newValue);
               }
             });
 
@@ -119,15 +119,16 @@ public class HeaderBox extends HBox {
                     .addListener(
                         (focusObs, wasFocused, isFocused) -> {
                           if (isFocused) {
-                            updateLanguageSelector(languageConfigurationService);
+                            updateLanguageSelector(codingLanguageConfigurationService);
                           }
                         });
               }
             });
 
     // Add multiple triggers to ensure UI updates when language changes
-    languageSelector.setOnMouseEntered(e -> updateLanguageSelector(languageConfigurationService));
-    languageSelector.setOnMouseMoved(e -> updateLanguageSelector(languageConfigurationService));
+    languageSelector.setOnMouseEntered(e -> updateLanguageSelector(
+        codingLanguageConfigurationService));
+    languageSelector.setOnMouseMoved(e -> updateLanguageSelector(codingLanguageConfigurationService));
 
     // Also add a window focus listener that checks more frequently
     languageSelector
@@ -135,14 +136,14 @@ public class HeaderBox extends HBox {
         .addListener(
             (obs, wasFocused, isFocused) -> {
               if (isFocused) {
-                updateLanguageSelector(languageConfigurationService);
+                updateLanguageSelector(codingLanguageConfigurationService);
               }
             });
   }
 
   private void updateLanguageSelector(
-      final LanguageConfigurationService languageConfigurationService) {
-    var currentLanguage = languageConfigurationService.getCurrentLanguage();
+      final CodingLanguageConfigurationService codingLanguageConfigurationService) {
+    var currentLanguage = codingLanguageConfigurationService.getCurrentLanguage();
     if (languageSelector.getValue() != currentLanguage) {
       languageSelector.setValue(currentLanguage);
     }

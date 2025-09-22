@@ -9,15 +9,16 @@ import java.util.function.Consumer;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
-public class LanguageConfigurationService {
+public class CodingLanguageConfigurationService {
 
   private final ProgrammingLanguage configuredLanguage;
   private final List<Consumer<ProgrammingLanguage>> languageChangeListeners = new ArrayList<>();
   private ProgrammingLanguage currentLanguage;
 
   @Inject
-  public LanguageConfigurationService(
-      @ConfigProperty(name = ConfigurationKeys.APP_DEFAULT_CODING_LANGUAGE) final ProgrammingLanguage languageConfig) {
+  public CodingLanguageConfigurationService(
+      @ConfigProperty(name = ConfigurationKeys.APP_DEFAULT_CODING_LANGUAGE)
+          final ProgrammingLanguage languageConfig) {
     this.configuredLanguage = languageConfig;
     this.currentLanguage = this.configuredLanguage;
   }

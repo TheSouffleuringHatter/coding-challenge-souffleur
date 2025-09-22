@@ -21,7 +21,7 @@ class AnthropicServiceTest {
   private static byte[] testImage;
 
   @Inject private AnthropicService anthropicService;
-  @Inject private LanguageConfigurationService languageConfigurationService;
+  @Inject private CodingLanguageConfigurationService codingLanguageConfigurationService;
 
   @BeforeAll
   static void setupTestImage() throws IOException {

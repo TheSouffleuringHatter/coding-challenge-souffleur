@@ -3,7 +3,7 @@ package dev.coding_challenge_souffleur.view.keylistener;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import dev.coding_challenge_souffleur.ConfigurationKeys;
-import dev.coding_challenge_souffleur.model.LanguageConfigurationService;
+import dev.coding_challenge_souffleur.model.CodingLanguageConfigurationService;
 import dev.coding_challenge_souffleur.model.ProgrammingLanguage;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +21,7 @@ class LanguageCyclingIntegrationTest {
 
   @Test
   void testLanguageConfigurationServiceCycling() {
-    var service = new LanguageConfigurationService(ProgrammingLanguage.JAVA);
+    var service = new CodingLanguageConfigurationService(ProgrammingLanguage.JAVA);
     assertEquals(ProgrammingLanguage.JAVA, service.getCurrentLanguage());
 
     service.cycleToNextLanguage();

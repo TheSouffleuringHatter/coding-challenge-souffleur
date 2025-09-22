@@ -38,7 +38,7 @@ public class AnthropicService {
   private final MultiSolutionStreamProcessor multiSolutionProcessor;
   private final FileService fileService;
   private final Model claudeModel;
-  private final LanguageConfigurationService languageConfigurationService;
+  private final CodingLanguageConfigurationService codingLanguageConfigurationService;
 
   private String baseSystemMessage;
   private String textResponsePrompt;
@@ -53,13 +53,13 @@ public class AnthropicService {
       final MultiSolutionStreamProcessor multiSolutionStreamProcessor,
       final FileService fileService,
       @ConfigProperty(name = ConfigurationKeys.ANTHROPIC_MODEL) final Model claudeModel,
-      final LanguageConfigurationService languageConfigurationService) {
+      final CodingLanguageConfigurationService codingLanguageConfigurationService) {
     this.anthropicClient = anthropicClient;
     this.imageService = imageService;
     this.multiSolutionProcessor = multiSolutionStreamProcessor;
     this.fileService = fileService;
     this.claudeModel = claudeModel;
-    this.languageConfigurationService = languageConfigurationService;
+    this.codingLanguageConfigurationService = codingLanguageConfigurationService;
   }
 
   private static <T> CompletableFuture<T> retryAsync(final Supplier<T> task, final int attempt) {
@@ -166,7 +166,7 @@ public class AnthropicService {
    * @return the complete system message
    */
   String buildSystemMessage() {
-    var currentLanguage = languageConfigurationService.getCurrentLanguage();
+    var currentLanguage = codingLanguageConfigurationService.getCurrentLanguage();
 
     try {
       var languagePrompt = fileService.loadResourceFile(currentLanguage.getPromptResourcePath());
