@@ -163,18 +163,20 @@ public class AnthropicService {
   /**
    * Builds the complete system message by combining base prompts with language-specific prompt.
    *
-   * @param language the programming language for which to build the system message
    * @return the complete system message
    */
-  String buildSystemMessage(final ProgrammingLanguage language) {
+  String buildSystemMessage() {
+    var currentLanguage = languageConfigurationService.getCurrentLanguage();
+
     try {
-      var languagePrompt = fileService.loadResourceFile(language.getPromptResourcePath());
+      var languagePrompt = fileService.loadResourceFile(currentLanguage.getPromptResourcePath());
       return baseSystemMessage + textResponsePrompt + languagePrompt + assistantMessage;
     } catch (final IOException e) {
-      LOGGER.warn("Failed to load language-specific prompt for {}, falling back to Java", language);
+      LOGGER.warn(
+          "Failed to load language-specific prompt for {}, falling back to Java", currentLanguage);
       try {
         var javaPrompt =
-          fileService.loadResourceFile(ProgrammingLanguage.JAVA.getPromptResourcePath());
+            fileService.loadResourceFile(ProgrammingLanguage.JAVA.getPromptResourcePath());
         return baseSystemMessage + textResponsePrompt + javaPrompt + assistantMessage;
       } catch (final IOException fallbackException) {
         throw new RuntimeException("Failed to load fallback Java prompt", fallbackException);
@@ -219,8 +221,7 @@ public class AnthropicService {
   }
 
   private MessageCreateParams createMessageParams(final byte[] imageBytes) {
-    var currentLanguage = languageConfigurationService.getCurrentLanguage();
-    var systemMessage = buildSystemMessage(currentLanguage);
+    var systemMessage = buildSystemMessage();
     return MessageCreateParams.builder()
         .maxTokens(10000)
         .system(systemMessage)
