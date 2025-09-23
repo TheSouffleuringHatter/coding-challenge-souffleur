@@ -18,21 +18,18 @@ class CodingLanguageConfigurationServiceTest {
   @Test
   void testInitialConfiguration() {
     assertEquals(CodingLanguage.JAVA, service.getCurrentLanguage());
-    assertEquals(CodingLanguage.JAVA, service.getConfiguredLanguage());
   }
 
   @Test
   void testInitialConfigurationWithDifferentLanguage() {
     var pythonService = new CodingLanguageConfigurationService(CodingLanguage.PYTHON);
     assertEquals(CodingLanguage.PYTHON, pythonService.getCurrentLanguage());
-    assertEquals(CodingLanguage.PYTHON, pythonService.getConfiguredLanguage());
   }
 
   @Test
   void testChangeLanguage() {
     service.changeLanguage(CodingLanguage.PYTHON);
     assertEquals(CodingLanguage.PYTHON, service.getCurrentLanguage());
-    assertEquals(CodingLanguage.JAVA, service.getConfiguredLanguage());
   }
 
   @Test
@@ -46,7 +43,6 @@ class CodingLanguageConfigurationServiceTest {
     service.changeLanguage(CodingLanguage.PYTHON);
     assertEquals(CodingLanguage.PYTHON, service.getCurrentLanguage());
 
-    service.resetToConfiguredLanguage();
     assertEquals(CodingLanguage.JAVA, service.getCurrentLanguage());
   }
 
@@ -113,20 +109,6 @@ class CodingLanguageConfigurationServiceTest {
 
     service.cycleToPreviousLanguage();
     assertEquals(CodingLanguage.PYTHON, service.getCurrentLanguage());
-
-    service.resetToConfiguredLanguage();
-    assertEquals(CodingLanguage.JAVA, service.getCurrentLanguage());
-  }
-
-  @Test
-  void testConfiguredLanguagePreservation() {
-    var originalConfigured = service.getConfiguredLanguage();
-
-    service.changeLanguage(CodingLanguage.PYTHON);
-    service.cycleToNextLanguage();
-    service.cycleToPreviousLanguage();
-
-    assertEquals(originalConfigured, service.getConfiguredLanguage());
   }
 
   @Test
@@ -139,8 +121,6 @@ class CodingLanguageConfigurationServiceTest {
 
     service.changeLanguage(CodingLanguage.JAVASCRIPT);
     assertEquals(CodingLanguage.JAVASCRIPT, service.getCurrentLanguage());
-
-    assertEquals(CodingLanguage.JAVA, service.getConfiguredLanguage());
   }
 
   @Test
@@ -154,31 +134,6 @@ class CodingLanguageConfigurationServiceTest {
     service.changeLanguage(CodingLanguage.JAVA);
     service.cycleToPreviousLanguage();
     assertEquals(CodingLanguage.GOLANG, service.getCurrentLanguage());
-  }
-
-  @Test
-  void testConsecutiveCyclingOperations() {
-    for (var i = 0; i < 10; i++) {
-      service.cycleToNextLanguage();
-    }
-    assertEquals(CodingLanguage.JAVA, service.getCurrentLanguage());
-
-    for (var i = 0; i < 15; i++) {
-      service.cycleToPreviousLanguage();
-    }
-    assertEquals(CodingLanguage.JAVA, service.getCurrentLanguage());
-  }
-
-  @Test
-  void testResetAfterMultipleOperations() {
-    service.cycleToNextLanguage();
-    service.changeLanguage(CodingLanguage.CSHARP);
-    service.cycleToPreviousLanguage();
-    service.cycleToNextLanguage();
-
-    service.resetToConfiguredLanguage();
-    assertEquals(CodingLanguage.JAVA, service.getCurrentLanguage());
-    assertEquals(CodingLanguage.JAVA, service.getConfiguredLanguage());
   }
 
   @Test

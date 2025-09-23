@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 public class AnthropicService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AnthropicService.class);
+
   private static final long DEFAULT_RETRY_BASE_DELAY_MS = 200;
   private static final int DEFAULT_RETRY_MAX_ATTEMPTS = 3;
 
@@ -38,7 +39,8 @@ public class AnthropicService {
   private final MultiSolutionStreamProcessor multiSolutionProcessor;
   private final FileService fileService;
   private final Model claudeModel;
-  private final CodingLanguageConfigurationService codingLanguageConfigurationService;
+
+  private CodingLanguage currentLanguage = CodingLanguage.JAVA;
 
   private String baseSystemMessage;
   private String textResponsePrompt;
@@ -52,14 +54,12 @@ public class AnthropicService {
       final ImageService imageService,
       final MultiSolutionStreamProcessor multiSolutionStreamProcessor,
       final FileService fileService,
-      @ConfigProperty(name = ConfigurationKeys.ANTHROPIC_MODEL) final Model claudeModel,
-      final CodingLanguageConfigurationService codingLanguageConfigurationService) {
+      @ConfigProperty(name = ConfigurationKeys.ANTHROPIC_MODEL) final Model claudeModel) {
     this.anthropicClient = anthropicClient;
     this.imageService = imageService;
     this.multiSolutionProcessor = multiSolutionStreamProcessor;
     this.fileService = fileService;
     this.claudeModel = claudeModel;
-    this.codingLanguageConfigurationService = codingLanguageConfigurationService;
   }
 
   private static <T> CompletableFuture<T> retryAsync(final Supplier<T> task, final int attempt) {
@@ -92,6 +92,12 @@ public class AnthropicService {
     var imageSource =
         Base64ImageSource.builder().data(base64Image).mediaType(MediaType.IMAGE_PNG).build();
     return ContentBlockParam.ofImage(ImageBlockParam.builder().source(imageSource).build());
+  }
+
+  @Inject
+  void setCodingLanguage(final CodingLanguage codingLanguage) {
+    LOGGER.trace("Updated current coding language to: {}", codingLanguage);
+    this.currentLanguage = codingLanguage;
   }
 
   @PostConstruct
@@ -166,8 +172,6 @@ public class AnthropicService {
    * @return the complete system message
    */
   String buildSystemMessage() {
-    var currentLanguage = codingLanguageConfigurationService.getCurrentLanguage();
-
     try {
       var languagePrompt = fileService.loadResourceFile(currentLanguage.getPromptResourcePath());
       return baseSystemMessage + textResponsePrompt + languagePrompt + assistantMessage;
@@ -175,8 +179,7 @@ public class AnthropicService {
       LOGGER.warn(
           "Failed to load language-specific prompt for {}, falling back to Java", currentLanguage);
       try {
-        var javaPrompt =
-            fileService.loadResourceFile(CodingLanguage.JAVA.getPromptResourcePath());
+        var javaPrompt = fileService.loadResourceFile(CodingLanguage.JAVA.getPromptResourcePath());
         return baseSystemMessage + textResponsePrompt + javaPrompt + assistantMessage;
       } catch (final IOException fallbackException) {
         throw new RuntimeException("Failed to load fallback Java prompt", fallbackException);

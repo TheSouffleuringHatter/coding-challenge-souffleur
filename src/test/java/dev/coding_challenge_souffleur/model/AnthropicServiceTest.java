@@ -7,11 +7,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import io.smallrye.config.inject.ConfigExtension;
 import jakarta.inject.Inject;
 import java.io.IOException;
+import java.util.stream.Stream;
 import org.jboss.weld.junit5.auto.AddExtensions;
 import org.jboss.weld.junit5.auto.AddPackages;
 import org.jboss.weld.junit5.auto.EnableAutoWeld;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 @EnableAutoWeld
 @AddPackages(AnthropicService.class)
@@ -21,7 +25,6 @@ class AnthropicServiceTest {
   private static byte[] testImage;
 
   @Inject private AnthropicService anthropicService;
-  @Inject private CodingLanguageConfigurationService codingLanguageConfigurationService;
 
   @BeforeAll
   static void setupTestImage() throws IOException {
@@ -89,27 +92,23 @@ class AnthropicServiceTest {
     assertTrue(result2.isComplete());
   }
 
-  @Test
-  void testBuildSystemMessageForDifferentLanguages() {
-    // Test that system messages are built correctly for different languages
-    var javaMessage = anthropicService.buildSystemMessage(CodingLanguage.JAVA);
-    assertNotNull(javaMessage);
-    assertTrue(javaMessage.contains("Java 21"));
+  private static Stream<Arguments> languageTestData() {
+    return Stream.of(
+      Arguments.of(CodingLanguage.JAVA, "Java 21"),
+      Arguments.of(CodingLanguage.PYTHON, "Python 3.9+"),
+      Arguments.of(CodingLanguage.CSHARP, "C# 10+"),
+      Arguments.of(CodingLanguage.JAVASCRIPT, "ES2020+"),
+      Arguments.of(CodingLanguage.GOLANG, "Go 1.18+")
+    );
+  }
 
-    var pythonMessage = anthropicService.buildSystemMessage(CodingLanguage.PYTHON);
-    assertNotNull(pythonMessage);
-    assertTrue(pythonMessage.contains("Python 3.9+"));
+  @ParameterizedTest
+  @MethodSource("languageTestData")
+  void testBuildSystemMessageForDifferentLanguages(CodingLanguage codingLanguage, String expectedContent) {
+    anthropicService.setCodingLanguage(codingLanguage);
 
-    var csharpMessage = anthropicService.buildSystemMessage(CodingLanguage.CSHARP);
-    assertNotNull(csharpMessage);
-    assertTrue(csharpMessage.contains("C# 10+"));
-
-    var jsMessage = anthropicService.buildSystemMessage(CodingLanguage.JAVASCRIPT);
-    assertNotNull(jsMessage);
-    assertTrue(jsMessage.contains("ES2020+"));
-
-    var goMessage = anthropicService.buildSystemMessage(CodingLanguage.GOLANG);
-    assertNotNull(goMessage);
-    assertTrue(goMessage.contains("Go 1.18+"));
+    var systemMessage = anthropicService.buildSystemMessage();
+    assertNotNull(systemMessage);
+    assertTrue(systemMessage.contains(expectedContent));
   }
 }
