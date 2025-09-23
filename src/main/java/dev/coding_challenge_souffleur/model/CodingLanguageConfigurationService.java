@@ -11,27 +11,27 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 @ApplicationScoped
 public class CodingLanguageConfigurationService {
 
-  private final ProgrammingLanguage configuredLanguage;
-  private final List<Consumer<ProgrammingLanguage>> languageChangeListeners = new ArrayList<>();
-  private ProgrammingLanguage currentLanguage;
+  private final CodingLanguage configuredLanguage;
+  private final List<Consumer<CodingLanguage>> languageChangeListeners = new ArrayList<>();
+  private CodingLanguage currentLanguage;
 
   @Inject
   public CodingLanguageConfigurationService(
       @ConfigProperty(name = ConfigurationKeys.APP_DEFAULT_CODING_LANGUAGE)
-          final ProgrammingLanguage languageConfig) {
+          final CodingLanguage languageConfig) {
     this.configuredLanguage = languageConfig;
     this.currentLanguage = this.configuredLanguage;
   }
 
-  public ProgrammingLanguage getCurrentLanguage() {
+  public CodingLanguage getCurrentLanguage() {
     return currentLanguage;
   }
 
-  public ProgrammingLanguage getConfiguredLanguage() {
+  public CodingLanguage getConfiguredLanguage() {
     return configuredLanguage;
   }
 
-  public void changeLanguage(final ProgrammingLanguage newLanguage) {
+  public void changeLanguage(final CodingLanguage newLanguage) {
     if (newLanguage != null) {
       this.currentLanguage = newLanguage;
       notifyLanguageChangeListeners();
@@ -43,7 +43,7 @@ public class CodingLanguageConfigurationService {
   }
 
   public void cycleToNextLanguage() {
-    var languages = ProgrammingLanguage.values();
+    var languages = CodingLanguage.values();
     var currentIndex = getCurrentLanguageIndex();
     var nextIndex = (currentIndex + 1) % languages.length;
     this.currentLanguage = languages[nextIndex];
@@ -51,20 +51,20 @@ public class CodingLanguageConfigurationService {
   }
 
   public void cycleToPreviousLanguage() {
-    var languages = ProgrammingLanguage.values();
+    var languages = CodingLanguage.values();
     var currentIndex = getCurrentLanguageIndex();
     var previousIndex = (currentIndex - 1 + languages.length) % languages.length;
     this.currentLanguage = languages[previousIndex];
     notifyLanguageChangeListeners();
   }
 
-  public void addLanguageChangeListener(final Consumer<ProgrammingLanguage> listener) {
+  public void addLanguageChangeListener(final Consumer<CodingLanguage> listener) {
     if (listener != null) {
       languageChangeListeners.add(listener);
     }
   }
 
-  public void removeLanguageChangeListener(final Consumer<ProgrammingLanguage> listener) {
+  public void removeLanguageChangeListener(final Consumer<CodingLanguage> listener) {
     languageChangeListeners.remove(listener);
   }
 
@@ -80,7 +80,7 @@ public class CodingLanguageConfigurationService {
   }
 
   private int getCurrentLanguageIndex() {
-    var languages = ProgrammingLanguage.values();
+    var languages = CodingLanguage.values();
     for (var i = 0; i < languages.length; i++) {
       if (languages[i] == currentLanguage) {
         return i;

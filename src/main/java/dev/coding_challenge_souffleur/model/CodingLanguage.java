@@ -4,7 +4,7 @@ package dev.coding_challenge_souffleur.model;
  * Enumeration of supported programming languages for code analysis and solution generation. Each
  * language has an associated display name and prompt file name for AI model configuration.
  */
-public enum ProgrammingLanguage {
+public enum CodingLanguage {
   JAVA("Java", "java_prompt.txt"),
   PYTHON("Python", "python_prompt.txt"),
   CSHARP("C#", "csharp_prompt.txt"),
@@ -14,23 +14,23 @@ public enum ProgrammingLanguage {
   private final String displayName;
   private final String promptFileName;
 
-  ProgrammingLanguage(final String displayName, final String promptFileName) {
+  CodingLanguage(final String displayName, final String promptFileName) {
     this.displayName = displayName;
     this.promptFileName = promptFileName;
   }
 
   /**
-   * Finds a ProgrammingLanguage by its name (case-insensitive).
+   * Finds a CodingLanguage by its name (case-insensitive).
    *
    * @param name the name to search for
-   * @return the matching ProgrammingLanguage, or JAVA as default if not found
+   * @return the matching CodingLanguage, or JAVA as default if not found
    */
-  public static ProgrammingLanguage fromString(final String name) {
+  public static CodingLanguage fromString(final String name) {
     if (name == null || name.trim().isEmpty()) {
       return JAVA;
     }
 
-    for (final var language : ProgrammingLanguage.values()) {
+    for (final var language : CodingLanguage.values()) {
       if (language.name().equalsIgnoreCase(name.trim())
           || language.getDisplayName().equalsIgnoreCase(name.trim())) {
         return language;

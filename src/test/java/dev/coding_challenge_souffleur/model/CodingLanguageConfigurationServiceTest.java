@@ -12,117 +12,117 @@ class CodingLanguageConfigurationServiceTest {
 
   @BeforeEach
   void setUp() {
-    service = new CodingLanguageConfigurationService(ProgrammingLanguage.JAVA);
+    service = new CodingLanguageConfigurationService(CodingLanguage.JAVA);
   }
 
   @Test
   void testInitialConfiguration() {
-    assertEquals(ProgrammingLanguage.JAVA, service.getCurrentLanguage());
-    assertEquals(ProgrammingLanguage.JAVA, service.getConfiguredLanguage());
+    assertEquals(CodingLanguage.JAVA, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.JAVA, service.getConfiguredLanguage());
   }
 
   @Test
   void testInitialConfigurationWithDifferentLanguage() {
-    var pythonService = new CodingLanguageConfigurationService(ProgrammingLanguage.PYTHON);
-    assertEquals(ProgrammingLanguage.PYTHON, pythonService.getCurrentLanguage());
-    assertEquals(ProgrammingLanguage.PYTHON, pythonService.getConfiguredLanguage());
+    var pythonService = new CodingLanguageConfigurationService(CodingLanguage.PYTHON);
+    assertEquals(CodingLanguage.PYTHON, pythonService.getCurrentLanguage());
+    assertEquals(CodingLanguage.PYTHON, pythonService.getConfiguredLanguage());
   }
 
   @Test
   void testChangeLanguage() {
-    service.changeLanguage(ProgrammingLanguage.PYTHON);
-    assertEquals(ProgrammingLanguage.PYTHON, service.getCurrentLanguage());
-    assertEquals(ProgrammingLanguage.JAVA, service.getConfiguredLanguage());
+    service.changeLanguage(CodingLanguage.PYTHON);
+    assertEquals(CodingLanguage.PYTHON, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.JAVA, service.getConfiguredLanguage());
   }
 
   @Test
   void testChangeLanguageToNull() {
     service.changeLanguage(null);
-    assertEquals(ProgrammingLanguage.JAVA, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.JAVA, service.getCurrentLanguage());
   }
 
   @Test
   void testResetToConfiguredLanguage() {
-    service.changeLanguage(ProgrammingLanguage.PYTHON);
-    assertEquals(ProgrammingLanguage.PYTHON, service.getCurrentLanguage());
+    service.changeLanguage(CodingLanguage.PYTHON);
+    assertEquals(CodingLanguage.PYTHON, service.getCurrentLanguage());
 
     service.resetToConfiguredLanguage();
-    assertEquals(ProgrammingLanguage.JAVA, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.JAVA, service.getCurrentLanguage());
   }
 
   @Test
   void testCycleToNextLanguage() {
-    assertEquals(ProgrammingLanguage.JAVA, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.JAVA, service.getCurrentLanguage());
 
     service.cycleToNextLanguage();
-    assertEquals(ProgrammingLanguage.PYTHON, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.PYTHON, service.getCurrentLanguage());
 
     service.cycleToNextLanguage();
-    assertEquals(ProgrammingLanguage.CSHARP, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.CSHARP, service.getCurrentLanguage());
 
     service.cycleToNextLanguage();
-    assertEquals(ProgrammingLanguage.JAVASCRIPT, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.JAVASCRIPT, service.getCurrentLanguage());
 
     service.cycleToNextLanguage();
-    assertEquals(ProgrammingLanguage.GOLANG, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.GOLANG, service.getCurrentLanguage());
 
     service.cycleToNextLanguage();
-    assertEquals(ProgrammingLanguage.JAVA, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.JAVA, service.getCurrentLanguage());
   }
 
   @Test
   void testCycleToPreviousLanguage() {
-    assertEquals(ProgrammingLanguage.JAVA, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.JAVA, service.getCurrentLanguage());
 
     service.cycleToPreviousLanguage();
-    assertEquals(ProgrammingLanguage.GOLANG, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.GOLANG, service.getCurrentLanguage());
 
     service.cycleToPreviousLanguage();
-    assertEquals(ProgrammingLanguage.JAVASCRIPT, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.JAVASCRIPT, service.getCurrentLanguage());
 
     service.cycleToPreviousLanguage();
-    assertEquals(ProgrammingLanguage.CSHARP, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.CSHARP, service.getCurrentLanguage());
 
     service.cycleToPreviousLanguage();
-    assertEquals(ProgrammingLanguage.PYTHON, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.PYTHON, service.getCurrentLanguage());
 
     service.cycleToPreviousLanguage();
-    assertEquals(ProgrammingLanguage.JAVA, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.JAVA, service.getCurrentLanguage());
   }
 
   @Test
   void testCyclingFromDifferentStartingLanguage() {
-    service.changeLanguage(ProgrammingLanguage.CSHARP);
-    assertEquals(ProgrammingLanguage.CSHARP, service.getCurrentLanguage());
+    service.changeLanguage(CodingLanguage.CSHARP);
+    assertEquals(CodingLanguage.CSHARP, service.getCurrentLanguage());
 
     service.cycleToNextLanguage();
-    assertEquals(ProgrammingLanguage.JAVASCRIPT, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.JAVASCRIPT, service.getCurrentLanguage());
 
     service.cycleToPreviousLanguage();
-    assertEquals(ProgrammingLanguage.CSHARP, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.CSHARP, service.getCurrentLanguage());
 
     service.cycleToPreviousLanguage();
-    assertEquals(ProgrammingLanguage.PYTHON, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.PYTHON, service.getCurrentLanguage());
   }
 
   @Test
   void testCombinedCyclingOperations() {
     service.cycleToNextLanguage();
     service.cycleToNextLanguage();
-    assertEquals(ProgrammingLanguage.CSHARP, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.CSHARP, service.getCurrentLanguage());
 
     service.cycleToPreviousLanguage();
-    assertEquals(ProgrammingLanguage.PYTHON, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.PYTHON, service.getCurrentLanguage());
 
     service.resetToConfiguredLanguage();
-    assertEquals(ProgrammingLanguage.JAVA, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.JAVA, service.getCurrentLanguage());
   }
 
   @Test
   void testConfiguredLanguagePreservation() {
     var originalConfigured = service.getConfiguredLanguage();
 
-    service.changeLanguage(ProgrammingLanguage.PYTHON);
+    service.changeLanguage(CodingLanguage.PYTHON);
     service.cycleToNextLanguage();
     service.cycleToPreviousLanguage();
 
@@ -131,29 +131,29 @@ class CodingLanguageConfigurationServiceTest {
 
   @Test
   void testMultipleLanguageChanges() {
-    service.changeLanguage(ProgrammingLanguage.PYTHON);
-    assertEquals(ProgrammingLanguage.PYTHON, service.getCurrentLanguage());
+    service.changeLanguage(CodingLanguage.PYTHON);
+    assertEquals(CodingLanguage.PYTHON, service.getCurrentLanguage());
 
-    service.changeLanguage(ProgrammingLanguage.CSHARP);
-    assertEquals(ProgrammingLanguage.CSHARP, service.getCurrentLanguage());
+    service.changeLanguage(CodingLanguage.CSHARP);
+    assertEquals(CodingLanguage.CSHARP, service.getCurrentLanguage());
 
-    service.changeLanguage(ProgrammingLanguage.JAVASCRIPT);
-    assertEquals(ProgrammingLanguage.JAVASCRIPT, service.getCurrentLanguage());
+    service.changeLanguage(CodingLanguage.JAVASCRIPT);
+    assertEquals(CodingLanguage.JAVASCRIPT, service.getCurrentLanguage());
 
-    assertEquals(ProgrammingLanguage.JAVA, service.getConfiguredLanguage());
+    assertEquals(CodingLanguage.JAVA, service.getConfiguredLanguage());
   }
 
   @Test
   void testCyclingWrapsCorrectlyAtBoundaries() {
-    service.changeLanguage(ProgrammingLanguage.GOLANG);
-    assertEquals(ProgrammingLanguage.GOLANG, service.getCurrentLanguage());
+    service.changeLanguage(CodingLanguage.GOLANG);
+    assertEquals(CodingLanguage.GOLANG, service.getCurrentLanguage());
 
     service.cycleToNextLanguage();
-    assertEquals(ProgrammingLanguage.JAVA, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.JAVA, service.getCurrentLanguage());
 
-    service.changeLanguage(ProgrammingLanguage.JAVA);
+    service.changeLanguage(CodingLanguage.JAVA);
     service.cycleToPreviousLanguage();
-    assertEquals(ProgrammingLanguage.GOLANG, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.GOLANG, service.getCurrentLanguage());
   }
 
   @Test
@@ -161,30 +161,30 @@ class CodingLanguageConfigurationServiceTest {
     for (var i = 0; i < 10; i++) {
       service.cycleToNextLanguage();
     }
-    assertEquals(ProgrammingLanguage.JAVA, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.JAVA, service.getCurrentLanguage());
 
     for (var i = 0; i < 15; i++) {
       service.cycleToPreviousLanguage();
     }
-    assertEquals(ProgrammingLanguage.JAVA, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.JAVA, service.getCurrentLanguage());
   }
 
   @Test
   void testResetAfterMultipleOperations() {
     service.cycleToNextLanguage();
-    service.changeLanguage(ProgrammingLanguage.CSHARP);
+    service.changeLanguage(CodingLanguage.CSHARP);
     service.cycleToPreviousLanguage();
     service.cycleToNextLanguage();
 
     service.resetToConfiguredLanguage();
-    assertEquals(ProgrammingLanguage.JAVA, service.getCurrentLanguage());
-    assertEquals(ProgrammingLanguage.JAVA, service.getConfiguredLanguage());
+    assertEquals(CodingLanguage.JAVA, service.getCurrentLanguage());
+    assertEquals(CodingLanguage.JAVA, service.getConfiguredLanguage());
   }
 
   @Test
   void testAllLanguagesAccessibleViaCycling() {
-    var allLanguages = ProgrammingLanguage.values();
-    var encounteredLanguages = new java.util.HashSet<ProgrammingLanguage>();
+    var allLanguages = CodingLanguage.values();
+    var encounteredLanguages = new java.util.HashSet<CodingLanguage>();
 
     for (var i = 0; i < allLanguages.length; i++) {
       encounteredLanguages.add(service.getCurrentLanguage());

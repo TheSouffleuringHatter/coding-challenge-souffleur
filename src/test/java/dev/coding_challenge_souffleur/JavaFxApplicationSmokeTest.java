@@ -11,7 +11,7 @@ import static org.testfx.matcher.base.NodeMatchers.isInvisible;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 
 import com.sun.jna.platform.win32.Win32VK;
-import dev.coding_challenge_souffleur.model.ProgrammingLanguage;
+import dev.coding_challenge_souffleur.model.CodingLanguage;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -305,30 +305,30 @@ class JavaFxApplicationSmokeTest {
     verifyThat(LANGUAGE_SELECTOR_SELECTOR, isVisible());
 
     var languageSelector = robot.lookup(LANGUAGE_SELECTOR_SELECTOR).queryAs(ComboBox.class);
-    var initialLanguage = (ProgrammingLanguage) languageSelector.getValue();
+    var initialLanguage = (CodingLanguage) languageSelector.getValue();
     LOGGER.debug("Initial language: {}", initialLanguage);
 
     // Test next language cycling
     LOGGER.debug("Pressing language next key combination");
     robot.push(languageNextKeyCombination);
     robot.sleep(500);
-    var nextLanguage = (ProgrammingLanguage) languageSelector.getValue();
+    var nextLanguage = (CodingLanguage) languageSelector.getValue();
     LOGGER.debug("Language after next key: {}", nextLanguage);
     assertNotEquals(nextLanguage, initialLanguage);
 
     // Test previous language cycling
     robot.push(languagePreviousKeyCombination);
     robot.sleep(500);
-    var backToInitial = (ProgrammingLanguage) languageSelector.getValue();
+    var backToInitial = (CodingLanguage) languageSelector.getValue();
     assertEquals(backToInitial, initialLanguage);
 
     // Test that cycling through all languages works
-    var allLanguages = ProgrammingLanguage.values();
+    var allLanguages = CodingLanguage.values();
     for (var i = 0; i < allLanguages.length; i++) {
       robot.push(languageNextKeyCombination);
       robot.sleep(50);
     }
-    var backToStart = (ProgrammingLanguage) languageSelector.getValue();
+    var backToStart = (CodingLanguage) languageSelector.getValue();
     assertEquals(backToStart, initialLanguage);
   }
 

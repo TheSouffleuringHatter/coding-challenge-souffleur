@@ -2,7 +2,7 @@ package dev.coding_challenge_souffleur.view.components;
 
 import com.sun.jna.platform.win32.Win32VK;
 import dev.coding_challenge_souffleur.model.CodingLanguageConfigurationService;
-import dev.coding_challenge_souffleur.model.ProgrammingLanguage;
+import dev.coding_challenge_souffleur.model.CodingLanguage;
 import java.io.IOException;
 import java.util.List;
 import javafx.collections.FXCollections;
@@ -23,7 +23,7 @@ public class HeaderBox extends HBox {
 
   @FXML private Label shortcutModifierText;
   @FXML private Label shortcutKeysLabel;
-  @FXML private ComboBox<ProgrammingLanguage> languageSelector;
+  @FXML private ComboBox<CodingLanguage> languageSelector;
   @FXML private Button closeButton;
 
   public HeaderBox(
@@ -73,14 +73,14 @@ public class HeaderBox extends HBox {
 
   private void setupLanguageSelector(
       final CodingLanguageConfigurationService codingLanguageConfigurationService) {
-    languageSelector.setItems(FXCollections.observableArrayList(ProgrammingLanguage.values()));
+    languageSelector.setItems(FXCollections.observableArrayList(CodingLanguage.values()));
     languageSelector.setValue(codingLanguageConfigurationService.getCurrentLanguage());
 
     languageSelector.setCellFactory(
         listView ->
             new ListCell<>() {
               @Override
-              protected void updateItem(final ProgrammingLanguage language, final boolean empty) {
+              protected void updateItem(final CodingLanguage language, final boolean empty) {
                 super.updateItem(language, empty);
                 setText(empty || language == null ? null : language.getDisplayName());
               }
@@ -89,7 +89,7 @@ public class HeaderBox extends HBox {
     languageSelector.setButtonCell(
         new ListCell<>() {
           @Override
-          protected void updateItem(final ProgrammingLanguage language, final boolean empty) {
+          protected void updateItem(final CodingLanguage language, final boolean empty) {
             super.updateItem(language, empty);
             setText(empty || language == null ? null : language.getDisplayName());
           }
@@ -149,7 +149,7 @@ public class HeaderBox extends HBox {
     }
   }
 
-  private void onLanguageChanged(final ProgrammingLanguage newLanguage) {
+  private void onLanguageChanged(final CodingLanguage newLanguage) {
     // Ensure UI updates happen on JavaFX Application Thread
     javafx.application.Platform.runLater(
         () -> {

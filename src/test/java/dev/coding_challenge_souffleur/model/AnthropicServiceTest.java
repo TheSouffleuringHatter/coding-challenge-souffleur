@@ -92,23 +92,23 @@ class AnthropicServiceTest {
   @Test
   void testBuildSystemMessageForDifferentLanguages() {
     // Test that system messages are built correctly for different languages
-    var javaMessage = anthropicService.buildSystemMessage(ProgrammingLanguage.JAVA);
+    var javaMessage = anthropicService.buildSystemMessage(CodingLanguage.JAVA);
     assertNotNull(javaMessage);
     assertTrue(javaMessage.contains("Java 21"));
 
-    var pythonMessage = anthropicService.buildSystemMessage(ProgrammingLanguage.PYTHON);
+    var pythonMessage = anthropicService.buildSystemMessage(CodingLanguage.PYTHON);
     assertNotNull(pythonMessage);
     assertTrue(pythonMessage.contains("Python 3.9+"));
 
-    var csharpMessage = anthropicService.buildSystemMessage(ProgrammingLanguage.CSHARP);
+    var csharpMessage = anthropicService.buildSystemMessage(CodingLanguage.CSHARP);
     assertNotNull(csharpMessage);
     assertTrue(csharpMessage.contains("C# 10+"));
 
-    var jsMessage = anthropicService.buildSystemMessage(ProgrammingLanguage.JAVASCRIPT);
+    var jsMessage = anthropicService.buildSystemMessage(CodingLanguage.JAVASCRIPT);
     assertNotNull(jsMessage);
     assertTrue(jsMessage.contains("ES2020+"));
 
-    var goMessage = anthropicService.buildSystemMessage(ProgrammingLanguage.GOLANG);
+    var goMessage = anthropicService.buildSystemMessage(CodingLanguage.GOLANG);
     assertNotNull(goMessage);
     assertTrue(goMessage.contains("Go 1.18+"));
   }

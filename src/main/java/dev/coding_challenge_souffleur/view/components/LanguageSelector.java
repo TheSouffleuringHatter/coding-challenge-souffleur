@@ -1,6 +1,6 @@
 package dev.coding_challenge_souffleur.view.components;
 
-import dev.coding_challenge_souffleur.model.ProgrammingLanguage;
+import dev.coding_challenge_souffleur.model.CodingLanguage;
 import java.util.function.Consumer;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ComboBox;
@@ -12,11 +12,11 @@ import org.slf4j.LoggerFactory;
  * Custom JavaFX component for selecting programming languages. Provides a ComboBox with all
  * supported programming languages.
  */
-public class LanguageSelector extends ComboBox<ProgrammingLanguage> {
+public class LanguageSelector extends ComboBox<CodingLanguage> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(LanguageSelector.class);
 
-  private Consumer<ProgrammingLanguage> onLanguageChanged;
+  private Consumer<CodingLanguage> onLanguageChanged;
 
   public LanguageSelector() {
     setupComponent();
@@ -27,7 +27,7 @@ public class LanguageSelector extends ComboBox<ProgrammingLanguage> {
    *
    * @param initialLanguage the initially selected language
    */
-  public LanguageSelector(final ProgrammingLanguage initialLanguage) {
+  public LanguageSelector(final CodingLanguage initialLanguage) {
     this();
     setValue(initialLanguage);
   }
@@ -37,17 +37,17 @@ public class LanguageSelector extends ComboBox<ProgrammingLanguage> {
     this.setId("languageSelector");
 
     // Populate with all available programming languages
-    this.setItems(FXCollections.observableArrayList(ProgrammingLanguage.values()));
+    this.setItems(FXCollections.observableArrayList(CodingLanguage.values()));
 
     // Set default value to Java
-    this.setValue(ProgrammingLanguage.JAVA);
+    this.setValue(CodingLanguage.JAVA);
 
     // Custom cell factory to display language names properly
     this.setCellFactory(
         listView ->
             new ListCell<>() {
               @Override
-              protected void updateItem(final ProgrammingLanguage language, final boolean empty) {
+              protected void updateItem(final CodingLanguage language, final boolean empty) {
                 super.updateItem(language, empty);
                 if (empty || language == null) {
                   setText(null);
@@ -61,7 +61,7 @@ public class LanguageSelector extends ComboBox<ProgrammingLanguage> {
     this.setButtonCell(
         new ListCell<>() {
           @Override
-          protected void updateItem(final ProgrammingLanguage language, final boolean empty) {
+          protected void updateItem(final CodingLanguage language, final boolean empty) {
             super.updateItem(language, empty);
             if (empty || language == null) {
               setText(null);
@@ -94,7 +94,7 @@ public class LanguageSelector extends ComboBox<ProgrammingLanguage> {
    *
    * @param onLanguageChanged callback function that receives the newly selected language
    */
-  public void setOnLanguageChanged(final Consumer<ProgrammingLanguage> onLanguageChanged) {
+  public void setOnLanguageChanged(final Consumer<CodingLanguage> onLanguageChanged) {
     this.onLanguageChanged = onLanguageChanged;
   }
 
@@ -103,9 +103,9 @@ public class LanguageSelector extends ComboBox<ProgrammingLanguage> {
    *
    * @return the selected programming language, or JAVA if none selected
    */
-  public ProgrammingLanguage getSelectedLanguage() {
+  public CodingLanguage getSelectedLanguage() {
     var selected = getValue();
-    return selected != null ? selected : ProgrammingLanguage.JAVA;
+    return selected != null ? selected : CodingLanguage.JAVA;
   }
 
   /**
@@ -113,7 +113,7 @@ public class LanguageSelector extends ComboBox<ProgrammingLanguage> {
    *
    * @param language the language to select
    */
-  public void setSelectedLanguage(final ProgrammingLanguage language) {
+  public void setSelectedLanguage(final CodingLanguage language) {
     if (language != null) {
       setValue(language);
     }
