@@ -55,11 +55,11 @@ enum KeyCommand {
 
   LANGUAGE_PREVIOUS(
       ConfigurationKeys.APP_KEYBOARD_KEY_CODING_LANGUAGE_PREVIOUS,
-      (deps) -> deps.languageConfigurationService().cycleToPreviousLanguage()),
+      (deps) -> deps.viewController().getHeaderBox().cycleToPreviousLanguage()),
 
   LANGUAGE_NEXT(
       ConfigurationKeys.APP_KEYBOARD_KEY_CODING_LANGUAGE_NEXT,
-      (deps) -> deps.languageConfigurationService().cycleToNextLanguage());
+      (deps) -> deps.viewController().getHeaderBox().cycleToNextLanguage());
 
   private final String keyConfigProperty;
   private final Consumer<KeyCommandDependencies> action;

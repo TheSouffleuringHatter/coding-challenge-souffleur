@@ -3,7 +3,6 @@ package dev.coding_challenge_souffleur.view;
 import com.sun.jna.platform.win32.Win32VK;
 import dev.coding_challenge_souffleur.ConfigurationKeys;
 import dev.coding_challenge_souffleur.model.AnthropicService;
-import dev.coding_challenge_souffleur.model.CodingLanguageConfigurationService;
 import dev.coding_challenge_souffleur.model.ScreenshotService;
 import dev.coding_challenge_souffleur.view.components.ContentPaneController;
 import dev.coding_challenge_souffleur.view.components.HeaderBox;
@@ -37,7 +36,6 @@ class MainSceneCreator {
   private final PlatformRunLater platformRunLater;
   private final ScreenshotDisplayService screenshotDisplayService;
   private final ContentPaneController contentPaneController;
-  private final CodingLanguageConfigurationService codingLanguageConfigurationService;
   private final Instance<Stage> stageInstance;
   private final boolean exitPlatformOnClose;
   private final Win32VK exitKeyCode;
@@ -54,8 +52,8 @@ class MainSceneCreator {
   private final Win32VK languagePreviousKey;
   private final Win32VK languageNextKey;
 
-  @Produces private ViewController viewController;
   @Produces private Scene mainScene;
+  @Produces private ViewController viewController;
   @Produces private MultiSolutionTabPane multiSolutionTabPane;
 
   @Inject
@@ -65,7 +63,6 @@ class MainSceneCreator {
       final PlatformRunLater platformRunLater,
       final ScreenshotDisplayService screenshotDisplayService,
       final ContentPaneController contentPaneController,
-      final CodingLanguageConfigurationService codingLanguageConfigurationService,
       final Instance<Stage> stageInstance,
       @ConfigProperty(name = ConfigurationKeys.APP_EXIT_PLATFORM_ON_CLOSE)
           final boolean exitPlatformOnClose,
@@ -98,7 +95,6 @@ class MainSceneCreator {
     this.platformRunLater = platformRunLater;
     this.screenshotDisplayService = screenshotDisplayService;
     this.contentPaneController = contentPaneController;
-    this.codingLanguageConfigurationService = codingLanguageConfigurationService;
     this.stageInstance = stageInstance;
     this.exitPlatformOnClose = exitPlatformOnClose;
     this.exitKeyCode = exitKeyCode;
@@ -129,11 +125,12 @@ class MainSceneCreator {
       throw new RuntimeException(e);
     }
 
-    this.mainScene = scene;
-    this.viewController = fxmlLoader.getController();
-    this.multiSolutionTabPane = new MultiSolutionTabPane();
+    mainScene = scene;
+    viewController = fxmlLoader.getController();
+    multiSolutionTabPane = new MultiSolutionTabPane();
     var headerBox =
         new HeaderBox(
+            anthropicService,
             exitKeyCode,
             modifierKeys,
             hideShowKey,
@@ -146,9 +143,8 @@ class MainSceneCreator {
             scrollUpKey,
             scrollDownKey,
             languagePreviousKey,
-            languageNextKey,
-            codingLanguageConfigurationService);
-    this.viewController.setup(
+            languageNextKey);
+    viewController.setup(
         anthropicService,
         screenshotService,
         platformRunLater,

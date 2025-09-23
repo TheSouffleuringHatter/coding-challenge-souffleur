@@ -94,8 +94,7 @@ public class AnthropicService {
     return ContentBlockParam.ofImage(ImageBlockParam.builder().source(imageSource).build());
   }
 
-  @Inject
-  void setCodingLanguage(final CodingLanguage codingLanguage) {
+  public void setCodingLanguage(final CodingLanguage codingLanguage) {
     LOGGER.trace("Updated current coding language to: {}", codingLanguage);
     this.currentLanguage = codingLanguage;
   }

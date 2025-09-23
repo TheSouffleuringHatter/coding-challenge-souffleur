@@ -34,8 +34,9 @@ public final class ConfigurationKeys {
   public static final String APP_KEYBOARD_KEY_TOGGLE_PROBLEM_STATEMENT =
       "app.keyboard.key.toggle_problem_statement";
   public static final String APP_KEYBOARD_KEY_CODING_LANGUAGE_PREVIOUS =
-    "app.keyboard.key.coding_language_previous";
-  public static final String APP_KEYBOARD_KEY_CODING_LANGUAGE_NEXT = "app.keyboard.key.coding_language_next";
+      "app.keyboard.key.coding_language_previous";
+  public static final String APP_KEYBOARD_KEY_CODING_LANGUAGE_NEXT =
+      "app.keyboard.key.coding_language_next";
 
   // Screenshot Configuration
   public static final String SAVE_SCREENSHOT_TO_FILE = "save.screenshot.to.file";

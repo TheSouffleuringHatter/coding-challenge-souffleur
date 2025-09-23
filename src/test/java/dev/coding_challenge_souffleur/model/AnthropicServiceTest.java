@@ -38,6 +38,15 @@ class AnthropicServiceTest {
     }
   }
 
+  private static Stream<Arguments> languageTestData() {
+    return Stream.of(
+        Arguments.of(CodingLanguage.JAVA, "Java 21"),
+        Arguments.of(CodingLanguage.PYTHON, "Python 3.9+"),
+        Arguments.of(CodingLanguage.CSHARP, "C# 10+"),
+        Arguments.of(CodingLanguage.JAVASCRIPT, "ES2020+"),
+        Arguments.of(CodingLanguage.GOLANG, "Go 1.18+"));
+  }
+
   @Test
   void testAnalyseMultiSolutionMock_Message_ReturnsAnalysisResult() {
     var future = anthropicService.analyseMultiSolutionMock(null);
@@ -92,19 +101,10 @@ class AnthropicServiceTest {
     assertTrue(result2.isComplete());
   }
 
-  private static Stream<Arguments> languageTestData() {
-    return Stream.of(
-      Arguments.of(CodingLanguage.JAVA, "Java 21"),
-      Arguments.of(CodingLanguage.PYTHON, "Python 3.9+"),
-      Arguments.of(CodingLanguage.CSHARP, "C# 10+"),
-      Arguments.of(CodingLanguage.JAVASCRIPT, "ES2020+"),
-      Arguments.of(CodingLanguage.GOLANG, "Go 1.18+")
-    );
-  }
-
   @ParameterizedTest
   @MethodSource("languageTestData")
-  void testBuildSystemMessageForDifferentLanguages(CodingLanguage codingLanguage, String expectedContent) {
+  void testBuildSystemMessageForDifferentLanguages(
+      CodingLanguage codingLanguage, String expectedContent) {
     anthropicService.setCodingLanguage(codingLanguage);
 
     var systemMessage = anthropicService.buildSystemMessage();

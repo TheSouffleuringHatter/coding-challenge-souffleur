@@ -1,10 +1,12 @@
 package dev.coding_challenge_souffleur.view.components;
 
 import com.sun.jna.platform.win32.Win32VK;
-import dev.coding_challenge_souffleur.model.CodingLanguageConfigurationService;
+import dev.coding_challenge_souffleur.model.AnthropicService;
 import dev.coding_challenge_souffleur.model.CodingLanguage;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,12 +23,15 @@ public class HeaderBox extends HBox {
   private static final Logger LOGGER = LoggerFactory.getLogger(HeaderBox.class);
   private static final String HEADER_BOX_FXML = "HeaderBox.fxml";
 
+  private final AnthropicService anthropicService;
+
   @FXML private Label shortcutModifierText;
   @FXML private Label shortcutKeysLabel;
   @FXML private ComboBox<CodingLanguage> languageSelector;
   @FXML private Button closeButton;
 
   public HeaderBox(
+      final AnthropicService anthropicService,
       final Win32VK exitKeyCode,
       final List<Win32VK> modifierKeys,
       final Win32VK hideShowKey,
@@ -39,14 +44,12 @@ public class HeaderBox extends HBox {
       final Win32VK scrollUpKey,
       final Win32VK scrollDownKey,
       final Win32VK languagePreviousKey,
-      final Win32VK languageNextKey,
-      final CodingLanguageConfigurationService codingLanguageConfigurationService) {
+      final Win32VK languageNextKey) {
     loadFxml();
+    this.anthropicService = anthropicService;
 
     shortcutModifierText.setText(
-        modifierKeys.stream()
-            .map(Win32VK::toString)
-            .collect(java.util.stream.Collectors.joining(" | ")));
+        modifierKeys.stream().map(Win32VK::toString).collect(Collectors.joining(" | ")));
     closeButton.setText("❌ (" + exitKeyCode + ")");
 
     var shortcutKeysText =
@@ -65,17 +68,36 @@ public class HeaderBox extends HBox {
             Character.toString(languageNextKey.code));
     shortcutKeysLabel.setText(shortcutKeysText);
 
-    setupLanguageSelector(codingLanguageConfigurationService);
-
-    // Register as listener for language changes via hotkeys
-    codingLanguageConfigurationService.addLanguageChangeListener(this::onLanguageChanged);
+    setupCodingLanguageSelector();
   }
 
-  private void setupLanguageSelector(
-      final CodingLanguageConfigurationService codingLanguageConfigurationService) {
-    languageSelector.setItems(FXCollections.observableArrayList(CodingLanguage.values()));
-    languageSelector.setValue(codingLanguageConfigurationService.getCurrentLanguage());
+  public void cycleToNextLanguage() {
+    var languages = CodingLanguage.values();
+    var currentValue = languageSelector.getValue();
+    var currentIndex = Arrays.asList(languages).indexOf(currentValue);
+    var nextIndex = (currentIndex + 1) % languages.length;
+    var codingLanguage = languages[nextIndex];
+    LOGGER.debug("Cycle to next language: {}", codingLanguage);
 
+    languageSelector.setValue(codingLanguage);
+    anthropicService.setCodingLanguage(codingLanguage);
+  }
+
+  public void cycleToPreviousLanguage() {
+    var languages = CodingLanguage.values();
+    var currentValue = languageSelector.getValue();
+    var currentIndex = Arrays.asList(languages).indexOf(currentValue);
+    var previousIndex = (currentIndex - 1 + languages.length) % languages.length;
+    var codingLanguage = languages[previousIndex];
+    LOGGER.debug("Cycle to previous language: {}", codingLanguage);
+
+    languageSelector.setValue(codingLanguage);
+    anthropicService.setCodingLanguage(codingLanguage);
+  }
+
+  private void setupCodingLanguageSelector() {
+    languageSelector.setItems(FXCollections.observableArrayList(CodingLanguage.values()));
+    languageSelector.setValue(CodingLanguage.JAVA);
     languageSelector.setCellFactory(
         listView ->
             new ListCell<>() {
@@ -85,76 +107,12 @@ public class HeaderBox extends HBox {
                 setText(empty || language == null ? null : language.getDisplayName());
               }
             });
-
     languageSelector.setButtonCell(
         new ListCell<>() {
           @Override
           protected void updateItem(final CodingLanguage language, final boolean empty) {
             super.updateItem(language, empty);
             setText(empty || language == null ? null : language.getDisplayName());
-          }
-        });
-
-    languageSelector
-        .getSelectionModel()
-        .selectedItemProperty()
-        .addListener(
-            (observable, oldValue, newValue) -> {
-              if (newValue != null && newValue != oldValue) {
-                codingLanguageConfigurationService.changeLanguage(newValue);
-              }
-            });
-
-    languageSelector.setTooltip(new javafx.scene.control.Tooltip("Select programming language"));
-
-    // Update selector when language changes via keyboard
-    languageSelector
-        .sceneProperty()
-        .addListener(
-            (obs, oldScene, newScene) -> {
-              if (newScene != null && newScene.getWindow() != null) {
-                newScene
-                    .getWindow()
-                    .focusedProperty()
-                    .addListener(
-                        (focusObs, wasFocused, isFocused) -> {
-                          if (isFocused) {
-                            updateLanguageSelector(codingLanguageConfigurationService);
-                          }
-                        });
-              }
-            });
-
-    // Add multiple triggers to ensure UI updates when language changes
-    languageSelector.setOnMouseEntered(e -> updateLanguageSelector(
-        codingLanguageConfigurationService));
-    languageSelector.setOnMouseMoved(e -> updateLanguageSelector(codingLanguageConfigurationService));
-
-    // Also add a window focus listener that checks more frequently
-    languageSelector
-        .focusedProperty()
-        .addListener(
-            (obs, wasFocused, isFocused) -> {
-              if (isFocused) {
-                updateLanguageSelector(codingLanguageConfigurationService);
-              }
-            });
-  }
-
-  private void updateLanguageSelector(
-      final CodingLanguageConfigurationService codingLanguageConfigurationService) {
-    var currentLanguage = codingLanguageConfigurationService.getCurrentLanguage();
-    if (languageSelector.getValue() != currentLanguage) {
-      languageSelector.setValue(currentLanguage);
-    }
-  }
-
-  private void onLanguageChanged(final CodingLanguage newLanguage) {
-    // Ensure UI updates happen on JavaFX Application Thread
-    javafx.application.Platform.runLater(
-        () -> {
-          if (languageSelector.getValue() != newLanguage) {
-            languageSelector.setValue(newLanguage);
           }
         });
   }
