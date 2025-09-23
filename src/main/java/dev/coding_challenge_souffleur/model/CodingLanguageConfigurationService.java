@@ -52,7 +52,7 @@ public class CodingLanguageConfigurationService {
     var currentIndex = getCurrentLanguageIndex();
     var nextIndex = (currentIndex + 1) % languages.length;
     this.currentLanguage = languages[nextIndex];
-    LOGGER.trace("Cycle to next language: {}", currentLanguage);
+    LOGGER.debug("Cycle to next language: {}", currentLanguage);
 
     notifyLanguageChangeListeners();
   }
@@ -62,6 +62,8 @@ public class CodingLanguageConfigurationService {
     var currentIndex = getCurrentLanguageIndex();
     var previousIndex = (currentIndex - 1 + languages.length) % languages.length;
     this.currentLanguage = languages[previousIndex];
+    LOGGER.debug("Cycle to previous language: {}", currentLanguage);
+
     notifyLanguageChangeListeners();
   }
 
