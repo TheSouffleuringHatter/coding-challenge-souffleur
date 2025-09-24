@@ -20,27 +20,6 @@ public enum CodingLanguage {
   }
 
   /**
-   * Finds a CodingLanguage by its name (case-insensitive).
-   *
-   * @param name the name to search for
-   * @return the matching CodingLanguage, or JAVA as default if not found
-   */
-  public static CodingLanguage fromString(final String name) {
-    if (name == null || name.trim().isEmpty()) {
-      return JAVA;
-    }
-
-    for (final var language : CodingLanguage.values()) {
-      if (language.name().equalsIgnoreCase(name.trim())
-          || language.getDisplayName().equalsIgnoreCase(name.trim())) {
-        return language;
-      }
-    }
-
-    return JAVA; // Default fallback
-  }
-
-  /**
    * Gets the human-readable display name for this programming language.
    *
    * @return the display name (e.g., "Java", "Python", "C#")
