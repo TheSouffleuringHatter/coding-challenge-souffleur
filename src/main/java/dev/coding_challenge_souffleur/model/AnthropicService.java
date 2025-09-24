@@ -43,8 +43,7 @@ public class AnthropicService {
   private CodingLanguage currentLanguage = CodingLanguage.JAVA;
 
   private String baseSystemMessage;
-  private String textResponsePrompt;
-  private String assistantMessage;
+  private String responseFormat;
   private String userMessage;
   private String multiSolutionMockText;
 
@@ -103,8 +102,7 @@ public class AnthropicService {
   void loadPrompts() {
     try {
       this.baseSystemMessage = fileService.loadResourceFile("/prompts/system_prompt.txt");
-      this.textResponsePrompt = fileService.loadResourceFile("/prompts/text_response_prompt.txt");
-      this.assistantMessage = fileService.loadResourceFile("/prompts/assistant_message.txt");
+      this.responseFormat = fileService.loadResourceFile("/prompts/response_format.txt");
       this.userMessage = fileService.loadResourceFile("/prompts/user_message.txt");
       this.multiSolutionMockText = fileService.loadResourceFile("/prompts/multi_solution_mock.txt");
     } catch (final IOException e) {
@@ -173,13 +171,13 @@ public class AnthropicService {
   String buildSystemMessage() {
     try {
       var languagePrompt = fileService.loadResourceFile(currentLanguage.getPromptResourcePath());
-      return baseSystemMessage + textResponsePrompt + languagePrompt + assistantMessage;
+      return baseSystemMessage + "\n\n" + languagePrompt + "\n\n" + responseFormat;
     } catch (final IOException e) {
       LOGGER.warn(
           "Failed to load language-specific prompt for {}, falling back to Java", currentLanguage);
       try {
         var javaPrompt = fileService.loadResourceFile(CodingLanguage.JAVA.getPromptResourcePath());
-        return baseSystemMessage + textResponsePrompt + javaPrompt + assistantMessage;
+        return baseSystemMessage + "\n\n" + javaPrompt + "\n\n" + responseFormat;
       } catch (final IOException fallbackException) {
         throw new RuntimeException("Failed to load fallback Java prompt", fallbackException);
       }

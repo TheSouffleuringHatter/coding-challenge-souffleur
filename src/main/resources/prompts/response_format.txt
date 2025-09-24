@@ -18,11 +18,12 @@ Formatting Rules:
 - Use "• " for bullet points
 - Use "  - " for sub-items
 - Keep lines short for overlay readability
-- Use the exact section names and markers as shown in the following "Example format"
+- Use the exact section names and markers as shown below
 
-// Example format (Start):
+Format Structure:
+
 PROBLEM_STATEMENT:
-[The coding problem to be solved (shared across all solutions)]
+Complete problem statement from image
 ===SECTION_END===
 
 SOLUTION_TITLE:
@@ -30,7 +31,7 @@ SOLUTION_TITLE:
 ===SECTION_END===
 
 SOLUTION_DESCRIPTION:
-[Brief approach / main strategy for this solution]
+Detailed explanation of approach
 
 • Core idea: [1-2 sentences]
 • Algorithm: [If using advanced algorithm, describe it briefly; omit this sub-item on trivial algorithm]
@@ -42,16 +43,20 @@ SOLUTION_DESCRIPTION:
 ===SECTION_END===
 
 EDGE_CASES:
+Edge cases and handling
+
 • [Edge case 1]: [Handling]
 • [Edge case 2]: [Handling]
 • [Edge case 3]: [Handling]
 ===SECTION_END===
 
 SOLUTION_CODE:
-[Your solution code here (unchanged format)]
+Complete code solution as plain Unicode text (no Markdown)
 ===SECTION_END===
 
 TIME_COMPLEXITY:
+Time complexity analysis
+
 O([Complexity]) - [Brief reasoning why]
 
 • Critical factor: [What determines complexity]
@@ -59,6 +64,8 @@ O([Complexity]) - [Brief reasoning why]
 ===SECTION_END===
 
 SPACE_COMPLEXITY:
+Space complexity analysis
+
 O([Complexity]) - [Brief reasoning why]
 
 • Memory: [What is stored]
@@ -66,4 +73,3 @@ O([Complexity]) - [Brief reasoning why]
 ===SECTION_END===
 
 [Repeat SOLUTION_TITLE through SPACE_COMPLEXITY blocks for additional solutions]
-// Example format (End)
