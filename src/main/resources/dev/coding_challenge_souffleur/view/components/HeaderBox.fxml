@@ -15,7 +15,7 @@
   <Label minWidth="130" styleClass="header-label" text="Shortcut Modifier"
     fx:id="shortcutModifierText"/>
   <Label styleClass="header-label" fx:id="shortcutKeysLabel"/>
-  <ComboBox fx:id="languageSelector" styleClass="language-selector" minWidth="80"/>
+  <ComboBox fx:id="codingLanguageSelector"/>
   <Region HBox.hgrow="ALWAYS"/>
   <Button styleClass="close-button" text="❌" fx:id="closeButton"/>
 </fx:root>

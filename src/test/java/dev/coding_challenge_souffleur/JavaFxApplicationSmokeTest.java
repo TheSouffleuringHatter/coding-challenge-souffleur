@@ -67,7 +67,7 @@ class JavaFxApplicationSmokeTest {
   private static final String STATUS_LABEL_SELECTOR = "#statusLabel";
   private static final String HEADER_BOX_SELECTOR = "#headerBox";
   private static final String SCREENSHOT_PREVIEW_SELECTOR = "#screenshotPreview";
-  private static final String LANGUAGE_SELECTOR_SELECTOR = "#languageSelector";
+  private static final String CODING_LANGUAGE_SELECTOR_SELECTOR = "#codingLanguageSelector";
 
   // Configuration-based key combinations - loaded from MicroProfile Config
   private KeyCodeCombination hideShowKeyCombination;
@@ -280,7 +280,7 @@ class JavaFxApplicationSmokeTest {
     assertTrue(initialWindow.isShowing());
 
     assertHeader(robot);
-    assertLanguageCycling(robot);
+    assertCodingLanguageCycling(robot);
     assertContentPane(robot);
     assertProblemStatementSection(robot);
     assertClosing(robot);
@@ -301,25 +301,26 @@ class JavaFxApplicationSmokeTest {
     verifyThat(SCREENSHOT_PREVIEW_SELECTOR, isVisible());
   }
 
-  private void assertLanguageCycling(final FxRobot robot) {
-    verifyThat(LANGUAGE_SELECTOR_SELECTOR, isVisible());
+  private void assertCodingLanguageCycling(final FxRobot robot) {
+    verifyThat(CODING_LANGUAGE_SELECTOR_SELECTOR, isVisible());
 
-    var languageSelector = robot.lookup(LANGUAGE_SELECTOR_SELECTOR).queryAs(ComboBox.class);
-    var initialLanguage = (CodingLanguage) languageSelector.getValue();
-    LOGGER.debug("Initial language: {}", initialLanguage);
+    var codingLanguageSelector =
+        robot.lookup(CODING_LANGUAGE_SELECTOR_SELECTOR).queryAs(ComboBox.class);
+    var initialLanguage = (CodingLanguage) codingLanguageSelector.getValue();
+    LOGGER.debug("Initial coding language: {}", initialLanguage);
 
     // Test next language cycling
-    LOGGER.debug("Pressing language next key combination");
+    LOGGER.debug("Pressing coding language next key combination");
     robot.push(languageNextKeyCombination);
     robot.sleep(500);
-    var nextLanguage = (CodingLanguage) languageSelector.getValue();
-    LOGGER.debug("Language after next key: {}", nextLanguage);
+    var nextLanguage = (CodingLanguage) codingLanguageSelector.getValue();
+    LOGGER.debug("Coding Language after next key: {}", nextLanguage);
     assertNotEquals(nextLanguage, initialLanguage);
 
     // Test previous language cycling
     robot.push(languagePreviousKeyCombination);
     robot.sleep(500);
-    var backToInitial = (CodingLanguage) languageSelector.getValue();
+    var backToInitial = (CodingLanguage) codingLanguageSelector.getValue();
     assertEquals(backToInitial, initialLanguage);
 
     // Test that cycling through all languages works
@@ -328,7 +329,7 @@ class JavaFxApplicationSmokeTest {
       robot.push(languageNextKeyCombination);
       robot.sleep(50);
     }
-    var backToStart = (CodingLanguage) languageSelector.getValue();
+    var backToStart = (CodingLanguage) codingLanguageSelector.getValue();
     assertEquals(backToStart, initialLanguage);
   }
 

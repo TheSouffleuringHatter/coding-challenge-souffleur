@@ -26,7 +26,7 @@ public class HeaderBox extends HBox {
 
   @FXML private Label shortcutModifierText;
   @FXML private Label shortcutKeysLabel;
-  @FXML private ComboBox<CodingLanguage> languageSelector;
+  @FXML private ComboBox<CodingLanguage> codingLanguageSelector;
   @FXML private Button closeButton;
 
   public HeaderBox(
@@ -67,8 +67,8 @@ public class HeaderBox extends HBox {
             Character.toString(languageNextKey.code));
     shortcutKeysLabel.setText(shortcutKeysText);
 
-    languageSelector.setItems(FXCollections.observableArrayList(CodingLanguage.values()));
-    languageSelector.setValue(CodingLanguage.JAVA);
+    codingLanguageSelector.setItems(FXCollections.observableArrayList(CodingLanguage.values()));
+    codingLanguageSelector.setValue(CodingLanguage.JAVA);
   }
 
   public void cycleToNextCodingLanguage() {
@@ -81,7 +81,7 @@ public class HeaderBox extends HBox {
 
   private void cycleCodingLanguageTo(CYCLE_DIRECTION direction) {
     var languages = CodingLanguage.values();
-    var currentValue = languageSelector.getValue();
+    var currentValue = codingLanguageSelector.getValue();
     var currentIndex = Arrays.asList(languages).indexOf(currentValue);
     int nextIndex;
 
@@ -94,7 +94,7 @@ public class HeaderBox extends HBox {
     var codingLanguage = languages[nextIndex];
     LOGGER.debug("Cycle to {} language: {}", direction, codingLanguage);
 
-    languageSelector.setValue(codingLanguage);
+    codingLanguageSelector.setValue(codingLanguage);
     anthropicService.setCodingLanguage(codingLanguage);
   }
 
