@@ -13,7 +13,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.layout.HBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,53 +67,35 @@ public class HeaderBox extends HBox {
             Character.toString(languageNextKey.code));
     shortcutKeysLabel.setText(shortcutKeysText);
 
-    setupCodingLanguageSelector();
-  }
-
-  public void cycleToNextLanguage() {
-    var languages = CodingLanguage.values();
-    var currentValue = languageSelector.getValue();
-    var currentIndex = Arrays.asList(languages).indexOf(currentValue);
-    var nextIndex = (currentIndex + 1) % languages.length;
-    var codingLanguage = languages[nextIndex];
-    LOGGER.debug("Cycle to next language: {}", codingLanguage);
-
-    languageSelector.setValue(codingLanguage);
-    anthropicService.setCodingLanguage(codingLanguage);
-  }
-
-  public void cycleToPreviousLanguage() {
-    var languages = CodingLanguage.values();
-    var currentValue = languageSelector.getValue();
-    var currentIndex = Arrays.asList(languages).indexOf(currentValue);
-    var previousIndex = (currentIndex - 1 + languages.length) % languages.length;
-    var codingLanguage = languages[previousIndex];
-    LOGGER.debug("Cycle to previous language: {}", codingLanguage);
-
-    languageSelector.setValue(codingLanguage);
-    anthropicService.setCodingLanguage(codingLanguage);
-  }
-
-  private void setupCodingLanguageSelector() {
     languageSelector.setItems(FXCollections.observableArrayList(CodingLanguage.values()));
     languageSelector.setValue(CodingLanguage.JAVA);
-    languageSelector.setCellFactory(
-        listView ->
-            new ListCell<>() {
-              @Override
-              protected void updateItem(final CodingLanguage language, final boolean empty) {
-                super.updateItem(language, empty);
-                setText(empty || language == null ? null : language.getDisplayName());
-              }
-            });
-    languageSelector.setButtonCell(
-        new ListCell<>() {
-          @Override
-          protected void updateItem(final CodingLanguage language, final boolean empty) {
-            super.updateItem(language, empty);
-            setText(empty || language == null ? null : language.getDisplayName());
-          }
-        });
+  }
+
+  public void cycleToNextCodingLanguage() {
+    cycleCodingLanguageTo(CYCLE_DIRECTION.NEXT);
+  }
+
+  public void cycleToPreviousCodingLanguage() {
+    cycleCodingLanguageTo(CYCLE_DIRECTION.PREVIOUS);
+  }
+
+  private void cycleCodingLanguageTo(CYCLE_DIRECTION direction) {
+    var languages = CodingLanguage.values();
+    var currentValue = languageSelector.getValue();
+    var currentIndex = Arrays.asList(languages).indexOf(currentValue);
+    int nextIndex;
+
+    if (direction == CYCLE_DIRECTION.NEXT) {
+      nextIndex = (currentIndex + 1) % languages.length;
+    } else {
+      nextIndex = (currentIndex - 1 + languages.length) % languages.length;
+    }
+
+    var codingLanguage = languages[nextIndex];
+    LOGGER.debug("Cycle to {} language: {}", direction, codingLanguage);
+
+    languageSelector.setValue(codingLanguage);
+    anthropicService.setCodingLanguage(codingLanguage);
   }
 
   private void loadFxml() {
@@ -127,6 +108,16 @@ public class HeaderBox extends HBox {
     } catch (IOException e) {
       LOGGER.warn("Failed to load FXML for HeaderBox", e);
       throw new RuntimeException("Failed to load HeaderBox FXML", e);
+    }
+  }
+
+  private enum CYCLE_DIRECTION {
+    NEXT,
+    PREVIOUS;
+
+    @Override
+    public String toString() {
+      return this.name().toLowerCase();
     }
   }
 }
