@@ -1,7 +1,9 @@
 package dev.coding_challenge_souffleur;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.testfx.api.FxAssert.verifyThat;
@@ -9,10 +11,12 @@ import static org.testfx.matcher.base.NodeMatchers.isInvisible;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 
 import com.sun.jna.platform.win32.Win32VK;
+import dev.coding_challenge_souffleur.model.CodingLanguage;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
@@ -63,6 +67,7 @@ class JavaFxApplicationSmokeTest {
   private static final String STATUS_LABEL_SELECTOR = "#statusLabel";
   private static final String HEADER_BOX_SELECTOR = "#headerBox";
   private static final String SCREENSHOT_PREVIEW_SELECTOR = "#screenshotPreview";
+  private static final String CODING_LANGUAGE_SELECTOR_SELECTOR = "#codingLanguageSelector";
 
   // Configuration-based key combinations - loaded from MicroProfile Config
   private KeyCodeCombination hideShowKeyCombination;
@@ -74,6 +79,8 @@ class JavaFxApplicationSmokeTest {
   private KeyCodeCombination switchToTab1Combination;
   private KeyCodeCombination switchToTab2Combination;
   private KeyCodeCombination switchToTab3Combination;
+  private KeyCodeCombination languagePreviousKeyCombination;
+  private KeyCodeCombination languageNextKeyCombination;
 
   private JavaFxApplication javaFxApplication;
   private WeldContainer weldContainer;
@@ -82,6 +89,11 @@ class JavaFxApplicationSmokeTest {
     if (win32VKs.size() == 2
         && (win32VKs.contains(Win32VK.VK_LSHIFT) || win32VKs.contains(Win32VK.VK_RSHIFT))) {
       return KeyCombination.SHIFT_DOWN;
+    }
+
+    if (win32VKs.size() == 2
+        && (win32VKs.contains(Win32VK.VK_LCONTROL) || win32VKs.contains(Win32VK.VK_RCONTROL))) {
+      return KeyCombination.CONTROL_DOWN;
     }
 
     throw new IllegalArgumentException("Unsupported Win32VKs: " + win32VKs);
@@ -99,6 +111,8 @@ class JavaFxApplicationSmokeTest {
       case VK_2 -> KeyCode.DIGIT2;
       case VK_3 -> KeyCode.DIGIT3;
       case VK_5 -> KeyCode.DIGIT5;
+      case VK_6 -> KeyCode.DIGIT6;
+      case VK_7 -> KeyCode.DIGIT7;
       default -> throw new IllegalArgumentException("Unsupported Win32VK: " + win32VK);
     };
   }
@@ -184,6 +198,17 @@ class JavaFxApplicationSmokeTest {
             Win32VK.valueOf(
                 config.getValue(ConfigurationKeys.APP_KEYBOARD_KEY_SWITCH_TO_TAB3, String.class)),
             matchingModifier);
+    languagePreviousKeyCombination =
+        createKeyCombination(
+            Win32VK.valueOf(
+                config.getValue(
+                    ConfigurationKeys.APP_KEYBOARD_KEY_CODING_LANGUAGE_PREVIOUS, String.class)),
+            matchingModifier);
+    var languageNextKeyString =
+        config.getValue(ConfigurationKeys.APP_KEYBOARD_KEY_CODING_LANGUAGE_NEXT, String.class);
+    LOGGER.debug("Language Next Key Config: {}", languageNextKeyString);
+    languageNextKeyCombination =
+        createKeyCombination(Win32VK.valueOf(languageNextKeyString), matchingModifier);
   }
 
   private void scrollDownUntilVisible(final FxRobot robot, String nodeQuery) {
@@ -255,6 +280,7 @@ class JavaFxApplicationSmokeTest {
     assertTrue(initialWindow.isShowing());
 
     assertHeader(robot);
+    assertCodingLanguageCycling(robot);
     assertContentPane(robot);
     assertProblemStatementSection(robot);
     assertClosing(robot);
@@ -273,6 +299,38 @@ class JavaFxApplicationSmokeTest {
 
     robot.push(screenshotKeyCombination);
     verifyThat(SCREENSHOT_PREVIEW_SELECTOR, isVisible());
+  }
+
+  private void assertCodingLanguageCycling(final FxRobot robot) {
+    verifyThat(CODING_LANGUAGE_SELECTOR_SELECTOR, isVisible());
+
+    var codingLanguageSelector =
+        robot.lookup(CODING_LANGUAGE_SELECTOR_SELECTOR).queryAs(ComboBox.class);
+    var initialLanguage = (CodingLanguage) codingLanguageSelector.getValue();
+    LOGGER.debug("Initial coding language: {}", initialLanguage);
+
+    // Test next language cycling
+    LOGGER.debug("Pressing coding language next key combination");
+    robot.push(languageNextKeyCombination);
+    robot.sleep(500);
+    var nextLanguage = (CodingLanguage) codingLanguageSelector.getValue();
+    LOGGER.debug("Coding Language after next key: {}", nextLanguage);
+    assertNotEquals(nextLanguage, initialLanguage);
+
+    // Test previous language cycling
+    robot.push(languagePreviousKeyCombination);
+    robot.sleep(500);
+    var backToInitial = (CodingLanguage) codingLanguageSelector.getValue();
+    assertEquals(backToInitial, initialLanguage);
+
+    // Test that cycling through all languages works
+    var allLanguages = CodingLanguage.values();
+    for (var i = 0; i < allLanguages.length; i++) {
+      robot.push(languageNextKeyCombination);
+      robot.sleep(50);
+    }
+    var backToStart = (CodingLanguage) codingLanguageSelector.getValue();
+    assertEquals(backToStart, initialLanguage);
   }
 
   private void assertContentPane(final FxRobot robot) throws TimeoutException {

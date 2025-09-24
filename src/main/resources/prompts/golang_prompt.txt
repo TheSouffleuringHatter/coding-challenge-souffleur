@@ -1,0 +1,21 @@
+# Go-Specific Requirements
+
+Use modern Go 1.18+ features appropriately:
+- Proper error handling with explicit error returns
+- Use generics for type-safe data structures when beneficial
+- Short variable declarations (:=) for local variables
+- Package-level functions and proper package organization
+- Struct embedding for composition over inheritance
+- Interfaces for defining behavior contracts
+- goroutines and channels for concurrent operations where appropriate
+- defer statements for cleanup operations
+- Use built-in functions: make(), append(), copy(), len(), cap()
+- Use appropriate data structures (map vs slice, sync.Map for concurrent access)
+- Self-explanatory variable names (row vs i, channel vs ch); common abbreviations OK
+- Follow Go naming conventions (exported names start with capital letter)
+- Use gofmt standard formatting
+- Prefer composition over inheritance
+- Handle errors explicitly, don't ignore them
+- Use context.Context for cancellation and timeouts
+- Use sync package for synchronization primitives
+- Zero values should be useful when possible

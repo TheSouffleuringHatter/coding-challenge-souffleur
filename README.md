@@ -76,18 +76,20 @@ Souffleur activation modifier is `Control on the righten side`.
 | `↑↓←→`  | Move          | Reposition the overlay window        |
 | `1/2/3` | 📑 Switch Tab | Switch between solution tabs         |
 | `4/5`   | ⬆️⬇️ Scroll   | Navigate through current tab content |
+| `6/7`   | 🔤 Language   | Cycle through programming languages  |
 | `W`     | 🚫 Hide/Show  | Toggle overlay visibility            |
 | `Q`     | ❌ Exit        | Exit Souffleur                       |
 
 ### Typical Workflow
 
 1. Position the overlay over your coding problem
-2. Press `R` to take a screenshot
-3. Press `T` to get AI analysis with multiple solution approaches
-4. Use `1/2/3` to switch between different solution tabs
-5. Use `4/5` to scroll through the current solution
-6. Press `W` to hide/show
-7. Press `Q` to exit when done
+2. Use `6/7` to select your preferred programming language (Java, Python, C#, JavaScript, Go)
+3. Press `R` to take a screenshot
+4. Press `T` to get AI analysis with multiple solution approaches
+5. Use `1/2/3` to switch between different solution tabs
+6. Use `4/5` to scroll through the current solution
+7. Press `W` to hide/show
+8. Press `Q` to exit when done
 
 ## 🛠 Configuration
 

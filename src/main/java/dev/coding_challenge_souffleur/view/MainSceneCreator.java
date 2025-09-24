@@ -49,9 +49,11 @@ class MainSceneCreator {
   private final Win32VK runAnalysisKey;
   private final Win32VK scrollUpKey;
   private final Win32VK scrollDownKey;
+  private final Win32VK languagePreviousKey;
+  private final Win32VK languageNextKey;
 
-  @Produces private ViewController viewController;
   @Produces private Scene mainScene;
+  @Produces private ViewController viewController;
   @Produces private MultiSolutionTabPane multiSolutionTabPane;
 
   @Inject
@@ -83,7 +85,11 @@ class MainSceneCreator {
       @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_SCROLL_UP)
           final Win32VK scrollUpKey,
       @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_SCROLL_DOWN)
-          final Win32VK scrollDownKey) {
+          final Win32VK scrollDownKey,
+      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_CODING_LANGUAGE_PREVIOUS)
+          final Win32VK languagePreviousKey,
+      @ConfigProperty(name = ConfigurationKeys.APP_KEYBOARD_KEY_CODING_LANGUAGE_NEXT)
+          final Win32VK languageNextKey) {
     this.anthropicService = anthropicService;
     this.screenshotService = screenshotService;
     this.platformRunLater = platformRunLater;
@@ -102,6 +108,8 @@ class MainSceneCreator {
     this.runAnalysisKey = runAnalysisKey;
     this.scrollUpKey = scrollUpKey;
     this.scrollDownKey = scrollDownKey;
+    this.languagePreviousKey = languagePreviousKey;
+    this.languageNextKey = languageNextKey;
   }
 
   @PostConstruct
@@ -117,11 +125,12 @@ class MainSceneCreator {
       throw new RuntimeException(e);
     }
 
-    this.mainScene = scene;
-    this.viewController = fxmlLoader.getController();
-    this.multiSolutionTabPane = new MultiSolutionTabPane();
+    mainScene = scene;
+    viewController = fxmlLoader.getController();
+    multiSolutionTabPane = new MultiSolutionTabPane();
     var headerBox =
         new HeaderBox(
+            anthropicService,
             exitKeyCode,
             modifierKeys,
             hideShowKey,
@@ -132,8 +141,10 @@ class MainSceneCreator {
             screenshotKey,
             runAnalysisKey,
             scrollUpKey,
-            scrollDownKey);
-    this.viewController.setup(
+            scrollDownKey,
+            languagePreviousKey,
+            languageNextKey);
+    viewController.setup(
         anthropicService,
         screenshotService,
         platformRunLater,

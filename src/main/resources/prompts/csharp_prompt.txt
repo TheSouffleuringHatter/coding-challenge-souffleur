@@ -1,0 +1,20 @@
+# C#-Specific Requirements
+
+Use modern C# 10+ features appropriately:
+- Nullable reference types and null-conditional operators (?., ??)
+- Pattern matching with switch expressions
+- Records for immutable data carriers
+- Init-only properties and required properties
+- Local functions for helper methods
+- LINQ for data querying and transformation
+- async/await for asynchronous operations
+- using statements for resource management
+- Expression-bodied members for simple methods
+- String interpolation ($"") over string concatenation
+- Generic collections (List<T>, Dictionary<TKey, TValue>, HashSet<T>)
+- Use appropriate data structures (Dictionary vs SortedDictionary, List vs LinkedList)
+- Self-explanatory variable names (row vs i, channel vs ch); common abbreviations OK
+- Follow C# naming conventions (PascalCase for public members, camelCase for local variables)
+- Use var for local type inference when type is obvious
+- Prefer readonly fields over mutable state
+- Use System.Collections.Generic and System.Linq namespaces appropriately

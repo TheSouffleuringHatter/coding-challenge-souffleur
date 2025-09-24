@@ -1,0 +1,19 @@
+# Python-Specific Requirements
+
+Use modern Python 3.9+ features appropriately:
+- Type hints for function parameters and return values
+- F-strings for string formatting
+- List/dict comprehensions where appropriate
+- Context managers (with statements) for resource management
+- Dataclasses or NamedTuple for data carriers
+- Enum for constants and options
+- pathlib.Path for file operations instead of os.path
+- Use collections.defaultdict, collections.Counter when beneficial
+- Exception handling with specific exception types
+- Generator expressions for memory efficiency
+- Use appropriate data structures (list vs deque, set vs list for membership)
+- Self-explanatory variable names (row vs i, channel vs ch); common abbreviations OK
+- Follow PEP 8 style guidelines
+- Use snake_case for variables and functions
+- Use built-in functions: any(), all(), zip(), enumerate(), sorted()
+- Prefer itertools for complex iterations

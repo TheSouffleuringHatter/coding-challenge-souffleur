@@ -51,7 +51,15 @@ enum KeyCommand {
 
   TOGGLE_PROBLEM_STATEMENT(
       ConfigurationKeys.APP_KEYBOARD_KEY_TOGGLE_PROBLEM_STATEMENT,
-      (deps) -> deps.viewController().toggleProblemStatement());
+      (deps) -> deps.viewController().toggleProblemStatement()),
+
+  CODING_LANGUAGE_PREVIOUS(
+      ConfigurationKeys.APP_KEYBOARD_KEY_CODING_LANGUAGE_PREVIOUS,
+      (deps) -> deps.viewController().getHeaderBox().cycleToPreviousCodingLanguage()),
+
+  CODING_LANGUAGE_NEXT(
+      ConfigurationKeys.APP_KEYBOARD_KEY_CODING_LANGUAGE_NEXT,
+      (deps) -> deps.viewController().getHeaderBox().cycleToNextCodingLanguage());
 
   private final String keyConfigProperty;
   private final Consumer<KeyCommandDependencies> action;

@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 public class AnthropicService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AnthropicService.class);
+
   private static final long DEFAULT_RETRY_BASE_DELAY_MS = 200;
   private static final int DEFAULT_RETRY_MAX_ATTEMPTS = 3;
 
@@ -39,7 +40,11 @@ public class AnthropicService {
   private final FileService fileService;
   private final Model claudeModel;
 
-  private String systemMessage;
+  private CodingLanguage currentLanguage = CodingLanguage.JAVA;
+
+  private String baseSystemMessage;
+  private String textResponsePrompt;
+  private String assistantMessage;
   private String userMessage;
   private String multiSolutionMockText;
 
@@ -89,14 +94,17 @@ public class AnthropicService {
     return ContentBlockParam.ofImage(ImageBlockParam.builder().source(imageSource).build());
   }
 
+  public void setCodingLanguage(final CodingLanguage codingLanguage) {
+    LOGGER.trace("Updated current coding language to: {}", codingLanguage);
+    this.currentLanguage = codingLanguage;
+  }
+
   @PostConstruct
   void loadPrompts() {
     try {
-      this.systemMessage =
-          fileService.loadResourceFile("/prompts/system_prompt.txt")
-              + fileService.loadResourceFile("/prompts/text_response_prompt.txt")
-              + fileService.loadResourceFile("/prompts/java_prompt.txt")
-              + fileService.loadResourceFile("/prompts/assistant_message.txt");
+      this.baseSystemMessage = fileService.loadResourceFile("/prompts/system_prompt.txt");
+      this.textResponsePrompt = fileService.loadResourceFile("/prompts/text_response_prompt.txt");
+      this.assistantMessage = fileService.loadResourceFile("/prompts/assistant_message.txt");
       this.userMessage = fileService.loadResourceFile("/prompts/user_message.txt");
       this.multiSolutionMockText = fileService.loadResourceFile("/prompts/multi_solution_mock.txt");
     } catch (final IOException e) {
@@ -157,6 +165,27 @@ public class AnthropicService {
         1);
   }
 
+  /**
+   * Builds the complete system message by combining base prompts with language-specific prompt.
+   *
+   * @return the complete system message
+   */
+  String buildSystemMessage() {
+    try {
+      var languagePrompt = fileService.loadResourceFile(currentLanguage.getPromptResourcePath());
+      return baseSystemMessage + textResponsePrompt + languagePrompt + assistantMessage;
+    } catch (final IOException e) {
+      LOGGER.warn(
+          "Failed to load language-specific prompt for {}, falling back to Java", currentLanguage);
+      try {
+        var javaPrompt = fileService.loadResourceFile(CodingLanguage.JAVA.getPromptResourcePath());
+        return baseSystemMessage + textResponsePrompt + javaPrompt + assistantMessage;
+      } catch (final IOException fallbackException) {
+        throw new RuntimeException("Failed to load fallback Java prompt", fallbackException);
+      }
+    }
+  }
+
   private MultiSolutionResult processMultiSolutionRequest(
       final byte[] imageBytes,
       final MultiSolutionResult result,
@@ -194,6 +223,7 @@ public class AnthropicService {
   }
 
   private MessageCreateParams createMessageParams(final byte[] imageBytes) {
+    var systemMessage = buildSystemMessage();
     return MessageCreateParams.builder()
         .maxTokens(10000)
         .system(systemMessage)
