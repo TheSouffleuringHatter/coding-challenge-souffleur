@@ -58,13 +58,13 @@ dependencies {
   implementation 'com.mikesamuel:json-sanitizer:1.2.3'
   testImplementation 'io.smallrye.config:smallrye-config:3.13.4'
   testImplementation 'org.jboss.weld:weld-junit5:5.0.2.Final'
-  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.13.4'
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.14.0'
   testImplementation libs.mockito
   testImplementation 'org.mockito:mockito-junit-jupiter:5.19.0'
   mockitoAgent(libs.mockito) { transitive = false }
   testImplementation 'org.awaitility:awaitility:4.3.0'
-  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.13.4'
-  testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.13.4'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.14.0'
+  testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.14.0'
   testImplementation 'org.testfx:testfx-core:4.0.18'
   testImplementation 'org.testfx:testfx-junit5:4.0.18'
 }
