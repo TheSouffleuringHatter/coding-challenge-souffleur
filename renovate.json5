@@ -4,6 +4,5 @@
     'config:recommended',
     ':disableDependencyDashboard'
   ],
-  automerge: true,
-  prCreation: 'immediate'
+  automerge: true
 }
