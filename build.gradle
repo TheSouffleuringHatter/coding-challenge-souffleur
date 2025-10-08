@@ -56,7 +56,7 @@ dependencies {
   runtimeOnly 'io.smallrye.config:smallrye-config:3.14.1'
   implementation 'com.anthropic:anthropic-java:2.8.1'
   testImplementation 'io.smallrye.config:smallrye-config:3.14.1'
-  testImplementation 'org.jboss.weld:weld-junit5:5.0.2.Final'
+  testImplementation 'org.jboss.weld:weld-junit5:5.0.3.Final'
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.14.0'
   testImplementation libs.mockito
   testImplementation 'org.mockito:mockito-junit-jupiter:5.20.0'
