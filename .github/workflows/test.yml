@@ -29,8 +29,14 @@ jobs:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
-      - name: Run tests
+      - name: Run tests (with Claude API)
+        if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
         run: ./gradlew test jacocoTestReport --continue
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      - name: Run tests (without Claude API)
+        if: github.ref != 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+        run: ./gradlew test jacocoTestReport --continue -PskipClaudeApiTests
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       - name: Sonar
