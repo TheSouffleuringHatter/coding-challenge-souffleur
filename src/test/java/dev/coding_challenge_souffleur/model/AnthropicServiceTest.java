@@ -12,6 +12,7 @@ import org.jboss.weld.junit5.auto.AddExtensions;
 import org.jboss.weld.junit5.auto.AddPackages;
 import org.jboss.weld.junit5.auto.EnableAutoWeld;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -73,6 +74,7 @@ class AnthropicServiceTest {
   }
 
   @Test
+  @Tag("useClaudeApi")
   void testAnalyseMultiSolution_WithImageBytes_LiveSmoke_whenApiKeyPresent() {
     // Single real API call to verify actual API integration
     var future = anthropicService.analyseMultiSolution(testImage, null);

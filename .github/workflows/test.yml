@@ -30,7 +30,7 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
       - name: Run tests
-        run: ./gradlew test jacocoTestReport --continue
+        run: ./gradlew test jacocoTestReport --continue${{ (github.event_name == 'push' && github.ref != 'refs/heads/main') && ' -PskipClaudeApiTests' || '' }}
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       - name: Sonar

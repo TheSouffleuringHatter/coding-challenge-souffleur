@@ -69,7 +69,11 @@ dependencies {
 }
 
 test {
-  useJUnitPlatform()
+  useJUnitPlatform {
+    if (project.hasProperty('skipClaudeApiTests')) {
+      excludeTags 'useClaudeApi'
+    }
+  }
 
   // See https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
   jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}"
