@@ -4,7 +4,7 @@ import dev.coding_challenge_souffleur.model.AnthropicService;
 import dev.coding_challenge_souffleur.model.MultiSolutionResult;
 import dev.coding_challenge_souffleur.model.ScreenshotService;
 import dev.coding_challenge_souffleur.view.components.ContentPaneController;
-import dev.coding_challenge_souffleur.view.components.FormattedTextFlow;
+import dev.coding_challenge_souffleur.view.components.VirtualizedTextDisplay;
 import dev.coding_challenge_souffleur.view.components.HeaderBox;
 import dev.coding_challenge_souffleur.view.components.MultiSolutionTabPane;
 import java.util.concurrent.CompletableFuture;
@@ -30,7 +30,7 @@ public class ViewController {
   private MultiSolutionTabPane multiSolutionTabPane;
   private HeaderBox headerBox;
   @FXML private VBox contentPane;
-  @FXML private FormattedTextFlow problemStatementFlow;
+  @FXML private VirtualizedTextDisplay problemStatementFlow;
   @FXML private HBox headerBoxPlaceholder;
   @FXML private Label statusLabel;
   @FXML private VBox problemStatementSection;

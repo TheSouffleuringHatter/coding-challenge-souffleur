@@ -18,11 +18,11 @@ public class SolutionTabContent extends ScrollPane {
 
   private final Tab tab;
 
-  @FXML private FormattedTextFlow solutionDescriptionFlow;
-  @FXML private FormattedTextFlow edgeCasesFlow;
-  @FXML private FormattedTextFlow solutionCodeFlow;
-  @FXML private FormattedTextFlow timeComplexityFlow;
-  @FXML private FormattedTextFlow spaceComplexityFlow;
+  @FXML private VirtualizedTextDisplay solutionDescriptionFlow;
+  @FXML private VirtualizedTextDisplay edgeCasesFlow;
+  @FXML private VirtualizedTextDisplay solutionCodeFlow;
+  @FXML private VirtualizedTextDisplay timeComplexityFlow;
+  @FXML private VirtualizedTextDisplay spaceComplexityFlow;
 
   public SolutionTabContent() {
     var loader = new FXMLLoader(getClass().getResource(SOLUTION_TAB_FXML));
