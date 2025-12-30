@@ -12,6 +12,7 @@ import static org.testfx.matcher.base.NodeMatchers.isVisible;
 
 import com.sun.jna.platform.win32.Win32VK;
 import dev.coding_challenge_souffleur.model.CodingLanguage;
+import dev.coding_challenge_souffleur.view.components.VirtualizedTextDisplay;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -24,7 +25,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyCombination.Modifier;
-import dev.coding_challenge_souffleur.view.components.VirtualizedTextDisplay;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.Window;

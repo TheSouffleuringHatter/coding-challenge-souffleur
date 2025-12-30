@@ -8,9 +8,6 @@ import org.fxmisc.richtext.LineNumberFactory;
  * A memory-efficient text display component using RichTextFX's virtualized rendering. This
  * component replaces FormattedTextFlow's node-per-line approach with virtualized scrolling, which
  * only renders visible lines in the viewport.
- *
- * <p>Memory savings: ~90% reduction for large code blocks (15+ MB → 1-2 MB) by avoiding creation
- * of thousands of JavaFX Text nodes.
  */
 public class VirtualizedTextDisplay extends StackPane {
 
