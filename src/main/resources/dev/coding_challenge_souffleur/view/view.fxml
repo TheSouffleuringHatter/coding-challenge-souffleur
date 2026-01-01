@@ -24,7 +24,7 @@
     <!-- HeaderBox will be dynamically added here -->
   </HBox>
   <VBox managed="false" styleClass="content-pane" visible="false" fx:id="contentPane">
-    <Label styleClass="status-label" text="Analyzing..." fx:id="statusLabel"/>
+    <Label styleClass="status-label" text="Analyzing..." wrapText="true" fx:id="statusLabel"/>
     <TabPane styleClass="solution-tabs" fx:id="solutionTabPanePlaceholder">
       <!-- Tabs will be dynamically added here -->
     </TabPane>

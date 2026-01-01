@@ -87,6 +87,13 @@ public class AnthropicService {
   }
 
   private static ContentBlockParam createImageBlock(final byte[] imageBytes) {
+    var pngSizeMB = imageBytes.length / (1024.0 * 1024.0);
+    var estimatedBase64SizeMB = pngSizeMB * 1.33; // Base64 inflation
+    LOGGER.debug(
+        "Image size - PNG: {} MB, Estimated Base64: {} MB",
+        String.format("%.2f", pngSizeMB),
+        String.format("%.2f", estimatedBase64SizeMB));
+
     var base64Image = Base64.getEncoder().encodeToString(imageBytes);
     var imageSource =
         Base64ImageSource.builder().data(base64Image).mediaType(MediaType.IMAGE_PNG).build();
