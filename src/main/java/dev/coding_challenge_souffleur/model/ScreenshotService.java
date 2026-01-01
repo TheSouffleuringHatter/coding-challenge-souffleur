@@ -17,6 +17,8 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.robot.Robot;
 import javafx.stage.Screen;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -30,6 +32,8 @@ public class ScreenshotService {
   private static final Logger LOGGER = LoggerFactory.getLogger(ScreenshotService.class);
   private static final String DEFAULT_SCREENSHOT_FILE_NAME_PREFIX =
       "screenshot." + ImageService.IMAGE_FORMAT;
+  private static final int CAPTURED_IMAGE_MAX_WIDTH_PIXELS = 1600;
+  private static final int CAPTURED_IMAGE_MAX_HEIGHT_PIXELS = 900;
 
   private final ImageService imageService;
   private final boolean saveScreenshotToFile;
@@ -112,29 +116,57 @@ public class ScreenshotService {
     return fxImage;
   }
 
-  private Image captureScreenImage(final Rectangle2D bounds) {
+  private static Image captureScreenImage(final Rectangle2D bounds) {
     var robot = new Robot();
     LOGGER.debug(
-        "Capturing screenshot: x={}, y={}, width={}, height={}",
+        "Capturing screenshot: boundsMinX={}, boundMinY={}, boundsWidth={}, boundsHeight={}",
         bounds.getMinX(),
         bounds.getMinY(),
         bounds.getWidth(),
         bounds.getHeight());
 
     // Ensure the coordinates and dimensions are whole numbers (not fractional)
-    var x = (int) Math.floor(bounds.getMinX());
-    var y = (int) Math.floor(bounds.getMinY());
-    var width = (int) Math.ceil(bounds.getWidth());
-    var height = (int) Math.ceil(bounds.getHeight());
+    var boundsMinX = (int) Math.floor(bounds.getMinX());
+    var boundMinY = (int) Math.floor(bounds.getMinY());
+    var boundsWidth = (int) Math.ceil(bounds.getWidth());
+    var boundsHeight = (int) Math.ceil(bounds.getHeight());
 
-    // Add a small delay to ensure the screen is ready for capture
     try {
+      // Add a small delay to ensure the screen is ready for capture
       Thread.sleep(100);
-    } catch (final InterruptedException e) {
+    } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
     }
 
-    return robot.getScreenCapture(null, x, y, width, height);
+    var capturedImage =
+        robot.getScreenCapture(null, boundsMinX, boundMinY, boundsWidth, boundsHeight);
+    if (boundsWidth <= CAPTURED_IMAGE_MAX_WIDTH_PIXELS
+        && boundsHeight <= CAPTURED_IMAGE_MAX_HEIGHT_PIXELS) {
+      LOGGER.debug(
+          "Image already within limits ({}x{}), no resize needed", boundsWidth, boundsHeight);
+      return capturedImage;
+    }
+
+    int newWidth, newHeight;
+    if (boundsWidth > boundsHeight) {
+      // Width is the limiting dimension
+      newWidth = CAPTURED_IMAGE_MAX_WIDTH_PIXELS;
+      newHeight = (int) ((double) boundsHeight * CAPTURED_IMAGE_MAX_WIDTH_PIXELS / boundsWidth);
+    } else {
+      // Height is the limiting dimension
+      newHeight = CAPTURED_IMAGE_MAX_HEIGHT_PIXELS;
+      newWidth = (int) ((double) boundsWidth * CAPTURED_IMAGE_MAX_HEIGHT_PIXELS / boundsHeight);
+    }
+    LOGGER.debug(
+        "Resizing image from {}x{} to {}x{}", boundsWidth, boundsHeight, newWidth, newHeight);
+    var resizedImage = new WritableImage(newWidth, newHeight);
+
+    var capturedImageView = new ImageView(capturedImage);
+    capturedImageView.setSmooth(true);
+    capturedImageView.setPreserveRatio(true);
+    capturedImageView.setFitWidth(newWidth);
+    capturedImageView.setFitHeight(newHeight);
+    return capturedImageView.snapshot(null, resizedImage);
   }
 
   private void saveScreenshotToFile(final Image image) {
