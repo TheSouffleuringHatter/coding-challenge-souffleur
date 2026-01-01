@@ -5,7 +5,7 @@
   Root is ScrollPane because the custom class extends ScrollPane.
   Note: No fx:controller attribute; controller is set programmatically by SolutionTabContent.
 -->
-<?import dev.coding_challenge_souffleur.view.components.FormattedTextFlow?>
+<?import dev.coding_challenge_souffleur.view.components.VirtualizedTextDisplay?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
@@ -14,40 +14,31 @@
   fitToWidth="true" styleClass="solution-scroll-pane">
   <VBox>
     <!-- Solution Description -->
-    <FormattedTextFlow fx:id="solutionDescriptionFlow" id="solutionDescriptionFlow"
-      styleClass="text-content">
-      <Text text="Loading..."/>
-    </FormattedTextFlow>
+    <VirtualizedTextDisplay fx:id="solutionDescriptionFlow" id="solutionDescriptionFlow"
+      styleClass="text-content"/>
 
     <!-- Edge Cases Section -->
     <VBox styleClass="content-section">
       <Label text="Edge Cases" styleClass="section-title"/>
-      <FormattedTextFlow fx:id="edgeCasesFlow" id="edgeCasesFlow" styleClass="text-content">
-        <Text text="Loading..."/>
-      </FormattedTextFlow>
+      <VirtualizedTextDisplay fx:id="edgeCasesFlow" id="edgeCasesFlow"
+        styleClass="text-content"/>
     </VBox>
 
     <!-- Solution Code -->
-    <FormattedTextFlow fx:id="solutionCodeFlow" id="solutionCodeFlow">
-      <Text text="Loading..."/>
-    </FormattedTextFlow>
+    <VirtualizedTextDisplay fx:id="solutionCodeFlow" id="solutionCodeFlow"/>
 
     <!-- Time Complexity Section -->
     <VBox styleClass="content-section">
       <Label text="Time Complexity" styleClass="section-title"/>
-      <FormattedTextFlow fx:id="timeComplexityFlow" id="timeComplexityFlow"
-        styleClass="text-content">
-        <Text text="Loading..."/>
-      </FormattedTextFlow>
+      <VirtualizedTextDisplay fx:id="timeComplexityFlow" id="timeComplexityFlow"
+        styleClass="text-content"/>
     </VBox>
 
     <!-- Space Complexity Section -->
     <VBox styleClass="content-section">
       <Label text="Space Complexity" styleClass="section-title"/>
-      <FormattedTextFlow fx:id="spaceComplexityFlow" id="spaceComplexityFlow"
-        styleClass="text-content">
-        <Text text="Loading..."/>
-      </FormattedTextFlow>
+      <VirtualizedTextDisplay fx:id="spaceComplexityFlow" id="spaceComplexityFlow"
+        styleClass="text-content"/>
     </VBox>
   </VBox>
 </fx:root>
