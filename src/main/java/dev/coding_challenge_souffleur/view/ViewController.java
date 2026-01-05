@@ -122,7 +122,7 @@ public class ViewController {
           // Use the enhanced MultiSolutionTabPane to display the result
           multiSolutionTabPane.displayResult(result);
 
-          // Handle problem statement display using enhanced FormattedTextFlow
+          // Handle problem statement display using VirtualizedTextDisplay
           var problem = result.getSharedProblemStatement();
           if (problem.isPresent()) {
             problemStatementFlow.displayProblemStatement(problem.get());
