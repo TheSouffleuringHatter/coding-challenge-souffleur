@@ -120,9 +120,9 @@ class JavaFxApplicationSmokeTest {
     assertInstanceOf(VirtualizedTextDisplay.class, flowNode);
     var virtualizedTextDisplay = (VirtualizedTextDisplay) flowNode;
 
-    // Extract text from VirtualizedTextDisplay's CodeArea
-    var codeArea = (org.fxmisc.richtext.CodeArea) virtualizedTextDisplay.lookup(".code-area");
-    return codeArea != null ? codeArea.getText() : "";
+    // Extract text from VirtualizedTextDisplay's CodeArea (direct child access)
+    var codeArea = (org.fxmisc.richtext.CodeArea) virtualizedTextDisplay.getChildren().getFirst();
+    return codeArea.getText();
   }
 
   private static void assertSelectedTabHasCoreNodes(final VBox contentBox) {
