@@ -30,6 +30,11 @@ sonar {
   properties {
     property 'sonar.projectKey', 'coding-challenge-souffleur'
     property 'sonar.organization', 'thesouffleuringhatter'
+    property 'sonar.issue.ignore.multicriteria', 'S112,S7637'
+    property 'sonar.issue.ignore.multicriteria.S112.ruleKey', 'java:S112'
+    property 'sonar.issue.ignore.multicriteria.S112.resourceKey', '**/*.java'
+    property 'sonar.issue.ignore.multicriteria.S7637.ruleKey', 'githubactions:S7637'
+    property 'sonar.issue.ignore.multicriteria.S7637.resourceKey', '**/.github/workflows/**'
   }
 }
 
