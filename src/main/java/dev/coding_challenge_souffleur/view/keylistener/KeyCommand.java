@@ -5,39 +5,39 @@ import java.util.function.Consumer;
 import javafx.scene.control.ScrollPane;
 
 enum KeyCommand {
-  EXIT(ConfigurationKeys.APP_KEYBOARD_KEY_EXIT, (deps) -> deps.exitApplication().run()),
+  EXIT(ConfigurationKeys.APP_KEYBOARD_KEY_EXIT, deps -> deps.exitApplication().run()),
 
   HIDE_SHOW(
       ConfigurationKeys.APP_KEYBOARD_KEY_HIDE_SHOW,
-      (deps) -> deps.hideShowState().toggleVisibility()),
+      deps -> deps.hideShowState().toggleVisibility()),
 
   TAKE_SCREENSHOT(
       ConfigurationKeys.APP_KEYBOARD_KEY_SCREENSHOT,
-      (deps) -> deps.screenshotDisplayService().takeScreenshotOfForegroundWindowAndShowPreview()),
+      deps -> deps.screenshotDisplayService().takeScreenshotOfForegroundWindowAndShowPreview()),
 
   MOVE_LEFT(
       ConfigurationKeys.APP_KEYBOARD_KEY_MOVE_LEFT,
-      (deps) -> deps.stage().setX(deps.stage().getX() - Constants.MOVE_AMOUNT)),
+      deps -> deps.stage().setX(deps.stage().getX() - Constants.MOVE_AMOUNT)),
 
   MOVE_RIGHT(
       ConfigurationKeys.APP_KEYBOARD_KEY_MOVE_RIGHT,
-      (deps) -> deps.stage().setX(deps.stage().getX() + Constants.MOVE_AMOUNT)),
+      deps -> deps.stage().setX(deps.stage().getX() + Constants.MOVE_AMOUNT)),
 
   MOVE_DOWN(
       ConfigurationKeys.APP_KEYBOARD_KEY_MOVE_DOWN,
-      (deps) -> deps.stage().setY(deps.stage().getY() + Constants.MOVE_AMOUNT)),
+      deps -> deps.stage().setY(deps.stage().getY() + Constants.MOVE_AMOUNT)),
 
   MOVE_UP(
       ConfigurationKeys.APP_KEYBOARD_KEY_MOVE_UP,
-      (deps) -> deps.stage().setY(deps.stage().getY() - Constants.MOVE_AMOUNT)),
+      deps -> deps.stage().setY(deps.stage().getY() - Constants.MOVE_AMOUNT)),
 
   RUN_ANALYSIS(
       ConfigurationKeys.APP_KEYBOARD_KEY_RUN_ANALYSIS,
-      (deps) -> deps.viewController().executeMultiSolutionAnalysis()),
+      deps -> deps.viewController().executeMultiSolutionAnalysis()),
 
   RUN_MOCK_ANALYSIS(
       ConfigurationKeys.APP_KEYBOARD_KEY_RUN_MOCK_ANALYSIS,
-      (deps) -> deps.viewController().executeMultiSolutionMockAnalysis()),
+      deps -> deps.viewController().executeMultiSolutionMockAnalysis()),
 
   SCROLL_DOWN(ConfigurationKeys.APP_KEYBOARD_KEY_SCROLL_DOWN, deps -> scroll(deps, 0.2)),
 
@@ -51,15 +51,15 @@ enum KeyCommand {
 
   TOGGLE_PROBLEM_STATEMENT(
       ConfigurationKeys.APP_KEYBOARD_KEY_TOGGLE_PROBLEM_STATEMENT,
-      (deps) -> deps.viewController().toggleProblemStatement()),
+      deps -> deps.viewController().toggleProblemStatement()),
 
   CODING_LANGUAGE_PREVIOUS(
       ConfigurationKeys.APP_KEYBOARD_KEY_CODING_LANGUAGE_PREVIOUS,
-      (deps) -> deps.viewController().getHeaderBox().cycleToPreviousCodingLanguage()),
+      deps -> deps.viewController().getHeaderBox().cycleToPreviousCodingLanguage()),
 
   CODING_LANGUAGE_NEXT(
       ConfigurationKeys.APP_KEYBOARD_KEY_CODING_LANGUAGE_NEXT,
-      (deps) -> deps.viewController().getHeaderBox().cycleToNextCodingLanguage());
+      deps -> deps.viewController().getHeaderBox().cycleToNextCodingLanguage());
 
   private final String keyConfigProperty;
   private final Consumer<KeyCommandDependencies> action;
