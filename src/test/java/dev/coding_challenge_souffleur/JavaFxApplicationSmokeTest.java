@@ -12,6 +12,7 @@ import static org.testfx.matcher.base.NodeMatchers.isVisible;
 
 import com.sun.jna.platform.win32.Win32VK;
 import dev.coding_challenge_souffleur.model.CodingLanguage;
+import dev.coding_challenge_souffleur.view.components.VirtualizedTextDisplay;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -25,8 +26,6 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyCombination.Modifier;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.eclipse.microprofile.config.ConfigProvider;
@@ -118,17 +117,12 @@ class JavaFxApplicationSmokeTest {
   }
 
   private static String getFlowText(final Node flowNode) {
-    assertInstanceOf(TextFlow.class, flowNode);
+    assertInstanceOf(VirtualizedTextDisplay.class, flowNode);
+    var virtualizedTextDisplay = (VirtualizedTextDisplay) flowNode;
 
-    var textFlow = (TextFlow) flowNode;
-    var sb = new StringBuilder();
-    for (var child : textFlow.getChildren()) {
-      if (child instanceof Text text) {
-        sb.append(text.getText());
-      }
-    }
-
-    return sb.toString();
+    // Extract text from VirtualizedTextDisplay's CodeArea (direct child access)
+    var codeArea = (org.fxmisc.richtext.CodeArea) virtualizedTextDisplay.getChildren().getFirst();
+    return codeArea.getText();
   }
 
   private static void assertSelectedTabHasCoreNodes(final VBox contentBox) {
