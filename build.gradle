@@ -26,13 +26,6 @@ application {
   applicationDefaultJvmArgs = ['--add-exports=javafx.graphics/com.sun.glass.ui=ALL-UNNAMED']
 }
 
-sonar {
-  properties {
-    property 'sonar.projectKey', 'coding-challenge-souffleur'
-    property 'sonar.organization', 'thesouffleuringhatter'
-  }
-}
-
 configurations {
   mockitoAgent
 }
