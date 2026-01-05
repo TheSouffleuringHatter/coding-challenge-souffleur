@@ -145,7 +145,7 @@ public class ViewController {
   private CompletableFuture<MultiSolutionResult> takeScreenshotAndAnalyzeMultiSolution(
       final Consumer<MultiSolutionResult> progressCallback, final Consumer<String> statusCallback) {
 
-    var optionalScreenshot = screenshotService.takeScreenshotOfDesktop();
+    var optionalScreenshot = screenshotService.takeScreenshotOfForegroundWindow();
     if (optionalScreenshot.isEmpty()) {
       var failureMessage = "Failed to take screenshot";
       statusCallback.accept(failureMessage);
