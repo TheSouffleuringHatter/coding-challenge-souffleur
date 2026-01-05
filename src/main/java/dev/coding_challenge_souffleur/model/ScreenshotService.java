@@ -147,7 +147,8 @@ public class ScreenshotService {
       return capturedImage;
     }
 
-    int newWidth, newHeight;
+    int newWidth;
+    int newHeight;
     if (boundsWidth > boundsHeight) {
       // Width is the limiting dimension
       newWidth = CAPTURED_IMAGE_MAX_WIDTH_PIXELS;
