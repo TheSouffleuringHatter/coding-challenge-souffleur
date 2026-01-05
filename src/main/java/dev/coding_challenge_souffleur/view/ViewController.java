@@ -94,6 +94,16 @@ public class ViewController {
   }
 
   public void executeMultiSolutionAnalysis() {
+    final var optionalPresentScreenshot = this.screenshotService.getScreenshot();
+    if (optionalPresentScreenshot.isPresent()) {
+      this.updateStatus("Sending present screenshot for multi-solution analysis...");
+      LOGGER.trace("Coordinating multi-solution analysis for present screenshot...");
+
+      anthropicService.analyseMultiSolution(
+          optionalPresentScreenshot.get(), this::displayMultiSolutionResult);
+      return;
+    }
+
     var future =
         takeScreenshotAndAnalyzeMultiSolution(this::displayMultiSolutionResult, this::updateStatus);
     handleMultiSolutionCompletion(future, "multi-solution analysis");
@@ -156,8 +166,8 @@ public class ViewController {
     var screenshot = optionalScreenshot.get();
     screenshotDisplayService.showScreenshotAsPreview(screenshot);
 
-    statusCallback.accept("Sending screenshot for multi-solution analysis...");
-    LOGGER.trace("Coordinating multi-solution analysis...");
+    statusCallback.accept("Sending new screenshot for multi-solution analysis...");
+    LOGGER.trace("Coordinating multi-solution analysis for new screenshot...");
 
     return anthropicService.analyseMultiSolution(screenshot, progressCallback);
   }
