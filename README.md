@@ -22,20 +22,17 @@ change.
 
 ## ✨ The Souffleur's Magic Tricks
 
-**🫥 Invisible to Screen Sharing**: The overlay automatically excludes itself from screen captures
-and recordings — perfect for interviews, presentations, or streaming where you want AI assistance
-without anyone knowing.
+**🫥 Invisible to Screen Sharing**: Automatically excluded from screen captures and recordings using
+Windows `SetWindowDisplayAffinity` API — perfect for interviews, presentations, or streaming.
 
-**👻 Ghost Mode**: Transparent overlay that appears over any application without interfering with the
-underlying interface.
+**👻 Ghost Mode**: Transparent overlay that lets mouse clicks and hovers pass through to underlying
+applications. You can interact with whatever is behind it as if the Souffleur wasn't there.
 
-**🎯 Keyboard Only Usage & Keyboard Event Absorption**: Uses native Windows keyboard hooks to "suck
-up" all keyboard events within the application, preventing keyloggers or screen readers from
-detecting your interactions with the AI.
+**🎯 Keyboard Event Absorption**: Native Windows keyboard hooks intercept and consume registered key
+combinations, preventing keyloggers or monitoring tools from detecting your AI interactions.
 
-**📑 Multi-Solution Analysis**: Provides up to 3 different solution approaches for each coding
-problem with descriptive tabs like "Hash Map Approach", "Two Pointers", "Sliding Window" —
-giving you multiple perspectives and learning opportunities.
+**📑 Multi-Solution Analysis**: Get up to 3 different approaches for each problem (e.g., "Hash
+Map", "Two Pointers", "Sliding Window") with intelligent naming.
 
 ## 🚀 Quick Start
 
@@ -151,7 +148,12 @@ the application window.
 This tells Windows to exclude the window from any screen capture, recording, or
 sharing — including OBS, Teams, Zoom, and Windows built-in screenshot tools.
 
-Additionally, the Souffleur window never gets activated and is transparent, even to mouse clicks.
+Additionally, the Souffleur window uses the
+[WS_EX_NOACTIVATE]([https://learn.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles](https://learn.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles))
+extended window style, which ensures the window never gets activated and allows mouse hovers and
+clicks to pass through to the underlying applications. This makes the overlay truly
+non-intrusive — you can interact with whatever is behind it without the Souffleur window
+intercepting your mouse input.
 
 You can **test** this functionality yourself locally by running Souffleur,
 then running a screen capture tool like
@@ -160,6 +162,7 @@ then running a screen capture tool like
 Windows details:
 
 - https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowdisplayaffinity
+- https://learn.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles
 
 Implemented in:
 [WindowFromScreenCaptureHider.java](src/main/java/dev/coding_challenge_souffleur/view/WindowFromScreenCaptureHider.java)
