@@ -60,7 +60,7 @@ dependencies {
   implementation 'net.java.dev.jna:jna-platform:5.18.1'
   implementation 'org.eclipse.microprofile.config:microprofile-config-api:3.1'
   runtimeOnly 'io.smallrye.config:smallrye-config:3.16.0'
-  implementation 'com.anthropic:anthropic-java:2.14.0'
+  implementation 'com.anthropic:anthropic-java:2.15.0'
   testImplementation 'io.smallrye.config:smallrye-config:3.16.0'
   testImplementation 'org.jboss.weld:weld-junit5:5.0.3.Final'
   testImplementation 'org.junit.jupiter:junit-jupiter-api:6.0.3'
