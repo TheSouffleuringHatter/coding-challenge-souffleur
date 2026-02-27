@@ -47,7 +47,7 @@ javafx {
   modules = ['javafx.controls', 'javafx.fxml', 'javafx.swing']
 }
 
-def libs = [mockito: 'org.mockito:mockito-core:5.21.0']
+def libs = [mockito: 'org.mockito:mockito-core:5.22.0']
 
 dependencies {
   implementation 'org.fxmisc.richtext:richtextfx:0.11.7'
@@ -65,7 +65,7 @@ dependencies {
   testImplementation 'org.jboss.weld:weld-junit5:5.0.3.Final'
   testImplementation 'org.junit.jupiter:junit-jupiter-api:6.0.3'
   testImplementation libs.mockito
-  testImplementation 'org.mockito:mockito-junit-jupiter:5.21.0'
+  testImplementation 'org.mockito:mockito-junit-jupiter:5.22.0'
   mockitoAgent(libs.mockito) { transitive = false }
   testImplementation 'org.awaitility:awaitility:4.3.0'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:6.0.3'
