@@ -94,7 +94,7 @@ Create `.env` or edit `src/main/resources/META-INF/microprofile-config.propertie
 
 ```properties
 # AI Model Configuration
-anthropic.model=claude-sonnet-4-0
+anthropic.model=claude-sonnet-4-6
 anthropic.api.key=your-api-key-here
 # Screenshot Configuration  
 save.screenshot.to.file=false
