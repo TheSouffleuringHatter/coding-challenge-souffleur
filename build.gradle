@@ -54,7 +54,7 @@ dependencies {
   implementation 'org.apache.commons:commons-lang3:3.20.0'
   implementation 'org.slf4j:slf4j-api:2.0.20'
   runtimeOnly 'org.slf4j:slf4j-simple:2.0.20'
-  implementation 'org.jboss.weld.se:weld-se-core:6.0.4.Final'
+  implementation 'org.jboss.weld.se:weld-se-core:7.0.0.Final'
   implementation 'io.smallrye:jandex:3.6.0'
   implementation 'net.java.dev.jna:jna:5.19.1'
   implementation 'net.java.dev.jna:jna-platform:5.19.1'
