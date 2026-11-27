@@ -67,7 +67,7 @@ dependencies {
   testImplementation libs.mockito
   testImplementation 'org.mockito:mockito-junit-jupiter:5.25.0'
   mockitoAgent(libs.mockito) { transitive = false }
-  testImplementation 'org.awaitility:awaitility:4.3.0'
+  testImplementation 'org.awaitility:awaitility:4.4.0'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:6.1.3'
   testRuntimeOnly 'org.junit.platform:junit-platform-launcher:6.1.3'
   testImplementation 'org.testfx:testfx-core:4.0.18'
